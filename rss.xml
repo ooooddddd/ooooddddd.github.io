@@ -12,7 +12,8 @@
             <title>test</title>
             <link>http://example.com/2023/10/08/test/</link>
             <pubDate>Sun, 08 Oct 2023 15:05:22 +0800</pubDate>
-            <description><![CDATA[  ]]></description>
+            <description><![CDATA[ &lt;p&gt;11111&lt;/p&gt;
+ ]]></description>
         </item>
     </channel>
 </rss>
