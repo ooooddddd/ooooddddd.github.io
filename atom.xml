@@ -4,12 +4,14 @@
     <title>橙熟</title>
     <link href="http://example.com" />
     <updated>2023-10-08T07:05:22.000Z</updated>
+    <category term="test" />
     <entry>
         <id>http://example.com/2023/10/08/test/</id>
         <title>test</title>
         <link rel="alternate" href="http://example.com/2023/10/08/test/"/>
         <content type="html">&lt;p&gt;11111&lt;/p&gt;
 </content>
+        <category term="test" />
         <updated>2023-10-08T07:05:22.000Z</updated>
     </entry>
 </feed>
