@@ -2,11 +2,11 @@
     "version": "https://jsonfeed.org/version/1",
     "title": "橙熟",
     "description": "我的笔记",
-    "home_page_url": "http://example.com",
+    "home_page_url": "https://github.com/ooooddddd/ooooddddd.github.io",
     "items": [
         {
-            "id": "http://example.com/2023/10/08/test/",
-            "url": "http://example.com/2023/10/08/test/",
+            "id": "https://github.com/ooooddddd/ooooddddd.github.io/2023/10/08/test/",
+            "url": "https://github.com/ooooddddd/ooooddddd.github.io/2023/10/08/test/",
             "title": "test",
             "date_published": "2023-10-08T07:05:22.000Z",
             "content_html": "<p>11111</p>\n",
