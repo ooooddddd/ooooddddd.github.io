@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://github.com/ooooddddd/ooooddddd.github.io</id>
+    <id>https://ooooddddd.github.io</id>
     <title>橙熟</title>
-    <link href="https://github.com/ooooddddd/ooooddddd.github.io" />
+    <link href="https://ooooddddd.github.io" />
     <updated>2023-10-08T07:05:22.000Z</updated>
     <category term="test" />
     <entry>
-        <id>https://github.com/ooooddddd/ooooddddd.github.io/2023/10/08/test/</id>
+        <id>https://ooooddddd.github.io/2023/10/08/test/</id>
         <title>test</title>
-        <link rel="alternate" href="https://github.com/ooooddddd/ooooddddd.github.io/2023/10/08/test/"/>
+        <link rel="alternate" href="https://ooooddddd.github.io/2023/10/08/test/"/>
         <content type="html">&lt;p&gt;11111&lt;/p&gt;
 </content>
         <category term="test" />
