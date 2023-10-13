@@ -14,11 +14,11 @@
 &lt;h2 id=&#34;11-安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#11-安装&#34;&gt;#&lt;/a&gt; 1.1 安装&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;
-&lt;p&gt;如图所示，运行 docker 镜像安装 rabbitmq&lt;img src=&#34;https://img.miccai.top//imgs/3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如图所示，运行 docker 镜像安装 rabbitmq&lt;img src=&#34;https://img.miccai.top//imgs/1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;报错提示：网络未找到&lt;br&gt;
-&lt;img src=&#34;/imgs/UpizCkacf7l37ixU.png&#34; alt=&#34;输入图片说明&#34;&gt;&lt;/p&gt;
+&lt;img src=&#34;https://img.miccai.top//imgs/2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;网络需要输入自己有的：&lt;br&gt;
