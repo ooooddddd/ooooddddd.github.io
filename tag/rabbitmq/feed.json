@@ -1,6 +1,6 @@
 {
     "version": "https://jsonfeed.org/version/1",
-    "title": "橙熟",
+    "title": "橙熟 • All posts by \"rabbitmq\" tag",
     "description": "我的笔记",
     "home_page_url": "https://ooooddddd.github.io",
     "items": [
@@ -12,16 +12,6 @@
             "content_html": "<h1 id=\"一-安装\"><a class=\"markdownIt-Anchor\" href=\"#一-安装\">#</a> 一、安装</h1>\n<h2 id=\"11-安装\"><a class=\"markdownIt-Anchor\" href=\"#11-安装\">#</a> 1.1 安装</h2>\n<ol>\n<li>\n<p>如图所示，运行 docker 镜像安装 rabbitmq<img src=\"https://img.miccai.top//imgs/3.png\" alt=\"\"></p>\n</li>\n<li>\n<p>报错提示：网络未找到<br>\n<img src=\"/imgs/UpizCkacf7l37ixU.png\" alt=\"输入图片说明\"></p>\n</li>\n<li>\n<p>网络需要输入自己有的：<br>\n <code>docker run -e RABBITMQ_DEFAULT_USER=ZC -e RABBITMQ_DEFAULT_PASS=123456 -v mq-plugins:/plugins --name mq --hostname mq -p 15672:15672 -p 5672:5672 --network bridge -d rabbitmq:3.8-management</code></p>\n</li>\n<li>\n<p>如何访问 <code>http://192.168.110.92:15672/</code></p>\n</li>\n<li>\n<p>访问成功页面<img src=\"https://img.miccai.top//imgs/3.png\" alt=\"\"></p>\n</li>\n</ol>\n<h2 id=\"22-快速入门\"><a class=\"markdownIt-Anchor\" href=\"#22-快速入门\">#</a> 2.2 快速入门</h2>\n<ol>\n<li>添加消息队列<img src=\"https://img.miccai.top//imgs/4.png\" alt=\"\"></li>\n<li>发送消息到交换机（exchanges），然后交换机需要 binding 消息队列，否则消息无法发送。<img src=\"https://img.miccai.top//imgs/5.png\" alt=\"\"></li>\n<li>总结：交换机没有存储消息的能力，只能转发消息</li>\n</ol>\n<h2 id=\"23-数据隔离\"><a class=\"markdownIt-Anchor\" href=\"#23-数据隔离\">#</a> 2.3 数据隔离</h2>\n<ol>\n<li>用户管理<img src=\"https://img.miccai.top//imgs/6.png\" alt=\"\"></li>\n<li>虚拟主机可以完成数据隔离，如何新建虚拟主机<img src=\"https://img.miccai.top//imgs/7.png\" alt=\"\"></li>\n<li>理论上讲，一个项目一个用户，一个虚拟主机</li>\n</ol>\n<h2 id=\"3-springamqp-java客户端\"><a class=\"markdownIt-Anchor\" href=\"#3-springamqp-java客户端\">#</a> 3 SpringAMQP Java 客户端</h2>\n<h3 id=\"31-如何收发消息\"><a class=\"markdownIt-Anchor\" href=\"#31-如何收发消息\">#</a> 3.1 如何收发消息</h3>\n<ol>\n<li>引入 spring-boot-starter-amqp 依赖<img src=\"https://img.miccai.top//imgs/8.png\" alt=\"\"></li>\n<li>相关配置<img src=\"https://img.miccai.top//imgs/9.png\" alt=\"\"></li>\n<li>发消息，注入 RabbitTemplate<img src=\"https://img.miccai.top//imgs/10.png\" alt=\"\"></li>\n<li>接收消息<img src=\"https://img.miccai.top//imgs/11.png\" alt=\"\"></li>\n</ol>\n<h3 id=\"32-workqueues模型\"><a class=\"markdownIt-Anchor\" href=\"#32-workqueues模型\">#</a> 3.2 WorkQueues 模型</h3>\n<ol>\n<li>让多个消费者绑定一个队列，共同消费一个队列中的消息<img src=\"https://img.miccai.top//imgs/12.png\" alt=\"\"></li>\n<li>循环发送消息<img src=\"https://img.miccai.top//imgs/13.png\" alt=\"\"></li>\n<li>同时接收消息，并模拟不同的处理速度<img src=\"https://img.miccai.top//imgs/14.png\" alt=\"\"></li>\n<li>设置 prefetch，控制消费者预取的消息数量<img src=\"https://img.miccai.top//imgs/15.png\" alt=\"\"></li>\n<li>总结<img src=\"https://img.miccai.top//imgs/16.png\" alt=\"\"></li>\n</ol>\n<h3 id=\"33fanout交换机\"><a class=\"markdownIt-Anchor\" href=\"#33fanout交换机\">#</a> 3.3Fanout 交换机</h3>\n<h3 id=\"34-direct交换机\"><a class=\"markdownIt-Anchor\" href=\"#34-direct交换机\">#</a> 3.4 Direct 交换机</h3>\n<h3 id=\"35-topic交换机\"><a class=\"markdownIt-Anchor\" href=\"#35-topic交换机\">#</a> 3.5 Topic 交换机</h3>\n<h3 id=\"36-声明队列和交换机\"><a class=\"markdownIt-Anchor\" href=\"#36-声明队列和交换机\">#</a> 3.6 声明队列和交换机</h3>\n<h3 id=\"37-消息转化器\"><a class=\"markdownIt-Anchor\" href=\"#37-消息转化器\">#</a> 3.7 消息转化器</h3>\n",
             "tags": [
                 "RabbitMQ"
-            ]
-        },
-        {
-            "id": "https://ooooddddd.github.io/2023/10/08/test/",
-            "url": "https://ooooddddd.github.io/2023/10/08/test/",
-            "title": "test",
-            "date_published": "2023-10-08T07:05:22.000Z",
-            "content_html": "<h3 id=\"11111\"><a class=\"markdownIt-Anchor\" href=\"#11111\">#</a> 11111</h3>\n<p><img src=\"https://img.miccai.top//imgs/1.png\" alt=\"\"></p>\n",
-            "tags": [
-                "test"
             ]
         }
     ]

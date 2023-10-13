@@ -1,16 +1,21 @@
 <?xml version="1.0"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://ooooddddd.github.io</id>
-    <title>橙熟</title>
-    <link href="https://ooooddddd.github.io" />
-    <updated>2023-10-12T15:45:10.000Z</updated>
-    <category term="RabbitMQ" />
-    <category term="test" />
-    <entry>
-        <id>https://ooooddddd.github.io/2023/10/12/RabbitMQ%E5%AD%A6%E4%B9%A0/</id>
-        <title>RabbitMQ学习</title>
-        <link rel="alternate" href="https://ooooddddd.github.io/2023/10/12/RabbitMQ%E5%AD%A6%E4%B9%A0/"/>
-        <content type="html">&lt;h1 id=&#34;一-安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#一-安装&#34;&gt;#&lt;/a&gt; 一、安装&lt;/h1&gt;
+<rss version="2.0">
+    <channel>
+        <title>橙熟 • Posts by &#34;中间件&#34; category</title>
+        <link>https://ooooddddd.github.io</link>
+        <description>我的笔记</description>
+        <language>zh-CN</language>
+        <pubDate>Thu, 12 Oct 2023 23:45:10 +0800</pubDate>
+        <lastBuildDate>Thu, 12 Oct 2023 23:45:10 +0800</lastBuildDate>
+        <category>RabbitMQ</category>
+        <category>test</category>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2023/10/12/RabbitMQ%E5%AD%A6%E4%B9%A0/</guid>
+            <title>RabbitMQ学习</title>
+            <link>https://ooooddddd.github.io/2023/10/12/RabbitMQ%E5%AD%A6%E4%B9%A0/</link>
+            <category>RabbitMQ</category>
+            <pubDate>Thu, 12 Oct 2023 23:45:10 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;一-安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#一-安装&#34;&gt;#&lt;/a&gt; 一、安装&lt;/h1&gt;
 &lt;h2 id=&#34;11-安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#11-安装&#34;&gt;#&lt;/a&gt; 1.1 安装&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;
@@ -64,18 +69,7 @@
 &lt;h3 id=&#34;35-topic交换机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#35-topic交换机&#34;&gt;#&lt;/a&gt; 3.5 Topic 交换机&lt;/h3&gt;
 &lt;h3 id=&#34;36-声明队列和交换机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#36-声明队列和交换机&#34;&gt;#&lt;/a&gt; 3.6 声明队列和交换机&lt;/h3&gt;
 &lt;h3 id=&#34;37-消息转化器&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#37-消息转化器&#34;&gt;#&lt;/a&gt; 3.7 消息转化器&lt;/h3&gt;
-</content>
-        <category term="RabbitMQ" />
-        <updated>2023-10-12T15:45:10.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://ooooddddd.github.io/2023/10/08/test/</id>
-        <title>test</title>
-        <link rel="alternate" href="https://ooooddddd.github.io/2023/10/08/test/"/>
-        <content type="html">&lt;h3 id=&#34;11111&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#11111&#34;&gt;#&lt;/a&gt; 11111&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://img.miccai.top//imgs/1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-</content>
-        <category term="test" />
-        <updated>2023-10-08T07:05:22.000Z</updated>
-    </entry>
-</feed>
+ ]]></description>
+        </item>
+    </channel>
+</rss>
