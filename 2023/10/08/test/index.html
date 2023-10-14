@@ -214,12 +214,12 @@ document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-
   function initWaline () {
     const waline = Waline.init(Object.assign({
       el: '#waline-wrap',
-      serverURL: 'https://waline.miccai.top/',
+      serverURL: 'https://waline.miccai.top',
       pageview: false,
       dark: 'html[data-theme="dark"]',
       path: window.location.pathname,
       comment: false,
-    }, {"locale":{"nick":"昵称","mail":"邮箱","link":"你的网站","placeholder":"欢迎大家文明评论嗷～(填写邮箱可以收到回复通知)","requiredMeta":[],"mailError":"请填写正确的邮件地址","sofa":"快来抢占沙发~","level0":"列兵","level1":"上等兵","level2":"一期","level3":"二期","level4":"三期","level5":"四期","level6":"五期","level7":"六期","level8":"兵王"},"emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/tw-emoji","https://cdn.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs","https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili"]}))
+    }, {"locale":{"nick":"昵称","mail":"邮箱","link":"你的网站","placeholder":"欢迎大家文明评论嗷～(填写邮箱可以收到回复通知)","requiredMeta":[],"mailError":"请填写正确的邮件地址","sofa":"快来抢占沙发~","level0":"列兵","level1":"上等兵","level2":"一期","level3":"二期","level4":"三期","level5":"四期","level6":"五期","level7":"六期","level8":"兵王"}}))
   }
 
   if (typeof Waline === 'object') initWaline()
@@ -316,7 +316,7 @@ if ('Waline' === 'Disqus' || !true) {
 
   const getComment = async () => {
     try {
-      const res = await fetch('https://waline.miccai.top//api/comment?type=recent&count=6', { method: 'GET' })
+      const res = await fetch('https://waline.miccai.top/api/comment?type=recent&count=6', { method: 'GET' })
       const result = await res.json()
       const walineArray = result.data.map(e => {
         return {
