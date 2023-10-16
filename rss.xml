@@ -8,7 +8,6 @@
         <pubDate>Thu, 12 Oct 2023 23:45:10 +0800</pubDate>
         <lastBuildDate>Thu, 12 Oct 2023 23:45:10 +0800</lastBuildDate>
         <category>RabbitMQ</category>
-        <category>test</category>
         <item>
             <guid isPermalink="true">https://ooooddddd.github.io/2023/10/12/RabbitMQ%E5%AD%A6%E4%B9%A0/</guid>
             <title>RabbitMQ学习</title>
@@ -115,16 +114,6 @@
 &lt;li&gt;发送消息与接收消息时，消息类型必须一致&lt;img src=&#34;/self/imgs/RabbitMQ/22.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
 &lt;img src=&#34;/self/imgs/RabbitMQ/23.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
 &lt;/ol&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://ooooddddd.github.io/2023/10/08/test/</guid>
-            <title>test</title>
-            <link>https://ooooddddd.github.io/2023/10/08/test/</link>
-            <category>test</category>
-            <pubDate>Sun, 08 Oct 2023 15:05:22 +0800</pubDate>
-            <description><![CDATA[ &lt;h3 id=&#34;11111&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#11111&#34;&gt;#&lt;/a&gt; 11111&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&#34;https://img.miccai.top//imgs/1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
  ]]></description>
         </item>
     </channel>
