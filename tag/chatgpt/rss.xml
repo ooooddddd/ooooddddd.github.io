@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>橙熟 • Posts by &#34;chatgpt&#34; tag</title>
+        <link>https://ooooddddd.github.io</link>
+        <description>我的笔记</description>
+        <language>zh-CN</language>
+        <pubDate>Mon, 16 Oct 2023 10:31:51 +0800</pubDate>
+        <lastBuildDate>Mon, 16 Oct 2023 10:31:51 +0800</lastBuildDate>
+        <category>RabbitMQ</category>
+        <category>chatGPT</category>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2023/10/16/%E6%9C%AC%E5%9C%B0ChatGPT/</guid>
+            <title>本地ChatGPT</title>
+            <link>https://ooooddddd.github.io/2023/10/16/%E6%9C%AC%E5%9C%B0ChatGPT/</link>
+            <category>chatGPT</category>
+            <pubDate>Mon, 16 Oct 2023 10:31:51 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;优点&#34;&gt;&lt;a href=&#34;#优点&#34; class=&#34;headerlink&#34; title=&#34;优点&#34;&gt;&lt;/a&gt;优点&lt;/h1&gt;&lt;p&gt;部署好之后不再依赖科学上网&lt;/p&gt;
+&lt;h1 id=&#34;缺点&#34;&gt;&lt;a href=&#34;#缺点&#34; class=&#34;headerlink&#34; title=&#34;缺点&#34;&gt;&lt;/a&gt;缺点&lt;/h1&gt;&lt;p&gt;仍然需要你有正常的openAI账号，token登录方式&lt;/p&gt;
+&lt;h1 id=&#34;前置要求&#34;&gt;&lt;a href=&#34;#前置要求&#34; class=&#34;headerlink&#34; title=&#34;前置要求&#34;&gt;&lt;/a&gt;前置要求&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;搭载了Centos7的本地虚拟机&lt;/li&gt;
+&lt;li&gt;在虚拟机上安装了Docker，网上很多安装教程，这里不再展开赘述&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;拉取镜像，启动容器&#34;&gt;&lt;a href=&#34;#拉取镜像，启动容器&#34; class=&#34;headerlink&#34; title=&#34;拉取镜像，启动容器&#34;&gt;&lt;/a&gt;拉取镜像，启动容器&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;拉取 pengzhile&amp;#x2F;pandora 镜像(如果拉取失败，使用科学上网重试)&lt;/p&gt;
+ &lt;pre class=&#34;language-bash&#34; data-language=&#34;bash&#34;&gt;&lt;code class=&#34;language-bash&#34;&gt;&lt;span class=&#34;token function&#34;&gt;docker&lt;/span&gt; pull pengzhile/pandora&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;启动容器&lt;/p&gt;
+ &lt;pre class=&#34;language-bash&#34; data-language=&#34;bash&#34;&gt;&lt;code class=&#34;language-bash&#34;&gt;&lt;span class=&#34;token function&#34;&gt;docker&lt;/span&gt; run &lt;span class=&#34;token parameter variable&#34;&gt;-e&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;PANDORA_CLOUD&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;cloud &lt;span class=&#34;token parameter variable&#34;&gt;-e&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;PANDORA_SERVER&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0.0&lt;/span&gt;.0.0:9527 &lt;span class=&#34;token parameter variable&#34;&gt;-p&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;9527&lt;/span&gt;:9527 &lt;span class=&#34;token parameter variable&#34;&gt;-d&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;--restart&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;always pengzhile/pandora&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt; -p 9527:9527：可以更换，确保没有被占用即可&lt;br&gt; –restart&amp;#x3D;always：自启动&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;查看虚拟机ip地址&lt;/p&gt;
+ &lt;pre class=&#34;language-bash&#34; data-language=&#34;bash&#34;&gt;&lt;code class=&#34;language-bash&#34;&gt;&lt;span class=&#34;token function&#34;&gt;ifconfig&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;访问：ip:9527，进入到登录页面，如图&lt;br&gt; &lt;img src=&#34;https://img.miccai.top//imgs/2023-10-16-chatgpt1.png&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;token获取，请访问：&lt;a href=&#34;https://chat.openai.com/api/auth/session&#34;&gt;获取toked&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>
