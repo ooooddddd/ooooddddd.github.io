@@ -1,0 +1,18 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "橙熟 • All posts by \"文档\" category",
+    "description": "我的笔记",
+    "home_page_url": "https://ooooddddd.github.io",
+    "items": [
+        {
+            "id": "https://ooooddddd.github.io/2023/10/16/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE%E6%96%87%E6%A1%A3/",
+            "url": "https://ooooddddd.github.io/2023/10/16/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE%E6%96%87%E6%A1%A3/",
+            "title": "博客建设文档",
+            "date_published": "2023-10-16T06:21:48.000Z",
+            "content_html": "<h1 id=\"参考\"><a class=\"markdownIt-Anchor\" href=\"#参考\">#</a> 参考</h1>\n<ol>\n<li><a href=\"https://butterfly.js.org/\">Buutterfly 文档</a></li>\n</ol>\n<h1 id=\"主要讲讲踩坑的地方\"><a class=\"markdownIt-Anchor\" href=\"#主要讲讲踩坑的地方\">#</a> 主要讲讲踩坑的地方</h1>\n",
+            "tags": [
+                "blog"
+            ]
+        }
+    ]
+}

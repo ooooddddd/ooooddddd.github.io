@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>橙熟 • Posts by &#34;blog&#34; tag</title>
+        <link>https://ooooddddd.github.io</link>
+        <description>我的笔记</description>
+        <language>zh-CN</language>
+        <pubDate>Mon, 16 Oct 2023 14:21:48 +0800</pubDate>
+        <lastBuildDate>Mon, 16 Oct 2023 14:21:48 +0800</lastBuildDate>
+        <category>RabbitMQ</category>
+        <category>blog</category>
+        <category>chatGPT</category>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2023/10/16/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE%E6%96%87%E6%A1%A3/</guid>
+            <title>博客建设文档</title>
+            <link>https://ooooddddd.github.io/2023/10/16/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE%E6%96%87%E6%A1%A3/</link>
+            <category>blog</category>
+            <pubDate>Mon, 16 Oct 2023 14:21:48 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;参考&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#参考&#34;&gt;#&lt;/a&gt; 参考&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://butterfly.js.org/&#34;&gt;Buutterfly 文档&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;主要讲讲踩坑的地方&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#主要讲讲踩坑的地方&#34;&gt;#&lt;/a&gt; 主要讲讲踩坑的地方&lt;/h1&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>
