@@ -18,6 +18,7 @@
             <category>项目</category>
             <pubDate>Thu, 21 Dec 2023 16:04:14 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;一-项目业务流程&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#一-项目业务流程&#34;&gt;#&lt;/a&gt; 一、项目业务流程&lt;/h1&gt;
+&lt;h2 id=&#34;体验地址http1207812874userlogin&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#体验地址http1207812874userlogin&#34;&gt;#&lt;/a&gt; 体验地址：&lt;a href=&#34;http://120.78.128.74/user/login&#34;&gt;http://120.78.128.74/user/login&lt;/a&gt;&lt;/h2&gt;
 &lt;h2 id=&#34;5个子系统&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#5个子系统&#34;&gt;#&lt;/a&gt; 5 个子系统&lt;/h2&gt;
 &lt;h3 id=&#34;1模拟接口系统&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#1模拟接口系统&#34;&gt;#&lt;/a&gt; 1. 模拟接口系统&lt;/h3&gt;
 &lt;h3 id=&#34;2后台管理系统&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#2后台管理系统&#34;&gt;#&lt;/a&gt; 2. 后台管理系统&lt;/h3&gt;
@@ -2107,7 +2108,8 @@ CMD &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&
             <link>https://ooooddddd.github.io/2023/10/16/%E6%9C%AC%E5%9C%B0ChatGPT/</link>
             <category>chatGPT</category>
             <pubDate>Mon, 16 Oct 2023 10:31:51 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;优点&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优点&#34;&gt;#&lt;/a&gt; 优点&lt;/h1&gt;
+            <description><![CDATA[ &lt;h1 id=&#34;20231221实测该教程已经寄了&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#20231221实测该教程已经寄了&#34;&gt;#&lt;/a&gt; 2023.12.21 实测，该教程已经寄了&lt;/h1&gt;
+&lt;h1 id=&#34;优点&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优点&#34;&gt;#&lt;/a&gt; 优点&lt;/h1&gt;
 &lt;p&gt;部署好之后不再依赖科学上网&lt;/p&gt;
 &lt;h1 id=&#34;缺点&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#缺点&#34;&gt;#&lt;/a&gt; 缺点&lt;/h1&gt;
 &lt;p&gt;仍然需要你有正常的 openAI 账号，token 登录方式&lt;/p&gt;
