@@ -1,23 +1,18 @@
 <?xml version="1.0"?>
-<rss version="2.0">
-    <channel>
-        <title>橙熟</title>
-        <link>https://ooooddddd.github.io</link>
-        <description>我的笔记</description>
-        <language>zh-CN</language>
-        <pubDate>Thu, 21 Dec 2023 16:04:14 +0800</pubDate>
-        <lastBuildDate>Thu, 21 Dec 2023 16:04:14 +0800</lastBuildDate>
-        <category>RabbitMQ</category>
-        <category>blog</category>
-        <category>chatGPT</category>
-        <category>项目</category>
-        <item>
-            <guid isPermalink="true">https://ooooddddd.github.io/2023/12/21/API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
-            <title>API开放平台学习笔记</title>
-            <link>https://ooooddddd.github.io/2023/12/21/API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
-            <category>项目</category>
-            <pubDate>Thu, 21 Dec 2023 16:04:14 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;一-项目业务流程&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#一-项目业务流程&#34;&gt;#&lt;/a&gt; 一、项目业务流程&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://ooooddddd.github.io</id>
+    <title>橙熟 • Posts by &#34;项目&#34; tag</title>
+    <link href="https://ooooddddd.github.io" />
+    <updated>2023-12-21T08:04:14.000Z</updated>
+    <category term="RabbitMQ" />
+    <category term="blog" />
+    <category term="chatGPT" />
+    <category term="项目" />
+    <entry>
+        <id>https://ooooddddd.github.io/2023/12/21/API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
+        <title>API开放平台学习笔记</title>
+        <link rel="alternate" href="https://ooooddddd.github.io/2023/12/21/API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+        <content type="html">&lt;h1 id=&#34;一-项目业务流程&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#一-项目业务流程&#34;&gt;#&lt;/a&gt; 一、项目业务流程&lt;/h1&gt;
 &lt;h2 id=&#34;5个子系统&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#5个子系统&#34;&gt;#&lt;/a&gt; 5 个子系统&lt;/h2&gt;
 &lt;h3 id=&#34;1模拟接口系统&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#1模拟接口系统&#34;&gt;#&lt;/a&gt; 1. 模拟接口系统&lt;/h3&gt;
 &lt;h3 id=&#34;2后台管理系统&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#2后台管理系统&#34;&gt;#&lt;/a&gt; 2. 后台管理系统&lt;/h3&gt;
@@ -2086,170 +2081,8 @@ CMD &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://ooooddddd.github.io/2023/10/16/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE%E6%96%87%E6%A1%A3/</guid>
-            <title>博客建设文档</title>
-            <link>https://ooooddddd.github.io/2023/10/16/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE%E6%96%87%E6%A1%A3/</link>
-            <category>blog</category>
-            <pubDate>Mon, 16 Oct 2023 14:21:48 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;参考&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#参考&#34;&gt;#&lt;/a&gt; 参考&lt;/h1&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://butterfly.js.org/&#34;&gt;Buutterfly 文档&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h1 id=&#34;主要讲讲踩坑的地方&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#主要讲讲踩坑的地方&#34;&gt;#&lt;/a&gt; 主要讲讲踩坑的地方&lt;/h1&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://ooooddddd.github.io/2023/10/16/%E6%9C%AC%E5%9C%B0ChatGPT/</guid>
-            <title>本地ChatGPT</title>
-            <link>https://ooooddddd.github.io/2023/10/16/%E6%9C%AC%E5%9C%B0ChatGPT/</link>
-            <category>chatGPT</category>
-            <pubDate>Mon, 16 Oct 2023 10:31:51 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;优点&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优点&#34;&gt;#&lt;/a&gt; 优点&lt;/h1&gt;
-&lt;p&gt;部署好之后不再依赖科学上网&lt;/p&gt;
-&lt;h1 id=&#34;缺点&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#缺点&#34;&gt;#&lt;/a&gt; 缺点&lt;/h1&gt;
-&lt;p&gt;仍然需要你有正常的 openAI 账号，token 登录方式&lt;/p&gt;
-&lt;h1 id=&#34;前置要求&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#前置要求&#34;&gt;#&lt;/a&gt; 前置要求&lt;/h1&gt;
-&lt;ol&gt;
-&lt;li&gt;搭载了 Centos7 的本地虚拟机&lt;/li&gt;
-&lt;li&gt;在虚拟机上安装了 Docker，网上很多安装教程，这里不再展开赘述&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h1 id=&#34;拉取镜像启动容器&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#拉取镜像启动容器&#34;&gt;#&lt;/a&gt; 拉取镜像，启动容器&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;拉取 pengzhile/pandora 镜像 (如果拉取失败，使用科学上网重试)&lt;/li&gt;
-&lt;/ul&gt;
- &lt;pre class=&#34;language-bash&#34; data-language=&#34;bash&#34;&gt;&lt;code class=&#34;language-bash&#34;&gt;&lt;span class=&#34;token function&#34;&gt;docker&lt;/span&gt; pull pengzhile/pandora&lt;/code&gt;&lt;/pre&gt;
-&lt;ul&gt;
-&lt;li&gt;启动容器&lt;/li&gt;
-&lt;/ul&gt;
- &lt;pre class=&#34;language-bash&#34; data-language=&#34;bash&#34;&gt;&lt;code class=&#34;language-bash&#34;&gt;&lt;span class=&#34;token function&#34;&gt;docker&lt;/span&gt; run &lt;span class=&#34;token parameter variable&#34;&gt;-e&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;PANDORA_CLOUD&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;cloud &lt;span class=&#34;token parameter variable&#34;&gt;-e&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;PANDORA_SERVER&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0.0&lt;/span&gt;.0.0:9527 &lt;span class=&#34;token parameter variable&#34;&gt;-p&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;9527&lt;/span&gt;:9527 &lt;span class=&#34;token parameter variable&#34;&gt;-d&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;--restart&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;always pengzhile/pandora&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;-p 9527:9527：可以更换，确保没有被占用即可
---restart=always：自启动
-&lt;/code&gt;&lt;/pre&gt;
-&lt;ul&gt;
-&lt;li&gt;查看虚拟机 ip 地址&lt;/li&gt;
-&lt;/ul&gt;
- &lt;pre class=&#34;language-bash&#34; data-language=&#34;bash&#34;&gt;&lt;code class=&#34;language-bash&#34;&gt;&lt;span class=&#34;token function&#34;&gt;ifconfig&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;访问：ip:9527，进入到登录页面，如图&lt;br&gt;
-&lt;img src=&#34;https://img.miccai.top//imgs/2023-10-16-chatgpt/1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;token 获取，请访问：&lt;a href=&#34;https://chat.openai.com/api/auth/session&#34;&gt;获取 toked&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://ooooddddd.github.io/2023/10/12/RabbitMQ%E5%AD%A6%E4%B9%A0/</guid>
-            <title>RabbitMQ学习</title>
-            <link>https://ooooddddd.github.io/2023/10/12/RabbitMQ%E5%AD%A6%E4%B9%A0/</link>
-            <category>RabbitMQ</category>
-            <pubDate>Thu, 12 Oct 2023 23:45:10 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;rabbitmq&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#rabbitmq&#34;&gt;#&lt;/a&gt; RabbitMQ&lt;/h1&gt;
-&lt;h2 id=&#34;安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#安装&#34;&gt;#&lt;/a&gt; 安装&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;如图所示，运行 docker 镜像安装 rabbitmq&lt;img src=&#34;/self/imgs/RabbitMQ/1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;报错提示：网络未找到&lt;br&gt;
-&lt;img src=&#34;/self/imgs/RabbitMQ/2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;网络需要输入自己有的，之后运行命令，记得将用户名和密码设置为自己的&lt;/p&gt;
- &lt;pre class=&#34;language-Docker&#34; data-language=&#34;Docker&#34;&gt;&lt;code class=&#34;language-Docker&#34;&gt;docker run -e RABBITMQ_DEFAULT_USER&amp;#x3D;xxx -e RABBITMQ_DEFAULT_PASS&amp;#x3D;xxxxx -v mq-plugins:&amp;#x2F;plugins --name mq --hostname mq -p 15672:15672 -p 5672:5672 --network bridge -d rabbitmq:3.8-management&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;如何访问&lt;br&gt;
-&lt;a href=&#34;http://192.168.110.92:15672/&#34;&gt; http://192.168.110.92:15672/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;访问成功页面&lt;img src=&#34;/self/imgs/RabbitMQ/3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;快速入门&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#快速入门&#34;&gt;#&lt;/a&gt; 快速入门&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;添加消息队列&lt;img src=&#34;/self/imgs/RabbitMQ/4.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;发送消息到交换机（exchanges），然后交换机需要 binding 消息队列，否则消息无法发送。&lt;img src=&#34;/self/imgs/RabbitMQ/5.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;总结：交换机没有存储消息的能力，只能转发消息&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;数据隔离&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#数据隔离&#34;&gt;#&lt;/a&gt; 数据隔离&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;用户管理&lt;img src=&#34;/self/imgs/RabbitMQ/6.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;虚拟主机可以完成数据隔离，如何新建虚拟主机&lt;img src=&#34;/self/imgs/RabbitMQ/7.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;理论上讲，一个项目一个用户，一个虚拟主机&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;springamqp-java客户端&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#springamqp-java客户端&#34;&gt;#&lt;/a&gt; SpringAMQP Java 客户端&lt;/h2&gt;
-&lt;h3 id=&#34;如何收发消息&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#如何收发消息&#34;&gt;#&lt;/a&gt; 如何收发消息&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;引入 spring-boot-starter-amqp 依赖&lt;img src=&#34;/self/imgs/RabbitMQ/8.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;相关配置&lt;img src=&#34;/self/imgs/RabbitMQ/9.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;发消息，注入 RabbitTemplate&lt;img src=&#34;/self/imgs/RabbitMQ/10.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;接收消息&lt;img src=&#34;/self/imgs/RabbitMQ/11.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;workqueues模型&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#workqueues模型&#34;&gt;#&lt;/a&gt; WorkQueues 模型&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;让多个消费者绑定一个队列，共同消费一个队列中的消息&lt;img src=&#34;/self/imgs/RabbitMQ/12.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;循环发送消息&lt;img src=&#34;/self/imgs/RabbitMQ/13.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;同时接收消息，并模拟不同的处理速度&lt;img src=&#34;/self/imgs/RabbitMQ/14.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;设置 prefetch，控制消费者预取的消息数量&lt;img src=&#34;/self/imgs/RabbitMQ/15.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;总结&lt;img src=&#34;/self/imgs/RabbitMQ/16.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;fanout交换机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#fanout交换机&#34;&gt;#&lt;/a&gt; Fanout 交换机&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;Fanout 交换机会将接收到的消息广播到每一个跟其绑定的队列，所以也叫做广播模式。
-&lt;blockquote&gt;
-&lt;p&gt;1、一个交换机可以绑定多个队列 生产者发送的消息&lt;br&gt;
- 2、只能发送到交换机&lt;br&gt;
- 3、交换机把消息发送给绑定过的所有队列&lt;br&gt;
- 4、订阅队列的消费者都能拿到消息&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;direct交换机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#direct交换机&#34;&gt;#&lt;/a&gt; Direct 交换机&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;Direct Exchange 会将接收到的消息根据规则路由到指定的 Queue，因此称为定向路由&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;1、每一个队列在 bind 交换机时都设置一个 BindingKey&lt;br&gt;
-2、发布者发送消息时，指定消息的 RoutingKey&lt;br&gt;
-3、exchange 将消息路由到 BindingKey 与 RoutingKey 一致的队列&lt;br&gt;
- 4、如图所示&lt;img src=&#34;/self/imgs/RabbitMQ/17.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;topic交换机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#topic交换机&#34;&gt;#&lt;/a&gt; Topic 交换机&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;Topic 与 Direct 功能类似，但 Topic 在 bindingkey 时更加灵活，可以使用通配符。&lt;/li&gt;
-&lt;li&gt;BindingKey 一般是由一个或多个单词组成，以。分割。&lt;/li&gt;
-&lt;li&gt;通配符规则：
-&lt;blockquote&gt;
-&lt;p&gt;#：匹配一个或多个单词&lt;br&gt;
- *：只匹配一个单词&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;声明队列和交换机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#声明队列和交换机&#34;&gt;#&lt;/a&gt; 声明队列和交换机&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;基于注解的声明方式&lt;br&gt;
-&lt;img src=&#34;/self/imgs/RabbitMQ/18.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;消息转化器&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#消息转化器&#34;&gt;#&lt;/a&gt; 消息转化器&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;配置 JSON 转换器&lt;br&gt;
- a. 先引入依赖&lt;br&gt;
-&lt;img src=&#34;/self/imgs/RabbitMQ/19.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
- b. 配置消息转换器，在启动类添加 Bean&lt;br&gt;
-&lt;img src=&#34;/self/imgs/RabbitMQ/20.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
-&lt;img src=&#34;/self/imgs/RabbitMQ/21.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;li&gt;发送消息与接收消息时，消息类型必须一致&lt;img src=&#34;/self/imgs/RabbitMQ/22.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
-&lt;img src=&#34;/self/imgs/RabbitMQ/23.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
-&lt;/ol&gt;
- ]]></description>
-        </item>
-    </channel>
-</rss>
+</content>
+        <category term="项目" />
+        <updated>2023-12-21T08:04:14.000Z</updated>
+    </entry>
+</feed>
