@@ -5,19 +5,17 @@
     <link href="https://ooooddddd.github.io" />
     <updated>2023-10-16T06:21:48.000Z</updated>
     <category term="RabbitMQ" />
-    <category term="blog" />
     <category term="chatGPT" />
+    <category term="blog" />
     <category term="项目" />
     <entry>
         <id>https://ooooddddd.github.io/2023/10/16/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE%E6%96%87%E6%A1%A3/</id>
         <title>博客建设文档</title>
         <link rel="alternate" href="https://ooooddddd.github.io/2023/10/16/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE%E6%96%87%E6%A1%A3/"/>
-        <content type="html">&lt;h1 id=&#34;参考&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#参考&#34;&gt;#&lt;/a&gt; 参考&lt;/h1&gt;
-&lt;ol&gt;
+        <content type="html">&lt;h1 id=&#34;参考&#34;&gt;&lt;a href=&#34;#参考&#34; class=&#34;headerlink&#34; title=&#34;参考&#34;&gt;&lt;/a&gt;参考&lt;/h1&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;https://butterfly.js.org/&#34;&gt;Buutterfly 文档&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h1 id=&#34;主要讲讲踩坑的地方&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#主要讲讲踩坑的地方&#34;&gt;#&lt;/a&gt; 主要讲讲踩坑的地方&lt;/h1&gt;
-</content>
+&lt;h1 id=&#34;主要讲讲踩坑的地方&#34;&gt;&lt;a href=&#34;#主要讲讲踩坑的地方&#34; class=&#34;headerlink&#34; title=&#34;主要讲讲踩坑的地方&#34;&gt;&lt;/a&gt;主要讲讲踩坑的地方&lt;/h1&gt;</content>
         <category term="blog" />
         <updated>2023-10-16T06:21:48.000Z</updated>
     </entry>
