@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>橙熟 • Posts by &#34;javase&#34; tag</title>
+        <link>https://ooooddddd.github.io</link>
+        <description>我的笔记</description>
+        <language>zh-CN</language>
+        <pubDate>Wed, 03 Jan 2024 20:00:41 +0800</pubDate>
+        <lastBuildDate>Wed, 03 Jan 2024 20:00:41 +0800</lastBuildDate>
+        <category>RabbitMQ</category>
+        <category>blog</category>
+        <category>chatGPT</category>
+        <category>项目</category>
+        <category>Javase</category>
+        <category>MySQL</category>
+        <category>Spring</category>
+        <category>API开放平台</category>
+        <category>点评</category>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2024/01/03/Javase%E7%9B%B8%E5%85%B3/</guid>
+            <title>Javase相关</title>
+            <link>https://ooooddddd.github.io/2024/01/03/Javase%E7%9B%B8%E5%85%B3/</link>
+            <category>Javase</category>
+            <pubDate>Wed, 03 Jan 2024 20:00:41 +0800</pubDate>
+            <description><![CDATA[ &lt;h3 id=&#34;一、Java常用类&#34;&gt;&lt;a href=&#34;#一、Java常用类&#34; class=&#34;headerlink&#34; title=&#34;一、Java常用类&#34;&gt;&lt;/a&gt;一、Java常用类&lt;/h3&gt;&lt;h4 id=&#34;1、Java的八大基本数据类型&#34;&gt;&lt;a href=&#34;#1、Java的八大基本数据类型&#34; class=&#34;headerlink&#34; title=&#34;1、Java的八大基本数据类型&#34;&gt;&lt;/a&gt;1、Java的八大基本数据类型&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;整数：byte、short、int、long&lt;/li&gt;
+&lt;li&gt;浮点数：float、double&lt;/li&gt;
+&lt;li&gt;布尔：boolearn&lt;/li&gt;
+&lt;li&gt;字符：char&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、ArrayList和linkedlist的区别&#34;&gt;&lt;a href=&#34;#2、ArrayList和linkedlist的区别&#34; class=&#34;headerlink&#34; title=&#34;2、ArrayList和linkedlist的区别&#34;&gt;&lt;/a&gt;2、ArrayList和linkedlist的区别&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;都是线程不安全的&lt;/li&gt;
+&lt;li&gt;底层数据结构：ArrayList使用的是Object数组；linkedlist底层使用的是双向循环链表&lt;/li&gt;
+&lt;li&gt;插入删除：ArrayList采用的是数组存储，因此在插入和删除时的时间复杂度会受到元素位置的影响。而LinkedList则近似于O(1)&lt;/li&gt;
+&lt;li&gt;是否支持快速随机访问：LinkedList不支持，而ArrayList则可以通过元素的序号快速获取元素对象。&lt;/li&gt;
+&lt;li&gt;内存空间占用：ArrayList的空间浪费主要体现在list列表的末尾需要预留一定的冗余空间。而LinkedList则是需要额外存储直接后继与直接前驱。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;3、ArrayList扩容&#34;&gt;&lt;a href=&#34;#3、ArrayList扩容&#34; class=&#34;headerlink&#34; title=&#34;3、ArrayList扩容&#34;&gt;&lt;/a&gt;3、ArrayList扩容&lt;/h4&gt;&lt;p&gt;以&lt;strong&gt;无参构造方法&lt;/strong&gt;创建一个ArrayList时，是不会分配容量的，默认是&lt;strong&gt;0&lt;/strong&gt;，只有在向ArrayList中add()第一个元素时，容量会得到扩容，默认为&lt;strong&gt;10&lt;/strong&gt;，然后继续向里面添加元素，到&lt;strong&gt;11个&lt;/strong&gt;元素时，此时已经超出当前容量，会进行扩容，10+10&amp;#x2F;2&amp;#x3D;15，当old容量为偶数时，新容量刚好就是old容量的1.5倍，奇数则会损失0.5的小数点。&lt;/p&gt;
+&lt;h4 id=&#34;4、HashMap-的-7-种遍历方式与性能分析&#34;&gt;&lt;a href=&#34;#4、HashMap-的-7-种遍历方式与性能分析&#34; class=&#34;headerlink&#34; title=&#34;4、HashMap 的 7 种遍历方式与性能分析&#34;&gt;&lt;/a&gt;4、HashMap 的 7 种遍历方式与性能分析&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;迭代器:Iterator EntrySet、Iterator KeySet&lt;/li&gt;
+&lt;li&gt;For Each:For EntrySet， For KeySet&lt;/li&gt;
+&lt;li&gt;Lambda表达式&lt;/li&gt;
+&lt;li&gt;Streams API&lt;/li&gt;
+&lt;li&gt;多线程Streams API&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;EntrySet的遍历性能最好，因为KeySet在循环时使用了map.get(key)，相当于又遍历了以便Map集合去查询Key所对应的值。在使用迭代器或者for循环时，其实已经遍历了一遍Map集合了。EntrySet只需要遍历一遍，然后就将对象的Key和Value都存放在了Entry对象中，因此再获取Key和Value就无需再遍历Map集合了&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;EntrySet&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre class=&#34;language-java&#34; data-language=&#34;java&#34;&gt;&lt;code class=&#34;language-java&#34;&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;// 遍历*&lt;/span&gt;
+   &lt;span class=&#34;token class-name&#34;&gt;Iterator&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;Entry&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Integer&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt; iterator &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;entrySet&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;iterator&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+   &lt;span class=&#34;token keyword&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;iterator&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;hasNext&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+     &lt;span class=&#34;token class-name&#34;&gt;Map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;Entry&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Integer&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt; entry &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; iterator&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+     &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;entry&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getKey&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+     &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;entry&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getValue&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+   &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;KeySet：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class=&#34;language-java&#34; data-language=&#34;java&#34;&gt;&lt;code class=&#34;language-java&#34;&gt;&lt;span class=&#34;token class-name&#34;&gt;Iterator&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Integer&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt; iterator &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;keySet&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;iterator&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;iterator&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;hasNext&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+      &lt;span class=&#34;token class-name&#34;&gt;Integer&lt;/span&gt; key &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; iterator&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;key&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;key&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;5、hashmap是否是线程安全的，常见的线程安全的集合&#34;&gt;&lt;a href=&#34;#5、hashmap是否是线程安全的，常见的线程安全的集合&#34; class=&#34;headerlink&#34; title=&#34;5、hashmap是否是线程安全的，常见的线程安全的集合&#34;&gt;&lt;/a&gt;5、hashmap是否是线程安全的，常见的线程安全的集合&lt;/h4&gt;&lt;p&gt;hashmap是线程不安全的，多线程下进行扩容会导致死循环，jdk1.7中hashmap的链表使用头插法插入元素，扩容时可能会导致环形链表的出现形成死循环，因此jdk1.8改为了尾插法，但是多线程的put操作，可能会导致元素的丢失问题。&lt;/p&gt;
+&lt;p&gt;常见的线程安全的集合：&lt;/p&gt;
+&lt;p&gt;hashtable，concurrentHashMap，vector、Stack。&lt;/p&gt;
+&lt;h4 id=&#34;6、HashMap的底层原理&#34;&gt;&lt;a href=&#34;#6、HashMap的底层原理&#34; class=&#34;headerlink&#34; title=&#34;6、HashMap的底层原理&#34;&gt;&lt;/a&gt;6、HashMap的底层原理&lt;/h4&gt;&lt;p&gt;在JDK1.8之前hashMap的底层数据结构是由数组+链表组成的，数组是HashMap的主体部分，而链表是为了解决哈希冲突而存在的。在JDK1.8中，是由数组+链表+红黑树组成的，当链表过长时，会严重影响HashMap的性能，因为链表的搜索时间复杂度是O（n），而红黑树则是O(logN)。因此，JDK1.8中引入了红黑树，在链表达到一定条件是会转化为红黑树。这个条件就是：当链表长度大于8，就会去检查数组的长度是否大于64，如果数组长度小于64，则进行数组的扩容，否则就会将链表转化为红黑树，以减少搜索时间。HashMap中采用的解决hash冲突的办法是链地址法。将哈希值相同的元素构成一个单链表，并将单链表的头结点存放在哈希表的第i个单元中。HashMap的默认加载因子是0.75，初始化数组的长度默认值是16，threshold是hashmap所能容纳的最大键值对数量&amp;#x3D;加载因子*数组长度，当容量达到这个值时，数组就会进行扩容，扩大为原来的两倍，并将原来的对象放入新数组中。这里jdk1.8进行了适当的优化，无需再重新计算hash值，元素的位置在原来的位置或者是原来的位置+oldCap。&lt;/p&gt;
+&lt;p&gt;jdk1.8之前，hashmap的插入方法是头插法，新插入的元素会插入到链表的头部。产生的问题如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;破坏了链表元素的插入顺序，可能不利于某些需要按照插入顺序进行遍历的场景&lt;/li&gt;
+&lt;li&gt;容易形成环形链表的问题：由于头插法需要修改链表头，在多线程环境下可能会引起链表环形的问题，使得链表遍历时出现死循环&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;7、ConCurrentHashMap底层原理&#34;&gt;&lt;a href=&#34;#7、ConCurrentHashMap底层原理&#34; class=&#34;headerlink&#34; title=&#34;7、ConCurrentHashMap底层原理&#34;&gt;&lt;/a&gt;7、ConCurrentHashMap底层原理&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;ConCurrentHashMap在HashMap的基础上加上的锁的机制，因此是线程安全的。在JDK1.7中，ConCurrentHashMap是由Segment分段数组结构和HashEntry数组结构组成的。即ConCurrentHashMap把哈希表分为了多个Segment小数组，而每个Segment就是一个类似于hashmap的结构，每一个hashmap的内部可以进行扩容，而segment的个数一旦初始化就不能再改变，默认值是16，也就可以认为其默认支持16个线程的并发。&lt;/li&gt;
+&lt;li&gt;在jdk1.8中，其数据结构变成了数组+链表&amp;#x2F;红黑树的组合，当链表冲突达到一定长度时，会转化为红黑树。在锁的实现上，抛弃了原本的Segment分段锁，采用了CAS + synchronized 对链表的头结点或红黑树的根节点进行加锁，将锁的级别控制在了更细粒度的级别，大大提高了并发量。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;二、并发编程&#34;&gt;&lt;a href=&#34;#二、并发编程&#34; class=&#34;headerlink&#34; title=&#34;二、并发编程&#34;&gt;&lt;/a&gt;二、并发编程&lt;/h3&gt;&lt;h4 id=&#34;1、volatile关键字&#34;&gt;&lt;a href=&#34;#1、volatile关键字&#34; class=&#34;headerlink&#34; title=&#34;1、volatile关键字&#34;&gt;&lt;/a&gt;1、volatile关键字&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;volatile保证变量对所有线程的可见性，当volatile变量被修改时，新值对所有变量会立即更新。即多线程环境下使用volatile修饰的变量的值一定是最新的。&lt;/li&gt;
+&lt;li&gt;禁止指令重排序&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、synchronized关键字&#34;&gt;&lt;a href=&#34;#2、synchronized关键字&#34; class=&#34;headerlink&#34; title=&#34;2、synchronized关键字&#34;&gt;&lt;/a&gt;2、synchronized关键字&lt;/h4&gt;&lt;p&gt;主要是用于解决多个线程之间访问资源的同步性，可以保证被其修饰的方法或代码块在任意时刻只能有一个线程执行。（悲观锁的思想）&lt;/p&gt;
+&lt;p&gt;修饰实例方法：给当前对象实例加锁，进入同步代码块之前需要获取当前对象实例的锁&lt;/p&gt;
+&lt;p&gt;修饰静态方法：给当前的类加锁，会作用于当前类的所有对象实例。&lt;/p&gt;
+&lt;p&gt;修饰代码块：既可以锁定对象实例，也可以锁定类，以括号中的代码为准&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;synchronized(object)&lt;/code&gt; 表示进入同步代码库前要获得 &lt;strong&gt;给定对象的锁&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;synchronized(类.class)&lt;/code&gt; 表示进入同步代码前要获得 &lt;strong&gt;给定 Class 的锁&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;底层实现：&lt;/strong&gt;主要通过两个指令实现，monitorenter指令指向同步代码块的开始位置，monitorexit指令指向同步代码块的结束位置。在执行monitorenter指令时，线程尝试获取锁也就是获取对象监视器monitor的持有权，对象监视器是由c++实现的，每个对象中都内置了一个对象监视器对象。如果锁的计数器为0，则表示可以被获取，获取后将锁计数器设为1，业务执行完毕后通过monitorexit指令释放锁，将锁的计数器设为0，然后其他线程才可以尝试获取锁。如果获取锁失败，当前线程需要阻塞等待，直到锁被另外一个线程释放为止。&lt;/p&gt;
+&lt;h4 id=&#34;3、乐观锁-与-悲观锁&#34;&gt;&lt;a href=&#34;#3、乐观锁-与-悲观锁&#34; class=&#34;headerlink&#34; title=&#34;3、乐观锁 与 悲观锁&#34;&gt;&lt;/a&gt;3、乐观锁 与 悲观锁&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;悲观锁：&lt;/strong&gt;总是假设最坏的情况，认为资源每次被访问的时候都会出问题（比如共享数据被修改），所以每次在获取资源操作的时候都会上锁，共享资源每次只给一个线程使用，其他线程都会阻塞。高并发场景下会增加系统开销，因为线程阻塞会导致系统的上下文切换。还有可能造成死锁的问题。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;乐观锁：&lt;/strong&gt;乐观锁总是假设最好情况，认为共享资源每次被访问都不会出现问题，线程无需等待，只是在提交修改的时候去验证对应的数据是否被其他线程修改了（&lt;strong&gt;版本号或者CAS算法&lt;/strong&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;使用场景&lt;/strong&gt;：悲观锁适用于：写操作比较多的场景 乐观锁适用于：读操作较多的场景&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;乐观锁的实现：&lt;/strong&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;版本号机制：&lt;/strong&gt;在数据表中加上一个数据版本号的字段，表示数据被修改的次数，要更新数据前读取该版本，更新操作完成，提交更新时再次读取版本号的值，与之前的值相等才更新。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CAS算法：&lt;/strong&gt;Compare And Swap（比较与交换）思想：使用一个预期值和要更新的变量值进行比较，两值相等才会进行更新。CAS 是一个原子操作，底层依赖于一条 CPU 的原子指令。乐观锁产生的问题&lt;ol&gt;
+&lt;li&gt;ABA问题：初次读取值为A，要更新时再检查依然是A，但是这个过程中被改为了B，又重新改为了A。&lt;/li&gt;
+&lt;li&gt;CAS自旋操作：就是执行不成功就一直循环执行直到成功为止，如果长时间循环，会对CPU带来较大的开销&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;4、线程死锁&#34;&gt;&lt;a href=&#34;#4、线程死锁&#34; class=&#34;headerlink&#34; title=&#34;4、线程死锁&#34;&gt;&lt;/a&gt;4、线程死锁&lt;/h4&gt;&lt;p&gt;多个线程同时被阻塞，产生死锁的四个必要条件：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;互斥条件，该资源在任意一个时刻只能由一个线程占用&lt;/li&gt;
+&lt;li&gt;请求与保持：一个线程因为请求资源被阻塞时，不会去是释放已经占用的资源&lt;/li&gt;
+&lt;li&gt;不剥夺条件：在线程未主动释放资源之前，不能被其他线程强行剥夺，只能使用完毕自行释放&lt;/li&gt;
+&lt;li&gt;循环等待：若干线程在等待资源时形成了首尾相接的情况&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;预防死锁：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;破坏互斥条件：一次性申请所有资源&lt;/li&gt;
+&lt;li&gt;破坏不剥夺条件：占用部分资源的线程进一步申请资源时如果被阻塞，就主动释放它所占用的资源&lt;/li&gt;
+&lt;li&gt;按序申请资源，破坏循环等待条件&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;避免死锁：&lt;/p&gt;
+&lt;p&gt;借助算法，如银行家算法等对资源分配进行计算评估，使其进入安全状态。&lt;/p&gt;
+&lt;p&gt;还有哪些关键字&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20231225103712047.png&#34; alt=&#34;image-20231225103712047&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;5、说说线程的生命周期和状态&#34;&gt;&lt;a href=&#34;#5、说说线程的生命周期和状态&#34; class=&#34;headerlink&#34; title=&#34;5、说说线程的生命周期和状态?&#34;&gt;&lt;/a&gt;5、说说线程的生命周期和状态?&lt;/h4&gt;&lt;p&gt;New:初始状态，线程被创建之后但没有被调用Start()&lt;/p&gt;
+&lt;p&gt;RUNNABLE:运行状态，线程被调用了Start()等待运行的状态。&lt;/p&gt;
+&lt;p&gt;​	在操作系统层面是有：READY和Running状态的区分，但是在JVM层面只能看到RUNNABLE状态&lt;/p&gt;
+&lt;p&gt;BLOCK:阻塞状态，需要等待锁释放&lt;/p&gt;
+&lt;p&gt;WAITING:等待状态，需要其他线程通知或中断&lt;/p&gt;
+&lt;p&gt;TIME_WAITING:超时等待状态，可以在指定的时间后自行返回而不是像WAITING那样一直等待&lt;/p&gt;
+&lt;p&gt;TERMINATED：终止状态，表示该线程运行完毕&lt;/p&gt;
+&lt;h4 id=&#34;6、线程的上下文切换&#34;&gt;&lt;a href=&#34;#6、线程的上下文切换&#34; class=&#34;headerlink&#34; title=&#34;6、线程的上下文切换&#34;&gt;&lt;/a&gt;6、线程的上下文切换&lt;/h4&gt;&lt;p&gt;每个线程在执行过程中，会有自己的运行条件和状态(也称为上下文)，当出现如下情况时，线程会从占用CPU的状态退出。主动让出CPU，比如调用了sleep、wait等，时间片用完、或者请求 IO，线程被阻塞。然后就会发生线程切换，需要保存当前线程的上下文，用于线程下次占用CPU的时候恢复线程。并加载下一个将要占用CPU的线程的上下文。如果切换频繁就会造成系统的整体效率低下&lt;/p&gt;
+&lt;h4 id=&#34;7、线程池的核心参数：&#34;&gt;&lt;a href=&#34;#7、线程池的核心参数：&#34; class=&#34;headerlink&#34; title=&#34;7、线程池的核心参数：&#34;&gt;&lt;/a&gt;7、线程池的核心参数：&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;corePoolSize：核心线程大小，线程池一直运行，核心线程就不会停止&lt;/li&gt;
+&lt;li&gt;maximumPoolSize：线程池最大线程数量，&lt;/li&gt;
+&lt;li&gt;keepAliveTime：非核心线程的心跳时间，在该时间内没有运行任务，就会消亡&lt;/li&gt;
+&lt;li&gt;workQueue：新任务来的时候判断当前运行的线程数量是否达到核心线程数，如果达到，任务就会被存放到阻塞队列。&lt;/li&gt;
+&lt;li&gt;unit：keepAliveTime的时间单位&lt;/li&gt;
+&lt;li&gt;ThreadFactory：线程工厂，创建新线程会用到&lt;/li&gt;
+&lt;li&gt;defaultHandler：饱和策略。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;8、Java-实现并发的几种方法&#34;&gt;&lt;a href=&#34;#8、Java-实现并发的几种方法&#34; class=&#34;headerlink&#34; title=&#34;8、Java 实现并发的几种方法&#34;&gt;&lt;/a&gt;8、Java 实现并发的几种方法&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;synchronized关键字&lt;/li&gt;
+&lt;li&gt;Volatile关键字&lt;/li&gt;
+&lt;li&gt;实现Runnable接口创建线程&lt;/li&gt;
+&lt;li&gt;继承Thread类创建线程&lt;/li&gt;
+&lt;li&gt;线程池&lt;/li&gt;
+&lt;li&gt;stream流也可以&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;三、JVM&#34;&gt;&lt;a href=&#34;#三、JVM&#34; class=&#34;headerlink&#34; title=&#34;三、JVM&#34;&gt;&lt;/a&gt;三、JVM&lt;/h3&gt;&lt;h4 id=&#34;1、JVM内存分区模型&#34;&gt;&lt;a href=&#34;#1、JVM内存分区模型&#34; class=&#34;headerlink&#34; title=&#34;1、JVM内存分区模型&#34;&gt;&lt;/a&gt;1、JVM内存分区模型&lt;/h4&gt;&lt;p&gt;主要分为以下几个区域：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;程序计数器&lt;/strong&gt;：每个线程都有自己的程序计数器，用于指示当前线程执行的字节码指令的行号，分支、循环、跳转、异常处理等基础功能都依赖这个指示器完成。每个线程都有一个独立的程序计数器，确保线程切换后能恢复到正确的执行位置。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;虚拟机栈&lt;/strong&gt;：也称为Java方法栈，用于存储方法执行时的局部变量表、操作数栈、动态链接、方法出口等信息。每个线程在执行一个方法时，都会为该方法分配一个栈桢，并将其压入虚拟机栈，当方法执行完毕后，虚拟机会将其出栈。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;本地方法栈&lt;/strong&gt;：与虚拟机栈类似，用于存储本地方法的执行信息&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;堆&lt;/strong&gt;：用于存储对象实例，是JVM中最大的一块内存区域。堆是被所有线程共享的，当创建一个新对象时，对象实例存储在堆中，堆中存储的对象实例都有一个标记用于指示对象是否存活。垃圾回收器会周期性地回收那些没有被标记为存活的对象。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;方法区&lt;/strong&gt;：用于存储已被虚拟机加载的类信息、常量、静态变量、即编译器编译后的代码等数据&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;运行时常量池&lt;/strong&gt;：是方法区的一部分，用于存储编译期间生成的各种字面量和符号引用的常量池。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、JVM垃圾回收算法&#34;&gt;&lt;a href=&#34;#2、JVM垃圾回收算法&#34; class=&#34;headerlink&#34; title=&#34;2、JVM垃圾回收算法&#34;&gt;&lt;/a&gt;2、JVM垃圾回收算法&lt;/h4&gt;&lt;p&gt;常见的垃圾回收算法有以下几种类型：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;标记——清除算法：&lt;/strong&gt;分为标记和清除两个阶段。标记阶段遍历所有活动对象并打上标记，清除阶段将未被标记的对象删除。优点是不需要连续的内存空间，缺点是清除后可能会产生内存碎片&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;复制算法：&lt;/strong&gt;将可用内存分为两块，只使用其中一块，当一块满了，将存活对象复制到另一块未被使用的空间，然后清除使用的那块。优点是：简单高效，不会产生内存碎片。缺点是可用内存缩小为原来的一半。不适合老年代：存活对象数量比较大，复制性能很差。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;标记——整理算法：&lt;/strong&gt;与标记——清除类似，在标记阶段与其相似，但是在清除阶段将存活对象整理到内存的一端，然后清除端边界外的所有对象。优点是不会产生内存碎片，缺点是比较慢。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分代收集算法：&lt;/strong&gt;当前虚拟机的垃圾收集都采用分代收集算法，根据对象存活的时间将内存分为几个区域，每个区域采用不同的回收策略。新生代、老年代分别采取不同的回收算法。&lt;ol&gt;
+&lt;li&gt;新生代：分为一个Eden区和两个Survivor 区，当Eden区没有空间时，虚拟机将发起一次Minor GC（只对新生代进行垃圾收集），执行完后，如果对象能够存在Eden区的话，就会直接在Eden分配内存。对象每在Survior区熬过一次，年龄标志就增长1，增长到一定程度就会晋升到老年代中，这个值默认是15&lt;/li&gt;
+&lt;li&gt;大对象和长期存活的对象将会进入老年代，Old GC，只对老年代进行垃圾收集&lt;/li&gt;
+&lt;li&gt;Mixed GC：混合收集&lt;/li&gt;
+&lt;li&gt;Full GC，收集整个Java堆和方法区&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;3、双亲委派模式&#34;&gt;&lt;a href=&#34;#3、双亲委派模式&#34; class=&#34;headerlink&#34; title=&#34;3、双亲委派模式&#34;&gt;&lt;/a&gt;3、双亲委派模式&lt;/h4&gt;&lt;p&gt;是Java类加载器在加载类时所采用的的一种设计模式。这种模式的核心思想是：当一个类加载器收到类加载请求时，首先不会自己尝试加载，而是将请求委派给它的父类加载器。依次递归，指导最顶层的启动类加载器；如果父类加载器无法加载该类，子类才尝试自己加载。&lt;/p&gt;
+&lt;p&gt;主要作用：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;避免类的重复加载&lt;/strong&gt;：通过委派给父类加载器，同一个类不会被多个类加载器重复加载。有助于节省内存资源&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;保护Java核心类库&lt;/strong&gt;：由于双亲委派制的存在，用户自定义的类加载器无法直接加载Java核心类库，java.lang.String等。能够确保Java核心类库的安全性。例如当我们自定义了一个java.lang包，并且定义了一个类String，一旦运行代码，需要加载这个类的时候，就会向上一层层的委派到顶层的&lt;strong&gt;启动类加载器&lt;/strong&gt;，顶层的引导类加载器会加载Java核心类库中的java.lang.String，该类中没有main方法，因此程序提示在&lt;strong&gt;java.lang.String类中找不到main方法&lt;/strong&gt;&lt;ol&gt;
+&lt;li&gt;&lt;img src=&#34;https://ask.qcloudimg.com/http-save/yehe-2219188/k9iysve4gq.png&#34; alt=&#34;img&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;维护类加载器的层次结构&lt;/strong&gt;：双亲委派模式使得各级类加载器可以按照⼀定的层次结构来组织和管理。这有助于 降低类加载器的复杂性，简化类加载过程。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;4、JVM-的垃圾回收机制&#34;&gt;&lt;a href=&#34;#4、JVM-的垃圾回收机制&#34; class=&#34;headerlink&#34; title=&#34;4、JVM 的垃圾回收机制&#34;&gt;&lt;/a&gt;4、JVM 的垃圾回收机制&lt;/h4&gt;&lt;p&gt;在Java中，程序员不需要显示的区释放一个对象的内存，而是由虚拟机自行执行。想要知道JVM的垃圾回收机制，首先我们得知道JVM是如何给一个对象分配内存的。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;大多数情况下，对象会在新生代中的Eden区进行分配内存，当Eden区没有足够空间时，会进行一次Minor GC。此时会将Eden区域的内容转移到Survivor中去，如果该空间不足，会通过分配担保机制将新生代的对象提前转移到老年代中。&lt;/li&gt;
+&lt;li&gt;大对象也会直接进入老年代中，如字符串、数组等&lt;/li&gt;
+&lt;li&gt;长期存活的对象将进入老年代。虚拟机会给每个对象分配一个Age计数器，初始在Eden区为0，经过一次Minor GC还存活，并且可以被Survivor区域所容纳，就会移动到Survivor区，Age计数器加一。每存活过一次Minor GC，Age计数器就会 + 1。到达15时，会转移到老年代中。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;如何判断是否需要进行回收：&lt;ol&gt;
+&lt;li&gt;进行可达性分析：通过一系列的称为 &lt;strong&gt;“GC Roots”&lt;/strong&gt; 的对象作为起点，从这些节点开始向下搜索，节点所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连的话，则证明此对象是不可用的，需要被回收。&lt;/li&gt;
+&lt;li&gt;然后通过一些垃圾回收算法进行垃圾回收。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;5、新生代和老生代怎么区分的&#34;&gt;&lt;a href=&#34;#5、新生代和老生代怎么区分的&#34; class=&#34;headerlink&#34; title=&#34;5、新生代和老生代怎么区分的&#34;&gt;&lt;/a&gt;5、新生代和老生代怎么区分的&lt;/h4&gt;&lt;h3 id=&#34;四、计算机网络&#34;&gt;&lt;a href=&#34;#四、计算机网络&#34; class=&#34;headerlink&#34; title=&#34;四、计算机网络&#34;&gt;&lt;/a&gt;四、计算机网络&lt;/h3&gt;&lt;h4 id=&#34;TCP连接的三次握手&#34;&gt;&lt;a href=&#34;#TCP连接的三次握手&#34; class=&#34;headerlink&#34; title=&#34;TCP连接的三次握手&#34;&gt;&lt;/a&gt;TCP连接的三次握手&lt;/h4&gt;&lt;p&gt;最开始，客户端和服务端都处于&lt;code&gt;Close&lt;/code&gt;状态，先是服务端主动监听某个端口，进入&lt;code&gt;Listen&lt;/code&gt;状态。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;第一次握手，由客户端向服务端发送建立连接的请求，向服务端发送一个同步报文，同时初始化一个随机数作为&lt;strong&gt;客户端的初始序列号seq&amp;#x3D;x&lt;/strong&gt;，并且进入SYN_SENT状态，等待服务器的确认。服务端接到请求之后，可以确认自己的接受能力和客户端的发送能力正常。&lt;/li&gt;
+&lt;li&gt;第二次握手，服务端受到连接请求报文后，如果同意建立连接，则向客户端发送同步确认报文，确认号ack&amp;#x3D;x+1，同时初始化一个随机数作为&lt;strong&gt;服务端的初始序列号seq&amp;#x3D;y&lt;/strong&gt;，此时服务器进入SYN_RECV状态。客户端收到这次报文后，能够确认自己的收、发能力，以及服务端的收、发能力都正常。&lt;/li&gt;
+&lt;li&gt;客户端收到服务端的确认之后，向服务端发送一个确认报文，确认号ack&amp;#x3D;y+1，序列号seq &amp;#x3D; x+1，服务端接收到这次报文之后能够确认自己的发送能力和客户端的接收能力都正常，完成三次握手，第三次握手还可以携带数据。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;为什么是三次握手？&#34;&gt;&lt;a href=&#34;#为什么是三次握手？&#34; class=&#34;headerlink&#34; title=&#34;为什么是三次握手？&#34;&gt;&lt;/a&gt;为什么是三次握手？&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;三次握手可以阻止重复历史连接的初始化&lt;/li&gt;
+&lt;li&gt;三次握手才可以同步双方的初始序列号&lt;/li&gt;
+&lt;li&gt;三次握手才可以保证双方均具有接收和发送的能力&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;TCP连接的四次挥手&#34;&gt;&lt;a href=&#34;#TCP连接的四次挥手&#34; class=&#34;headerlink&#34; title=&#34;TCP连接的四次挥手&#34;&gt;&lt;/a&gt;TCP连接的四次挥手&lt;/h4&gt;&lt;p&gt;第一次挥手，客户端向服务端发送连接释放报文FIN，主动关闭连接，同时等待服务端的确认，序列号&amp;#x3D;客户端上次发送报文的最后一个字节的序号+1，确认号是服务端上次发送的报文的最后一个字节的序号+1&lt;/p&gt;
+&lt;p&gt;第二次挥手：服务端接收到连接释放的报文后，立即发出确认报文，序列号等于刚才客户端的确认号，确认号等于刚才客户端的序列号+1。此时TCP处于半关闭状态，服务端还可以继续向客户端发送没有发完的数据，发送完毕后。&lt;/p&gt;
+&lt;p&gt;第三次挥手，服务端向客户端发送连接释放报文FIN，主动关闭连接，同时等待客户端的确认。序列号&amp;#x3D;服务端上次发送报文的最后一个字节的序号+1，与第二次挥手相同，因为这段时间客户端没有发送数据&lt;/p&gt;
+&lt;p&gt;第四次挥手：客户端收到服务端的释放连接报文后，立即发送确认报文，序列号等于&amp;#x3D;上面的确认号+1，确认号&amp;#x3D;上面的序列号+1，服务端进入Close状态。然后客户端进入TIME_WAIT状态，等待2*MSL（最长报文寿命），之后才会进入Close状态。&lt;/p&gt;
+&lt;h5 id=&#34;为什么需要等待2-MSL：&#34;&gt;&lt;a href=&#34;#为什么需要等待2-MSL：&#34; class=&#34;headerlink&#34; title=&#34;为什么需要等待2*MSL：&#34;&gt;&lt;/a&gt;为什么需要等待2*MSL：&lt;/h5&gt;&lt;p&gt;​	确保第四次握手，客户端的确认报文能够到达服务端，从而使服务端正常关闭连接。如果没有正常到达服务端，服务端会超时重传FIN，此时如果客户端已经断开连接，那么就无法响应服务端的请求，服务端无法正常收到确认报文，无法正常关闭连接。2*MSL&amp;#x3D;客户端确认报文1MSL+服务端重传FIN报文1MSL，这样能够确保服务端能够正常关闭。&lt;/p&gt;
+&lt;h3 id=&#34;职业规划&#34;&gt;&lt;a href=&#34;#职业规划&#34; class=&#34;headerlink&#34; title=&#34;职业规划&#34;&gt;&lt;/a&gt;职业规划&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;能在1-2年完全胜任岗位职责，有优秀的产出&lt;/li&gt;
+&lt;li&gt;2-3年成为岗位熟手，自身优秀的同时能带教新人&lt;/li&gt;
+&lt;li&gt;3-5年成为业务骨干或一线经理，能带领小团队协作完成任务&lt;/li&gt;
+&lt;/ul&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>

@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://ooooddddd.github.io</id>
+    <title>橙熟 • Posts by &#34;api开放平台&#34; tag</title>
+    <link href="https://ooooddddd.github.io" />
+    <updated>2024-01-03T11:58:05.000Z</updated>
+    <category term="RabbitMQ" />
+    <category term="blog" />
+    <category term="chatGPT" />
+    <category term="项目" />
+    <category term="Javase" />
+    <category term="MySQL" />
+    <category term="Spring" />
+    <category term="API开放平台" />
+    <category term="点评" />
+    <entry>
+        <id>https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</id>
+        <title>橙-API开放平台相关问题</title>
+        <link rel="alternate" href="https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/"/>
+        <content type="html">&lt;p&gt;基于React + Spring Boot + Dubbo + Gateway的API接口开放调用平台。管理员可以接入并发布接口，可视化各接口调用情况；用户可以开通接口调用权限、浏览接口及在线调试，并通过客户端 SDK 轻松调用接口。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;项目难点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;权限校验，切面注解。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;首先定义一个注解类，该注解允许在方法上定义两种权限规则：&lt;code&gt;anyRole&lt;/code&gt; 表示任意角色通过，&lt;code&gt;mustRole&lt;/code&gt; 表示必须有特定角色才能通过。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;/**
+ * 权限校验
+ * @author zc
+   */
+   @Target(ElementType.METHOD)
+   @Retention(RetentionPolicy.RUNTIME)
+   public @interface AuthCheck &amp;#123;
+
+   /**
+
+    * 有任何一个角色
+      *
+    * @return
+      */
+      String[] anyRole() default &amp;quot;&amp;quot;;
+
+   /**
+
+    * 必须有某个角色
+      *
+    * @return
+      */
+      String mustRole() default &amp;quot;&amp;quot;;
+
+&amp;#125;
+&lt;pre class=&#34;language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;
+2. 然后定义一个拦截器进行权限校验
+
+   &amp;#96;&amp;#96;&amp;#96;java
+   &amp;#x2F;**
+    * 权限校验 AOP
+    *
+    * @author zc
+    *&amp;#x2F;
+   @Aspect
+   @Component
+   public class AuthInterceptor &amp;#123;
+   
+       @Resource
+       private UserService userService;
+   
+       &amp;#x2F;**
+        * 执行拦截
+        *
+        * @param joinPoint
+        * @param authCheck
+        * @return
+        *&amp;#x2F;
+       @Around(&amp;quot;@annotation(authCheck)&amp;quot;)
+       public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable &amp;#123;
+           List&amp;lt;String&amp;gt; anyRole &amp;#x3D; Arrays.stream(authCheck.anyRole()).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+           String mustRole &amp;#x3D; authCheck.mustRole();
+           RequestAttributes requestAttributes &amp;#x3D; RequestContextHolder.currentRequestAttributes();
+           HttpServletRequest request &amp;#x3D; ((ServletRequestAttributes) requestAttributes).getRequest();
+           &amp;#x2F;&amp;#x2F; 当前登录用户
+           User user &amp;#x3D; userService.getLoginUser(request);
+           &amp;#x2F;&amp;#x2F; 拥有任意权限即通过
+           if (CollectionUtils.isNotEmpty(anyRole)) &amp;#123;
+               String userRole &amp;#x3D; user.getUserRole();
+               if (!anyRole.contains(userRole)) &amp;#123;
+                   throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+               &amp;#125;
+           &amp;#125;
+           &amp;#x2F;&amp;#x2F; 必须有所有权限才通过
+           if (StringUtils.isNotBlank(mustRole)) &amp;#123;
+               String userRole &amp;#x3D; user.getUserRole();
+               if (!mustRole.equals(userRole)) &amp;#123;
+                   throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+               &amp;#125;
+           &amp;#125;
+           &amp;#x2F;&amp;#x2F; 通过权限校验，放行
+           return joinPoint.proceed();
+       &amp;#125;
+   &amp;#125;&lt;/code&gt;&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;最后在需要进行权限校验的方法上添加&lt;code&gt;@AuthCheck&lt;/code&gt;注解即可&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20240102135217501.png&#34; alt=&#34;image-20240102135217501&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;网关设计&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;1、为什么要做这个项目：&#34;&gt;&lt;a href=&#34;#1、为什么要做这个项目：&#34; class=&#34;headerlink&#34; title=&#34;1、为什么要做这个项目：&#34;&gt;&lt;/a&gt;1、为什么要做这个项目：&lt;/h4&gt;&lt;p&gt;尽可能地帮助和服务更多的用户和开发者，让他们可以方便快捷地获取他们想要的信息和功能。接口开放平台可以帮助开发者快速接入一些常用的服务，从而提高他们的开发效率，比如天气服务、随机头像、心灵鸡汤等，他们是一些应用或者小程序中常见的功能，所以提供这些接口可以帮助开发者更加方便地实现这些功能。这些接口也可以让用户在使用应用时获得更加全面的功能和服务，从而提高用户体验。所以我认为接口开放平台是一个有意义的项目，可以为用户和开发者带来更多的便利和价值。&lt;/p&gt;
+&lt;p&gt;表结构：用户表（user）、接口信息表（interfaceInfo）、用户接口表（userInterface，用于记录用户对接口是否有调用权限，是否有剩余调用次数等）、土味情话表（用于提供随机土味情话服务的接口需要的表）&lt;/p&gt;
+&lt;h4 id=&#34;2、项目架构设计&#34;&gt;&lt;a href=&#34;#2、项目架构设计&#34; class=&#34;headerlink&#34; title=&#34;2、项目架构设计&#34;&gt;&lt;/a&gt;2、项目架构设计&lt;/h4&gt;&lt;p&gt;采用了前后端分离的架构设计。前端使用Ant-design-pro框架快速开发，然后使用Nginx进行部署，通过Nginx反向代理将请求转发到后端Web项目，因为项目刚刚上线，用户量较少，暂时采用了单机部署的模式，未来可能采取&lt;strong&gt;水平扩容&lt;/strong&gt;的方式，增加多台节点，通过nginx的&lt;strong&gt;负载均衡&lt;/strong&gt;，将请求平均的分发到多个节点上，以支撑更高的并发量。我的web项目使用Spring Boot开发，并且连接到到了 Mysql数据库 和 Redis，数据库主要用来存储用户和接口的相关信息，通过Redis实现了分布式session，因为考虑到未来要是用分布式架构，可以避免使用tomcat保存session出现用户登录失效的问题。&lt;/p&gt;
+&lt;h5 id=&#34;反向代理与正向代理&#34;&gt;&lt;a href=&#34;#反向代理与正向代理&#34; class=&#34;headerlink&#34; title=&#34;反向代理与正向代理&#34;&gt;&lt;/a&gt;反向代理与正向代理&lt;/h5&gt;&lt;p&gt;反向代理：客户端将请求发送到反向代理服务器，由反向代理服务器去选择目标服务器，获取数据后再返回给客户端。对外暴露的是反向代理服务器地址，隐藏了真实服务器 IP 地址。反向代理“代理”的是目标服务器。&lt;/p&gt;
+&lt;p&gt;正向代理：顺着请求的方向进行的代理，即代理服务器它是由你配置为你服务，去请求目标服务器地址。类似于科学上网&lt;/p&gt;
+&lt;h5 id=&#34;负载均衡&#34;&gt;&lt;a href=&#34;#负载均衡&#34; class=&#34;headerlink&#34; title=&#34;负载均衡&#34;&gt;&lt;/a&gt;负载均衡&lt;/h5&gt;&lt;p&gt;常见的负载均衡算法：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;随机法，如果没有配置权重的话，所有服务器被访问到的概率是相等的。权重越高，被访问到的概率也越高。适合服务器性能接近的集群，其中每个服务器承载相同的负载，缺点：部分机器在一段时间之内无法被访问到。&lt;/li&gt;
+&lt;li&gt;轮询法：挨个服务器进行访问，当然，也可以设置权重。&lt;/li&gt;
+&lt;li&gt;一致性Hash法：相同参数的请求总是发送到同一台服务器进行处理，比如同个IP的请求&lt;/li&gt;
+&lt;li&gt;最小连接法：遍历服务器节点列表，选取活动连接数（可以理解为正在处理的请求数）最小的一台服务器来响应当前的请求。&lt;/li&gt;
+&lt;li&gt;两次随机法：两次随机法在随机法的基础上多了一次随机，多选出一台服务器，然后根据两台服务器的负载情况，从中选择一台最合适的&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;水平扩容&#34;&gt;&lt;a href=&#34;#水平扩容&#34; class=&#34;headerlink&#34; title=&#34;水平扩容&#34;&gt;&lt;/a&gt;水平扩容&lt;/h5&gt;&lt;p&gt;垂直扩容：增加自身的容量。&lt;/p&gt;
+&lt;p&gt;水平扩容：增加节点的方式来增加整个系统的容量。垂直扩容比较方便，但是会受制于机器的内存、性能等。所以到了一定阶段肯定要进行水平扩容。&lt;/p&gt;
+&lt;h4 id=&#34;3、技术选型及原因&#34;&gt;&lt;a href=&#34;#3、技术选型及原因&#34; class=&#34;headerlink&#34; title=&#34;3、技术选型及原因&#34;&gt;&lt;/a&gt;3、技术选型及原因&lt;/h4&gt;&lt;p&gt;使用SpringBoot是因为通过&lt;strong&gt;自动装配&lt;/strong&gt;能够提高项目的开发效率，能够很好地整合Spring的相关服务。使用Mysql的原因是考虑到未来打算上用户充值交易功能，限制调用次数等场景需要使用事务来保证数据的&lt;strong&gt;完整性和一致性&lt;/strong&gt;。使用Redis是因为可以用来实现分布式session、锁、缓存等功能。因为Redis是一个单独的中间件，不同客户端可以向同一个Redis或者集群中存放session&amp;#x2F;加锁，能够保证资源在分布式服务下都可见。由于Redis是单线程的，同时也支持Lua脚本，可以保证并发安全的问题，也能够轻松实现分布式锁的功能。&lt;/p&gt;
+&lt;h5 id=&#34;自动装配&#34;&gt;&lt;a href=&#34;#自动装配&#34; class=&#34;headerlink&#34; title=&#34;自动装配&#34;&gt;&lt;/a&gt;自动装配&lt;/h5&gt;&lt;p&gt;&lt;strong&gt;什么是自动装配：&lt;/strong&gt;在没有SpringBoot的情况下，如果我们需要引入第三方依赖，需要手动配置，非常麻烦。但是，在SpringBoot中，我们直接引入一个 starter 即可。比如想要使用redis的话，直接在项目中引入对应的starter，然后在application.yml中配置即可。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如何实现自动装配与按需加载的：&lt;/strong&gt;核心注解：SpringBootApplication注解，是@EnableAutoConfiguration、（启用SpringBoot的自动装配机制）@Configuration（允许上下文中注册额外的bean或者导入其他配置类）、@ComponentScan（扫描被@Compent、@Service、@Controller注解修饰的bean），注解默认会扫描启动类所在的包下的所有类，也可以自定义不扫描某些bean。&lt;/p&gt;
+&lt;p&gt;自动装配核心功能的实现实际是通过 &lt;code&gt;AutoConfigurationImportSelector&lt;/code&gt;类实现的，该类实现&lt;code&gt;ImportSelector&lt;/code&gt;接口，同时实现接口中的&lt;code&gt;selectImports&lt;/code&gt;方法，该方法&lt;strong&gt;获取所有符合条件的类的全限定类名，这些类需要被加载到 IoC 容器中&lt;/strong&gt;。主要是通过读取&lt;code&gt;META-INF/spring.factories&lt;/code&gt;来获取需要自动装配的类的。同时根据&lt;code&gt;@ConditionalOnXXX&lt;/code&gt;注解来实现按需加载&lt;/p&gt;
+&lt;p&gt;项目中的SDK利用上述功能开发成了一个Starter，首先引入Spring Boot 相关依赖，然后创建一个类&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20231221102811685.png&#34; alt=&#34;image-20231221102811685&#34;&gt;&lt;/p&gt;
+&lt;p&gt;最后在resources&amp;#x2F;META-INF目录下创建一个spring.factories文件，引入该类&lt;/p&gt;
+&lt;pre class=&#34;language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;org.springframework.boot.autoconfigure.EnableAutoConfiguration&amp;#x3D;com.zc.orangeapiclientsdk.OrangeApiClientConfig&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此时，该类就被做成了一个Starter，可以给其他开发者调用。&lt;/p&gt;
+&lt;h5 id=&#34;共享session&#34;&gt;&lt;a href=&#34;#共享session&#34; class=&#34;headerlink&#34; title=&#34;共享session&#34;&gt;&lt;/a&gt;共享session&lt;/h5&gt;&lt;p&gt;在分布式系统中，存在多台服务器，如果用户登陆信息存储在服务器1中，第二次访问时用户被分配到了服务器2，此时就需要重新登陆。因此引入Redis 对这些 Session 信息进行统一的存储和管理，这样无论请求发送到那台服务器，服务器都会去同一个 Redis 获取相关的 Session 信息，这样就解决了分布式系统下 Session 存储的问题。&lt;/p&gt;
+&lt;h4 id=&#34;4、开发流程&#34;&gt;&lt;a href=&#34;#4、开发流程&#34; class=&#34;headerlink&#34; title=&#34;4、开发流程&#34;&gt;&lt;/a&gt;4、开发流程&lt;/h4&gt;&lt;p&gt;首选参考了一些已有的产品，根据这些产品，总结出比较好的功能点，再结合自己想要实现的一些特色功能，做了一个项目的整体设计，然后再进行技术选型。&lt;/p&gt;
+&lt;h4 id=&#34;5、项目核心：网关&#34;&gt;&lt;a href=&#34;#5、项目核心：网关&#34; class=&#34;headerlink&#34; title=&#34;5、项目核心：网关&#34;&gt;&lt;/a&gt;5、项目核心：网关&lt;/h4&gt;&lt;p&gt;本平台的关键点就在于提供接口服务，要保证接口的高可用性和稳定性，所有的接口服务项目独立进行部署，隐藏其真实的接口地址及调用，调用接口服务的请求都必须经过网关进行统一鉴权、流量控制（路由转发）、流量染色、负载均衡，接口保护、统一日志等，之后再将请求转发到真实的接口地址，防止接口地址被恶意调用，盗刷等。&lt;/p&gt;
+&lt;p&gt;在本项目中，使用API网关做了什么：&lt;/p&gt;
+&lt;p&gt;1、统一鉴权：应用API签名认证算法校验用户请求的合法性。&lt;/p&gt;
+&lt;p&gt;2、公共业务逻辑：对每个接口的调用进行集中的统计。&lt;/p&gt;
+&lt;p&gt;3、路由转发：前端发送请求到API网关，通过网关转发到实际的接口地址&lt;/p&gt;
+&lt;p&gt;4、流量染色：给经过网关的请求加上特定的请求头参数，便于让API服务确定来源及合法性。&lt;/p&gt;
+&lt;h4 id=&#34;6、API签名认证算法&#34;&gt;&lt;a href=&#34;#6、API签名认证算法&#34; class=&#34;headerlink&#34; title=&#34;6、API签名认证算法&#34;&gt;&lt;/a&gt;6、API签名认证算法&lt;/h4&gt;&lt;p&gt;该算法是用于验证API请求的合法行和完整性的安全机制。具体实现：&lt;/p&gt;
+&lt;p&gt;1、生成密钥对，给每个用户生成唯一的密钥对(ak,sk)，并保存到数据库中，仅用户本人可查看自己的密钥对。&lt;/p&gt;
+&lt;p&gt;2、请求方生成签名：请求方（客户端）使用sk对请求参数和数据进行签名，签名内容包括请求参数、时间戳、随机数等，签名加密算法此处选择MD5&lt;/p&gt;
+&lt;p&gt;3、请求方发送请求：请求方将请求参数、签名、用户标识一起发送给API提供者，通常会把签名信息放到请求头参数中传递，注意这里千万不能传递sk。&lt;/p&gt;
+&lt;p&gt;4、API提供者验证签名：在API网关中，通过请求头获取到用户标识，根据该标识去数据库查询到该用户对应的ak，sk，并使用相同的签名算法生成签名，和请求头中的签名进行对比，如果一致，则API提供者可以信任请求方，然后可以进行后续的操作。&lt;/p&gt;
+&lt;h4 id=&#34;7、为什么使用Dubbo-RPC&#34;&gt;&lt;a href=&#34;#7、为什么使用Dubbo-RPC&#34; class=&#34;headerlink&#34; title=&#34;7、为什么使用Dubbo RPC&#34;&gt;&lt;/a&gt;7、为什么使用Dubbo RPC&lt;/h4&gt;&lt;p&gt;RPC（远程过程调用）是一种用于实现分布式系统通信的协议和技术。它允许一个计算机从程序调用另一个地址的函数或方法，就像本地调用一样。Dubbo是基于Java的高性能、轻量级的开源RPC框架，便于开发者轻松实现分布式系统和微服务架构。简单来说就是性能高、协议多、功能强、生态好、易扩展&lt;/p&gt;
+&lt;h4 id=&#34;8、如何使用的Dubbo-RPC&#34;&gt;&lt;a href=&#34;#8、如何使用的Dubbo-RPC&#34; class=&#34;headerlink&#34; title=&#34;8、如何使用的Dubbo RPC&#34;&gt;&lt;/a&gt;8、如何使用的Dubbo RPC&lt;/h4&gt;&lt;p&gt;在正式运用Dubbo到项目中之前，先阅读了Dubbo的官方文档，利用快速启动跑通了基础的RPC调用的Demo，明确了注册中心，Maven包依赖和各种版本号。先在本地启动Nacos注册中心，然后在服务提供者和服务调用者项目引入Dubbo依赖（最好是引入相同的依赖和配置），编写nacos的连接配置，并且需要在启动类通过@EnableDubbo注解开启Dubbo支持&lt;/p&gt;
+&lt;p&gt;编写服务提供者类和服务调用者客户端类，分别加上@DubboService和DubboReference注解，优先启动服务提供者项目，在Nacos控制台观察到注册信息之后，再启动服务调用者项目。&lt;/p&gt;
+&lt;h4 id=&#34;9、&#34;&gt;&lt;a href=&#34;#9、&#34; class=&#34;headerlink&#34; title=&#34;9、&#34;&gt;&lt;/a&gt;9、&lt;/h4&gt;</content>
+        <category term="API开放平台" />
+        <updated>2024-01-03T11:58:05.000Z</updated>
+    </entry>
+</feed>

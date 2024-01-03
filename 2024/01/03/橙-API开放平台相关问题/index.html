@@ -1,0 +1,597 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>橙-API开放平台相关问题 | 橙熟</title><meta name="author" content="zc"><meta name="copyright" content="zc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="基于React + Spring Boot + Dubbo + Gateway的API接口开放调用平台。管理员可以接入并发布接口，可视化各接口调用情况；用户可以开通接口调用权限、浏览接口及在线调试，并通过客户端 SDK 轻松调用接口。 项目难点：  权限校验，切面注解。  首先定义一个注解类，该注解允许在方法上定义两种权限规则：anyRole 表示任意角色通过，mustRole 表示必须有特定角色">
+<meta property="og:type" content="article">
+<meta property="og:title" content="橙-API开放平台相关问题">
+<meta property="og:url" content="https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="橙熟">
+<meta property="og:description" content="基于React + Spring Boot + Dubbo + Gateway的API接口开放调用平台。管理员可以接入并发布接口，可视化各接口调用情况；用户可以开通接口调用权限、浏览接口及在线调试，并通过客户端 SDK 轻松调用接口。 项目难点：  权限校验，切面注解。  首先定义一个注解类，该注解允许在方法上定义两种权限规则：anyRole 表示任意角色通过，mustRole 表示必须有特定角色">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/20231221160700.png">
+<meta property="article:published_time" content="2024-01-03T11:58:05.000Z">
+<meta property="article:modified_time" content="2024-01-03T12:00:53.386Z">
+<meta property="article:author" content="zc">
+<meta property="article:tag" content="API开放平台">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/20231221160700.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?72f5d185beeddfa65a6064480cf43a71";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"DQLKK163PC","apiKey":"a3e4a75ae66ef186b7acfc756c55dd24","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: zc","link":"链接: ","source":"来源: 橙熟","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '橙-API开放平台相关问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-03 20:00:53'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/self/duotone.css"><link rel="stylesheet" href="//at.alicdn.com/t/c/font_4286548_9cv1z5uybf8.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> HOME</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-list"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-list"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw iconfont icon-yongyan"></i><span> 书单</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 留言</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/20231221160700.png')"><nav id="nav"><span id="blog-info"><a href="/" title="橙熟"><span class="site-name">橙熟</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> HOME</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-list"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-list"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw iconfont icon-yongyan"></i><span> 书单</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 留言</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">橙-API开放平台相关问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-03T11:58:05.000Z" title="发表于 2024-01-03 19:58:05">2024-01-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-03T12:00:53.386Z" title="更新于 2024-01-03 20:00:53">2024-01-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="橙-API开放平台相关问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>基于React + Spring Boot + Dubbo + Gateway的API接口开放调用平台。管理员可以接入并发布接口，可视化各接口调用情况；用户可以开通接口调用权限、浏览接口及在线调试，并通过客户端 SDK 轻松调用接口。</p>
+<p><strong>项目难点：</strong></p>
+<ul>
+<li><p>权限校验，切面注解。</p>
+<ol>
+<li><p>首先定义一个注解类，该注解允许在方法上定义两种权限规则：<code>anyRole</code> 表示任意角色通过，<code>mustRole</code> 表示必须有特定角色才能通过。</p>
+<ul>
+<li><pre><code class="java">/**
+ * 权限校验
+ * @author zc
+   */
+   @Target(ElementType.METHOD)
+   @Retention(RetentionPolicy.RUNTIME)
+   public @interface AuthCheck &#123;
+
+   /**
+
+    * 有任何一个角色
+      *
+    * @return
+      */
+      String[] anyRole() default &quot;&quot;;
+
+   /**
+
+    * 必须有某个角色
+      *
+    * @return
+      */
+      String mustRole() default &quot;&quot;;
+
+&#125;
+<pre class="language-none"><code class="language-none">
+2. 然后定义一个拦截器进行权限校验
+
+   &#96;&#96;&#96;java
+   &#x2F;**
+    * 权限校验 AOP
+    *
+    * @author zc
+    *&#x2F;
+   @Aspect
+   @Component
+   public class AuthInterceptor &#123;
+   
+       @Resource
+       private UserService userService;
+   
+       &#x2F;**
+        * 执行拦截
+        *
+        * @param joinPoint
+        * @param authCheck
+        * @return
+        *&#x2F;
+       @Around(&quot;@annotation(authCheck)&quot;)
+       public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable &#123;
+           List&lt;String&gt; anyRole &#x3D; Arrays.stream(authCheck.anyRole()).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+           String mustRole &#x3D; authCheck.mustRole();
+           RequestAttributes requestAttributes &#x3D; RequestContextHolder.currentRequestAttributes();
+           HttpServletRequest request &#x3D; ((ServletRequestAttributes) requestAttributes).getRequest();
+           &#x2F;&#x2F; 当前登录用户
+           User user &#x3D; userService.getLoginUser(request);
+           &#x2F;&#x2F; 拥有任意权限即通过
+           if (CollectionUtils.isNotEmpty(anyRole)) &#123;
+               String userRole &#x3D; user.getUserRole();
+               if (!anyRole.contains(userRole)) &#123;
+                   throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+               &#125;
+           &#125;
+           &#x2F;&#x2F; 必须有所有权限才通过
+           if (StringUtils.isNotBlank(mustRole)) &#123;
+               String userRole &#x3D; user.getUserRole();
+               if (!mustRole.equals(userRole)) &#123;
+                   throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+               &#125;
+           &#125;
+           &#x2F;&#x2F; 通过权限校验，放行
+           return joinPoint.proceed();
+       &#125;
+   &#125;</code></pre>
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>最后在需要进行权限校验的方法上添加<code>@AuthCheck</code>注解即可</p>
+<ul>
+<li><img src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20240102135217501.png" alt="image-20240102135217501"></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>网关设计</p>
+</li>
+</ul>
+<h4 id="1、为什么要做这个项目："><a href="#1、为什么要做这个项目：" class="headerlink" title="1、为什么要做这个项目："></a>1、为什么要做这个项目：</h4><p>尽可能地帮助和服务更多的用户和开发者，让他们可以方便快捷地获取他们想要的信息和功能。接口开放平台可以帮助开发者快速接入一些常用的服务，从而提高他们的开发效率，比如天气服务、随机头像、心灵鸡汤等，他们是一些应用或者小程序中常见的功能，所以提供这些接口可以帮助开发者更加方便地实现这些功能。这些接口也可以让用户在使用应用时获得更加全面的功能和服务，从而提高用户体验。所以我认为接口开放平台是一个有意义的项目，可以为用户和开发者带来更多的便利和价值。</p>
+<p>表结构：用户表（user）、接口信息表（interfaceInfo）、用户接口表（userInterface，用于记录用户对接口是否有调用权限，是否有剩余调用次数等）、土味情话表（用于提供随机土味情话服务的接口需要的表）</p>
+<h4 id="2、项目架构设计"><a href="#2、项目架构设计" class="headerlink" title="2、项目架构设计"></a>2、项目架构设计</h4><p>采用了前后端分离的架构设计。前端使用Ant-design-pro框架快速开发，然后使用Nginx进行部署，通过Nginx反向代理将请求转发到后端Web项目，因为项目刚刚上线，用户量较少，暂时采用了单机部署的模式，未来可能采取<strong>水平扩容</strong>的方式，增加多台节点，通过nginx的<strong>负载均衡</strong>，将请求平均的分发到多个节点上，以支撑更高的并发量。我的web项目使用Spring Boot开发，并且连接到到了 Mysql数据库 和 Redis，数据库主要用来存储用户和接口的相关信息，通过Redis实现了分布式session，因为考虑到未来要是用分布式架构，可以避免使用tomcat保存session出现用户登录失效的问题。</p>
+<h5 id="反向代理与正向代理"><a href="#反向代理与正向代理" class="headerlink" title="反向代理与正向代理"></a>反向代理与正向代理</h5><p>反向代理：客户端将请求发送到反向代理服务器，由反向代理服务器去选择目标服务器，获取数据后再返回给客户端。对外暴露的是反向代理服务器地址，隐藏了真实服务器 IP 地址。反向代理“代理”的是目标服务器。</p>
+<p>正向代理：顺着请求的方向进行的代理，即代理服务器它是由你配置为你服务，去请求目标服务器地址。类似于科学上网</p>
+<h5 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h5><p>常见的负载均衡算法：</p>
+<ol>
+<li>随机法，如果没有配置权重的话，所有服务器被访问到的概率是相等的。权重越高，被访问到的概率也越高。适合服务器性能接近的集群，其中每个服务器承载相同的负载，缺点：部分机器在一段时间之内无法被访问到。</li>
+<li>轮询法：挨个服务器进行访问，当然，也可以设置权重。</li>
+<li>一致性Hash法：相同参数的请求总是发送到同一台服务器进行处理，比如同个IP的请求</li>
+<li>最小连接法：遍历服务器节点列表，选取活动连接数（可以理解为正在处理的请求数）最小的一台服务器来响应当前的请求。</li>
+<li>两次随机法：两次随机法在随机法的基础上多了一次随机，多选出一台服务器，然后根据两台服务器的负载情况，从中选择一台最合适的</li>
+</ol>
+<h5 id="水平扩容"><a href="#水平扩容" class="headerlink" title="水平扩容"></a>水平扩容</h5><p>垂直扩容：增加自身的容量。</p>
+<p>水平扩容：增加节点的方式来增加整个系统的容量。垂直扩容比较方便，但是会受制于机器的内存、性能等。所以到了一定阶段肯定要进行水平扩容。</p>
+<h4 id="3、技术选型及原因"><a href="#3、技术选型及原因" class="headerlink" title="3、技术选型及原因"></a>3、技术选型及原因</h4><p>使用SpringBoot是因为通过<strong>自动装配</strong>能够提高项目的开发效率，能够很好地整合Spring的相关服务。使用Mysql的原因是考虑到未来打算上用户充值交易功能，限制调用次数等场景需要使用事务来保证数据的<strong>完整性和一致性</strong>。使用Redis是因为可以用来实现分布式session、锁、缓存等功能。因为Redis是一个单独的中间件，不同客户端可以向同一个Redis或者集群中存放session&#x2F;加锁，能够保证资源在分布式服务下都可见。由于Redis是单线程的，同时也支持Lua脚本，可以保证并发安全的问题，也能够轻松实现分布式锁的功能。</p>
+<h5 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h5><p><strong>什么是自动装配：</strong>在没有SpringBoot的情况下，如果我们需要引入第三方依赖，需要手动配置，非常麻烦。但是，在SpringBoot中，我们直接引入一个 starter 即可。比如想要使用redis的话，直接在项目中引入对应的starter，然后在application.yml中配置即可。</p>
+<p><strong>如何实现自动装配与按需加载的：</strong>核心注解：SpringBootApplication注解，是@EnableAutoConfiguration、（启用SpringBoot的自动装配机制）@Configuration（允许上下文中注册额外的bean或者导入其他配置类）、@ComponentScan（扫描被@Compent、@Service、@Controller注解修饰的bean），注解默认会扫描启动类所在的包下的所有类，也可以自定义不扫描某些bean。</p>
+<p>自动装配核心功能的实现实际是通过 <code>AutoConfigurationImportSelector</code>类实现的，该类实现<code>ImportSelector</code>接口，同时实现接口中的<code>selectImports</code>方法，该方法<strong>获取所有符合条件的类的全限定类名，这些类需要被加载到 IoC 容器中</strong>。主要是通过读取<code>META-INF/spring.factories</code>来获取需要自动装配的类的。同时根据<code>@ConditionalOnXXX</code>注解来实现按需加载</p>
+<p>项目中的SDK利用上述功能开发成了一个Starter，首先引入Spring Boot 相关依赖，然后创建一个类</p>
+<p><img src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20231221102811685.png" alt="image-20231221102811685"></p>
+<p>最后在resources&#x2F;META-INF目录下创建一个spring.factories文件，引入该类</p>
+<pre class="language-none"><code class="language-none">org.springframework.boot.autoconfigure.EnableAutoConfiguration&#x3D;com.zc.orangeapiclientsdk.OrangeApiClientConfig</code></pre>
+
+<p>此时，该类就被做成了一个Starter，可以给其他开发者调用。</p>
+<h5 id="共享session"><a href="#共享session" class="headerlink" title="共享session"></a>共享session</h5><p>在分布式系统中，存在多台服务器，如果用户登陆信息存储在服务器1中，第二次访问时用户被分配到了服务器2，此时就需要重新登陆。因此引入Redis 对这些 Session 信息进行统一的存储和管理，这样无论请求发送到那台服务器，服务器都会去同一个 Redis 获取相关的 Session 信息，这样就解决了分布式系统下 Session 存储的问题。</p>
+<h4 id="4、开发流程"><a href="#4、开发流程" class="headerlink" title="4、开发流程"></a>4、开发流程</h4><p>首选参考了一些已有的产品，根据这些产品，总结出比较好的功能点，再结合自己想要实现的一些特色功能，做了一个项目的整体设计，然后再进行技术选型。</p>
+<h4 id="5、项目核心：网关"><a href="#5、项目核心：网关" class="headerlink" title="5、项目核心：网关"></a>5、项目核心：网关</h4><p>本平台的关键点就在于提供接口服务，要保证接口的高可用性和稳定性，所有的接口服务项目独立进行部署，隐藏其真实的接口地址及调用，调用接口服务的请求都必须经过网关进行统一鉴权、流量控制（路由转发）、流量染色、负载均衡，接口保护、统一日志等，之后再将请求转发到真实的接口地址，防止接口地址被恶意调用，盗刷等。</p>
+<p>在本项目中，使用API网关做了什么：</p>
+<p>1、统一鉴权：应用API签名认证算法校验用户请求的合法性。</p>
+<p>2、公共业务逻辑：对每个接口的调用进行集中的统计。</p>
+<p>3、路由转发：前端发送请求到API网关，通过网关转发到实际的接口地址</p>
+<p>4、流量染色：给经过网关的请求加上特定的请求头参数，便于让API服务确定来源及合法性。</p>
+<h4 id="6、API签名认证算法"><a href="#6、API签名认证算法" class="headerlink" title="6、API签名认证算法"></a>6、API签名认证算法</h4><p>该算法是用于验证API请求的合法行和完整性的安全机制。具体实现：</p>
+<p>1、生成密钥对，给每个用户生成唯一的密钥对(ak,sk)，并保存到数据库中，仅用户本人可查看自己的密钥对。</p>
+<p>2、请求方生成签名：请求方（客户端）使用sk对请求参数和数据进行签名，签名内容包括请求参数、时间戳、随机数等，签名加密算法此处选择MD5</p>
+<p>3、请求方发送请求：请求方将请求参数、签名、用户标识一起发送给API提供者，通常会把签名信息放到请求头参数中传递，注意这里千万不能传递sk。</p>
+<p>4、API提供者验证签名：在API网关中，通过请求头获取到用户标识，根据该标识去数据库查询到该用户对应的ak，sk，并使用相同的签名算法生成签名，和请求头中的签名进行对比，如果一致，则API提供者可以信任请求方，然后可以进行后续的操作。</p>
+<h4 id="7、为什么使用Dubbo-RPC"><a href="#7、为什么使用Dubbo-RPC" class="headerlink" title="7、为什么使用Dubbo RPC"></a>7、为什么使用Dubbo RPC</h4><p>RPC（远程过程调用）是一种用于实现分布式系统通信的协议和技术。它允许一个计算机从程序调用另一个地址的函数或方法，就像本地调用一样。Dubbo是基于Java的高性能、轻量级的开源RPC框架，便于开发者轻松实现分布式系统和微服务架构。简单来说就是性能高、协议多、功能强、生态好、易扩展</p>
+<h4 id="8、如何使用的Dubbo-RPC"><a href="#8、如何使用的Dubbo-RPC" class="headerlink" title="8、如何使用的Dubbo RPC"></a>8、如何使用的Dubbo RPC</h4><p>在正式运用Dubbo到项目中之前，先阅读了Dubbo的官方文档，利用快速启动跑通了基础的RPC调用的Demo，明确了注册中心，Maven包依赖和各种版本号。先在本地启动Nacos注册中心，然后在服务提供者和服务调用者项目引入Dubbo依赖（最好是引入相同的依赖和配置），编写nacos的连接配置，并且需要在启动类通过@EnableDubbo注解开启Dubbo支持</p>
+<p>编写服务提供者类和服务调用者客户端类，分别加上@DubboService和DubboReference注解，优先启动服务提供者项目，在Nacos控制台观察到注册信息之后，再启动服务调用者项目。</p>
+<h4 id="9、"><a href="#9、" class="headerlink" title="9、"></a>9、</h4></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://ooooddddd.github.io">zc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://ooooddddd.github.io" target="_blank">橙熟</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0/">API开放平台</a></div><div class="post_share"><div class="social-share" data-image="https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/20231221160700.png" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/01/03/Javase%E7%9B%B8%E5%85%B3/" title="Javase相关"><img class="cover" src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240103200135.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Javase相关</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/03/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MySQL面试题"><img class="cover" src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240103194815.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySQL面试题</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Waline</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">zc</div><div class="author-info__description">默默无闻</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ooooddddd"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ooooddddd" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1310410823@qq.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">1、为什么要做这个项目：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">2、项目架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E4%B8%8E%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">2.1.</span> <span class="toc-text">反向代理与正向代理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">2.2.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%AE%B9"><span class="toc-number">2.3.</span> <span class="toc-text">水平扩容</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9B%A0"><span class="toc-number">3.</span> <span class="toc-text">3、技术选型及原因</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D"><span class="toc-number">3.1.</span> <span class="toc-text">自动装配</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B1%E4%BA%ABsession"><span class="toc-number">3.2.</span> <span class="toc-text">共享session</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">4、开发流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E3%80%81%E9%A1%B9%E7%9B%AE%E6%A0%B8%E5%BF%83%EF%BC%9A%E7%BD%91%E5%85%B3"><span class="toc-number">5.</span> <span class="toc-text">5、项目核心：网关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6%E3%80%81API%E7%AD%BE%E5%90%8D%E8%AE%A4%E8%AF%81%E7%AE%97%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">6、API签名认证算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8Dubbo-RPC"><span class="toc-number">7.</span> <span class="toc-text">7、为什么使用Dubbo RPC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8%E3%80%81%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E7%9A%84Dubbo-RPC"><span class="toc-number">8.</span> <span class="toc-text">8、如何使用的Dubbo RPC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9%E3%80%81"><span class="toc-number">9.</span> <span class="toc-text">9、</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/%E8%B1%86%E4%B8%81%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3/" title="豆丁点评相关"><img src="/img/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="豆丁点评相关"/></a><div class="content"><a class="title" href="/2024/01/03/%E8%B1%86%E4%B8%81%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3/" title="豆丁点评相关">豆丁点评相关</a><time datetime="2024-01-03T12:06:12.000Z" title="发表于 2024-01-03 20:06:12">2024-01-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/Spring%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/" title="Spring框架相关"><img src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240103200304.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring框架相关"/></a><div class="content"><a class="title" href="/2024/01/03/Spring%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/" title="Spring框架相关">Spring框架相关</a><time datetime="2024-01-03T12:02:34.000Z" title="发表于 2024-01-03 20:02:34">2024-01-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/Javase%E7%9B%B8%E5%85%B3/" title="Javase相关"><img src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240103200135.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Javase相关"/></a><div class="content"><a class="title" href="/2024/01/03/Javase%E7%9B%B8%E5%85%B3/" title="Javase相关">Javase相关</a><time datetime="2024-01-03T12:00:41.000Z" title="发表于 2024-01-03 20:00:41">2024-01-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" title="橙-API开放平台相关问题"><img src="https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/20231221160700.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="橙-API开放平台相关问题"/></a><div class="content"><a class="title" href="/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" title="橙-API开放平台相关问题">橙-API开放平台相关问题</a><time datetime="2024-01-03T11:58:05.000Z" title="发表于 2024-01-03 19:58:05">2024-01-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MySQL面试题"><img src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240103194815.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL面试题"/></a><div class="content"><a class="title" href="/2024/01/03/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MySQL面试题">MySQL面试题</a><time datetime="2024-01-03T11:46:41.000Z" title="发表于 2024-01-03 19:46:41">2024-01-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/20231221160700.png')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By zc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener external nofollow noreferrer" href="https://blog.miccai.top/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>function loadWaline () {
+  function initWaline () {
+    const waline = Waline.init(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline.miccai.top',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, {"locale":{"nick":"昵称","mail":"邮箱","link":"你的网站","placeholder":"欢迎大家文明评论嗷～(填写邮箱可以收到回复通知)","requiredMeta":[],"mailError":"请填写正确的邮件地址","sofa":"快来抢占沙发~","level0":"列兵","level1":"上等兵","level2":"一期","level3":"二期","level4":"三期","level5":"四期","level6":"五期","level7":"六期","level8":"兵王"},"emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/qq","https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili"]}))
+  }
+
+  if (typeof Waline === 'object') initWaline()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css').then(() => {
+      getScript('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js').then(initWaline)
+    })
+  }
+}
+
+if ('Waline' === 'Waline' || !true) {
+  if (true) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+  else setTimeout(loadWaline, 0)
+} else {
+  function loadOtherComment () {
+    loadWaline()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/'
+    this.page.identifier = '/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/'
+    this.page.title = '橙-API开放平台相关问题'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-ooooddddd-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Waline' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline.miccai.top/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="8181670003" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="爱国,公正,和平,友善" data-fontsize="15px" data-random="true" async="async"></script><script src="//code.tidio.co/sqsgrbmshnf7qvhnlpqchn7a4dvsyfcf.js" async="async"></script><script>(() => {
+  const isChatBtn = true
+  const isChatHideShow = true
+
+  if (isChatBtn) {
+    let isShow = false
+    const close = () => {
+      window.tidioChatApi.hide()
+      isShow = false
+    }
+    
+    const open = () => {
+      window.tidioChatApi.open()
+      window.tidioChatApi.show()
+      isShow = true
+    }
+
+    const onTidioChatApiReady = () => {
+      window.tidioChatApi.hide()
+      window.tidioChatApi.on("close", close)
+    }
+    if (window.tidioChatApi) {
+      window.tidioChatApi.on("ready", onTidioChatApiReady)
+    } else {
+      document.addEventListener("tidioChat-ready", onTidioChatApiReady)
+    }
+
+    window.chatBtnFn = () => {
+      if (!window.tidioChatApi) return
+      isShow ? close() : open()
+    }
+  } else if (isChatHideShow) {
+    window.chatBtn = {
+      hide: () => {
+        window.tidioChatApi && window.tidioChatApi.hide()
+      },
+      show: () => {
+        window.tidioChatApi && window.tidioChatApi.show()
+      }
+    }
+  }
+})()</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script></div></div></body></html>

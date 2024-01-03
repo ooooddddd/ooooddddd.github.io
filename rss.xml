@@ -5,19 +5,666 @@
         <link>https://ooooddddd.github.io</link>
         <description>我的笔记</description>
         <language>zh-CN</language>
-        <pubDate>Thu, 21 Dec 2023 16:04:14 +0800</pubDate>
-        <lastBuildDate>Thu, 21 Dec 2023 16:04:14 +0800</lastBuildDate>
+        <pubDate>Wed, 03 Jan 2024 20:06:12 +0800</pubDate>
+        <lastBuildDate>Wed, 03 Jan 2024 20:06:12 +0800</lastBuildDate>
         <category>RabbitMQ</category>
-        <category>chatGPT</category>
         <category>blog</category>
+        <category>chatGPT</category>
         <category>项目</category>
+        <category>Javase</category>
+        <category>MySQL</category>
+        <category>Spring</category>
+        <category>API开放平台</category>
+        <category>点评</category>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2024/01/03/%E8%B1%86%E4%B8%81%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3/</guid>
+            <title>豆丁点评相关</title>
+            <link>https://ooooddddd.github.io/2024/01/03/%E8%B1%86%E4%B8%81%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3/</link>
+            <category>点评</category>
+            <pubDate>Wed, 03 Jan 2024 20:06:12 +0800</pubDate>
+            <description><![CDATA[ &lt;pre&gt;&lt;code&gt;基于Redis + Spring Boot实现的类点评APP，实现了用户登录、查询店铺、优惠券秒杀、发表点评、推送点评、附近商户、用户签到的完整业务流程。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;项目的难点：主要是事务的问题&lt;/p&gt;
+&lt;h3 id=&#34;用户登陆：&#34;&gt;&lt;a href=&#34;#用户登陆：&#34; class=&#34;headerlink&#34; title=&#34;用户登陆：&#34;&gt;&lt;/a&gt;&lt;strong&gt;用户登陆&lt;/strong&gt;：&lt;/h3&gt;&lt;p&gt;使用 Redis 实现分布式 Session，解决集群间登录态同步问题；使用 Hash 代替 String 来存储用户信息，节约内存的同时有利于单个字段的修改。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;科室查询&lt;/strong&gt;：将高访问量的科室信息提前缓存到了redis中，降低数据库压力的同时提高了查询性能。同时，为了之后方便其他业务使用缓存功能，使用&lt;strong&gt;泛型 + 函数式&lt;/strong&gt;编程实现了通用缓存的静态方法，并解决了&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;缓存穿透&lt;/strong&gt;（用户请求的数据在缓存中和数据库中都不存在，不断发起这样的请求，给数据库带来巨大压力），是通过缓存 &lt;strong&gt;null&lt;/strong&gt; 值解决，但是会浪费内存空间，所以后续准备改为布隆过滤器&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;缓存雪崩&lt;/strong&gt;（指在同一时段大量的缓存key同时失效或者Redis服务宕机，导致大量请求到达数据库，带来巨大压力。）：&lt;ul&gt;
+&lt;li&gt;在原有的失效时间的基础上添加一个随机值(1-5分钟)&lt;/li&gt;
+&lt;li&gt;搭建redis集群提高服务的高可用性&lt;/li&gt;
+&lt;li&gt;多级缓存&lt;/li&gt;
+&lt;li&gt;降级限流策略&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;缓存击穿（热点Key问题）&lt;/strong&gt;【被&lt;strong&gt;高并发访问&lt;/strong&gt;并且&lt;strong&gt;缓存重建业务较复杂&lt;/strong&gt;的key突然失效了，无数的请求访问会在瞬间给数据库带来巨大的冲击。】（利用&lt;strong&gt;互斥锁&lt;/strong&gt;或者&lt;strong&gt;逻辑过期&lt;/strong&gt;实现）&lt;ol&gt;
+&lt;li&gt;逻辑过期时间（不保证一致性，适用于注重用户体验，而非注重数据一致性的场景）：先从redis中查询缓存，如果未命中，直接返回 null，如果命中，判断其逻辑过期时间是否过期，未过期，直接返回数据。已过期，则需要进行缓存重建，先尝试获取互斥锁，获取成功，开启独立线程去完成缓存重建的工作。如果获取互斥锁失败，则不进行等待，直接返回已经过期的数据即可。性能较好。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;双写一致性&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20231229142644881.png&#34; alt=&#34;image-20231229142644881&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;优惠券秒杀功能：&#34;&gt;&lt;a href=&#34;#优惠券秒杀功能：&#34; class=&#34;headerlink&#34; title=&#34;优惠券秒杀功能：&#34;&gt;&lt;/a&gt;&lt;strong&gt;优惠券秒杀功能&lt;/strong&gt;：&lt;/h3&gt;&lt;p&gt;使用Redis + Lua脚本实现对用户下单资格的预检，同时用乐观锁解决预约下单产生的超号问题。&lt;/p&gt;
+&lt;p&gt;乐观锁：不加锁，在更新时判断是否有其他线程在修改（性能好，但成功率低）&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;版本号法：额外记录一个 version 值，在扣减库存的同时变化这个值，通过这个值是否变化来检验&lt;/li&gt;
+&lt;li&gt;库存直接作为版本号，在更新时加一条对库存的判断&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;使用Redisson分布式锁解决了在集群模式下一人一单的线程安全问题。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;首先是想通过加 synchronized 锁来解决一人一单，将 synchronized 锁加到方法的外面，先获取锁，再通过代理对象去提交事务，最后释放锁，是线程安全的。但这样操作又会出现 spring 事务失效的问题，因此需要先获取事务的代理对象，然后再使用代理对象去调用方法。需要在spingboot的启动类上面添加@EnableAspectJAutoProxy(exposeProxy &amp;#x3D; true)注解。&lt;/li&gt;
+&lt;li&gt;但是这个synchronized 锁在分布式集群模式下，会失效，因为synchronized关键字的作用域其实是一个进程，在这个进程下面的所有线程都能够进行加锁，但是在集群模式下属于多台服务器，多进程&lt;/li&gt;
+&lt;li&gt;通过使用Redisson提供的锁对象，利用 userId创建锁对象，来控制一人一单。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;进一步优化&#34;&gt;&lt;a href=&#34;#进一步优化&#34; class=&#34;headerlink&#34; title=&#34;进一步优化&#34;&gt;&lt;/a&gt;&lt;strong&gt;进一步优化&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;使用Redis Stream结构作为消息队列，实现异步预约下单功能。&lt;/p&gt;
+&lt;p&gt;使用阻塞队列也可以完成异步下单的功能，但是会存在几个问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;基于 jvm 的阻塞队列存在内存限制的问题&lt;/li&gt;
+&lt;li&gt;数据丢失问题：当jvm重启或宕机，阻塞队列中的所有信息都会丢失&lt;/li&gt;
+&lt;li&gt;同时，当该订单从阻塞队列中取出后，在处理的过程中发生了异常，则这个订单就永远无法处理了&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;因此可以利用 Redis Stream 消息队列解决上面存在的几个问题，Stream类型的消息队列的特点&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;消息可回溯&lt;/li&gt;
+&lt;li&gt;一个消息可以被多个消费者读取&lt;/li&gt;
+&lt;li&gt;可以阻塞读取&lt;/li&gt;
+&lt;li&gt;但是有消息漏读的风险&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;过程：依然是通过 Lua 脚本进行 判断秒杀优惠券库存和校验一人一单的功能，如果校验成功，则发送消息到消息队列中，并且初始化一个代理对象，这个代理对象可以进行创建订单的功能。&lt;/p&gt;
+&lt;p&gt;然后通过一个线程池去不断去消费消息队列中的消息，即使发生异常（消息已取出但未消费）的消息会持久化到PendingList中，后续通过获取pending-list中的订单信息，依然可以将其消费掉。然后跳出 handlePendingList的方法，继续去处理正常的消息队列。最后创建订单，并且通过 SACK 命令确认消息已处理。&lt;/p&gt;
+&lt;h3 id=&#34;探店笔记点赞排行&#34;&gt;&lt;a href=&#34;#探店笔记点赞排行&#34; class=&#34;headerlink&#34; title=&#34;探店笔记点赞排行&#34;&gt;&lt;/a&gt;&lt;strong&gt;探店笔记&lt;/strong&gt;点赞排行&lt;/h3&gt;&lt;p&gt;使用 Redis List 数据结构存储用户点赞信息，并基于 ZSet 实现 TopN 点赞排行&lt;/p&gt;
+&lt;h3 id=&#34;推送点评&#34;&gt;&lt;a href=&#34;#推送点评&#34; class=&#34;headerlink&#34; title=&#34;推送点评&#34;&gt;&lt;/a&gt;推送点评&lt;/h3&gt;&lt;p&gt;feed流，使用的是推模式，后续随着用户量的增加，可以将其改为推拉结合，活跃粉丝使用推模式，而普通粉丝则使用拉模式。&lt;/p&gt;
+&lt;h3 id=&#34;附近商户&#34;&gt;&lt;a href=&#34;#附近商户&#34; class=&#34;headerlink&#34; title=&#34;附近商户&#34;&gt;&lt;/a&gt;附近商户&lt;/h3&gt;&lt;p&gt;使用了redis中的geo数据结构，根据经纬度坐标信息存储商户的地理位置，并使用 Geo Search 命令实现高性能商户查询及按距离排序。&lt;/p&gt;
+&lt;h3 id=&#34;用户签到&#34;&gt;&lt;a href=&#34;#用户签到&#34; class=&#34;headerlink&#34; title=&#34;用户签到&#34;&gt;&lt;/a&gt;用户签到&lt;/h3&gt;&lt;p&gt;使用到了Redis的BitMap数据统计功能，利用bitmap，计算今天是本月的第几天，就将对应bit位置1.&lt;/p&gt;
+&lt;p&gt;后续计划根据用户签到送出激励计划，用户签到赠送橙币，可以使用橙币在购买优惠券时抵扣现金。&lt;/p&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2024/01/03/Spring%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/</guid>
+            <title>Spring框架相关</title>
+            <link>https://ooooddddd.github.io/2024/01/03/Spring%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/</link>
+            <category>Spring</category>
+            <pubDate>Wed, 03 Jan 2024 20:02:34 +0800</pubDate>
+            <description><![CDATA[ &lt;h3 id=&#34;一、IOC和AOP&#34;&gt;&lt;a href=&#34;#一、IOC和AOP&#34; class=&#34;headerlink&#34; title=&#34;一、IOC和AOP&#34;&gt;&lt;/a&gt;一、IOC和AOP&lt;/h3&gt;&lt;h4 id=&#34;IOC&#34;&gt;&lt;a href=&#34;#IOC&#34; class=&#34;headerlink&#34; title=&#34;IOC&#34;&gt;&lt;/a&gt;IOC&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;控制翻转，IOC指的是将对象的创建和依赖注入由应用代码转移到了Spring容器中，原本需要程序员手动创建对象，依赖，现在翻转给了Spring帮忙实现。降低了应用代码的复杂度，提高了代码的可重用性和可维护性。&lt;/li&gt;
+&lt;li&gt;BeanFactory就是IOC容器，由容器进行创建Bean对象&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;AOP&#34;&gt;&lt;a href=&#34;#AOP&#34; class=&#34;headerlink&#34; title=&#34;AOP&#34;&gt;&lt;/a&gt;AOP&lt;/h4&gt;&lt;p&gt;面向切面编程，正常来说，我们的代码中不仅需要业务逻辑部分，还需要日志，安全，事务等，但是如果有个业务需要经常用到，就比如说登陆校验吧，用户可能在看购物车需要校验其是否登陆，在看订单信息也需要校验是否登陆，如果使用AOP将这个校验的逻辑抽离出来，实现一个全局统一登陆校验，就不用再每个方法里面单独进行校验了。&lt;/p&gt;
+&lt;h3 id=&#34;二、IOC的实现机制&#34;&gt;&lt;a href=&#34;#二、IOC的实现机制&#34; class=&#34;headerlink&#34; title=&#34;二、IOC的实现机制&#34;&gt;&lt;/a&gt;二、IOC的实现机制&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;定义Bean：在Spring IOC中，所有的对象都被看作是Bean，需要在配置文件使用注解的方式中进行定义和配置&lt;/li&gt;
+&lt;li&gt;创建Bean工厂，在Spring 中，BeanFactory 负责管理Bean的创建、组装和销毁等任务。Spring IOC 容器就是Bean工厂的一种实现。&lt;/li&gt;
+&lt;li&gt;读取配置文件：Spring IOC 容器会读取配置文件或者使用注解的方式来获取Bean的定义和配置信息&lt;/li&gt;
+&lt;li&gt;创建Bean实例：根据配置文件相关信息通过反射技术来创建Bean的实例，并保存到容器中&lt;/li&gt;
+&lt;li&gt;组装Bean：Spring IOC 容器根据配置文件中的信息，将不同的Bean实例组装起来，形成一个完整的应用程序。&lt;/li&gt;
+&lt;li&gt;注入依赖：根据配置文件的信息，自动为Bean注入依赖的对象或者值&lt;/li&gt;
+&lt;li&gt;提供Bean实例：通过Spring IOC 容器获取需要的Bean实例，从而调用其中的方法或者属性等。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;Bean的生命周期&#34;&gt;&lt;a href=&#34;#Bean的生命周期&#34; class=&#34;headerlink&#34; title=&#34;Bean的生命周期&#34;&gt;&lt;/a&gt;Bean的生命周期&lt;/h4&gt;&lt;p&gt;创建的过程：首先实例化Bean，并设置Bean的属性，根据其实现的Aware接口设置依赖信息，接下来会陆续调用一些方法：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;BeanPostProcess的postProcessBeforeInitialization方法，完成初始化前的自定义操作&lt;/li&gt;
+&lt;li&gt;afterPropertiesSet方法做一些属性被设定后的自定义操作&lt;/li&gt;
+&lt;li&gt;调用Bean的Init方法，做一些初始化相关操作&lt;/li&gt;
+&lt;li&gt;然后再调用postProcessAfterInitialization去完成bean初始化之后的相关自定义操作。这四个方法类似于AOP&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;此时，Bean初始化完成，可以使用这个Bean了&lt;/p&gt;
+&lt;p&gt;销毁过程：调用DisposableBean的destory()方法，如果实现了自定义的销毁方法，也去调用。其中单例Bean会随着容器的销毁而销毁，多例的Bean则是通过JVM里的垃圾回收器负责回收的。&lt;/p&gt;
+&lt;h3 id=&#34;三、Spring框架中的设计模式&#34;&gt;&lt;a href=&#34;#三、Spring框架中的设计模式&#34; class=&#34;headerlink&#34; title=&#34;三、Spring框架中的设计模式&#34;&gt;&lt;/a&gt;三、Spring框架中的设计模式&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;单例模式：Spring中的Bean默认是单例模式，每个对象实例只创建一次&lt;/li&gt;
+&lt;li&gt;工厂模式：Spring使用工厂模式通过BeanFactory创建并管理Bean&lt;/li&gt;
+&lt;li&gt;代理模式：Spring Aop基于动态代理技术，使用代理模式实现切面编程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;四、-Autowired-和-Resources的区别&#34;&gt;&lt;a href=&#34;#四、-Autowired-和-Resources的区别&#34; class=&#34;headerlink&#34; title=&#34;四、@Autowired 和 @Resources的区别&#34;&gt;&lt;/a&gt;四、@Autowired 和 @Resources的区别&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;@Autowired：Spring框架的注入Bean的注解，默认的注入方式是ByType（根据类型进行匹配），当一个接口存在多个实现类时，需要通过@Qualifier注解来指定名称。支持在构造函数、方法、字段和参数上使用。&lt;/li&gt;
+&lt;li&gt;@Resources：jdk提供的注解注入方式，默认是ByName（根据名称进行匹配），如果一个接口有多个实现类，可以通过name属性显式指定名称。主要用于字段和方法的注入，不支持在构造函数上使用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;五、Spring处理线程并发问题，ThreadLocal&#34;&gt;&lt;a href=&#34;#五、Spring处理线程并发问题，ThreadLocal&#34; class=&#34;headerlink&#34; title=&#34;五、Spring处理线程并发问题，ThreadLocal&#34;&gt;&lt;/a&gt;五、Spring处理线程并发问题，ThreadLocal&lt;/h3&gt;&lt;p&gt;ThreadLocal类：提供了线程本地变量的功能，可以让每个线程拥有自己的&lt;strong&gt;变量副本&lt;/strong&gt;，从而避免了多个线程之间的共享问题。但是ThreadLocal使用时需要注意&lt;strong&gt;内存泄漏&lt;/strong&gt;的问题。&lt;/p&gt;
+&lt;p&gt;在豆丁点评项目中，用户登陆之后，将用户的脱敏信息通过set方法存放到了ThreadLocal中，使用时可以通过get方法获取，退出登录时使用remove方法将其移除。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原理：&lt;/strong&gt;首选，Thread类中存在两个ThreadLocalMap类型的变量，可以将ThreadLocalMap理解为ThreadLocal类实现的定制化HashMap。最终的变量是存储在了当前线程的ThreadLocalMap中，并不是ThreadLocal上，ThreadLocalMap可以存储以ThreadLocal为 key，Object对象为value的键值对。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;内存泄露问题：&lt;/strong&gt;ThreadLocalMap中的Key是ThreadLocal的弱引用，而value是强引用。所有在垃圾回收时，key被清理掉时，value不会被清理。此时ThreadLocalMap中就会出现key为null的Entry，如果不做任何措施，value无法被GC回收，此时就会出现内存泄漏。因此ThreadLocalMap在调用set，get和remove方法的时候，会主动清理key为null的记录。&lt;/p&gt;
+&lt;h3 id=&#34;六、Spring-⽀持哪⼏种事务管理类型&#34;&gt;&lt;a href=&#34;#六、Spring-⽀持哪⼏种事务管理类型&#34; class=&#34;headerlink&#34; title=&#34;六、Spring ⽀持哪⼏种事务管理类型&#34;&gt;&lt;/a&gt;六、Spring ⽀持哪⼏种事务管理类型&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;编程式事务管理&lt;/li&gt;
+&lt;li&gt;声明式事务管理：&lt;/li&gt;
+&lt;li&gt;注解式事务管理：@Transactional注解&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;七、Spring-Boot-的主要优点&#34;&gt;&lt;a href=&#34;#七、Spring-Boot-的主要优点&#34; class=&#34;headerlink&#34; title=&#34;七、Spring Boot 的主要优点&#34;&gt;&lt;/a&gt;七、Spring Boot 的主要优点&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;开发基于Spring的应用程序简单多了，提高了整体的开发速度&lt;/li&gt;
+&lt;li&gt;Spring Boot 不需要编写大量的xml配置&lt;/li&gt;
+&lt;li&gt;Spring Boot 提供嵌入式HTTP服务器，如Tomcat，可以更加轻松地开发web应用程序&lt;/li&gt;
+&lt;li&gt;Spring Boot Starters 是⼀系列依赖关系的集合，因为它的存在，项⽬的依赖之 间的关系对我们来说变的更加简单了&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;八、-SpringBootApplication注解&#34;&gt;&lt;a href=&#34;#八、-SpringBootApplication注解&#34; class=&#34;headerlink&#34; title=&#34;八、@SpringBootApplication注解&#34;&gt;&lt;/a&gt;八、@SpringBootApplication注解&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;可以把SpringBootApplication注解看作是@Configuration、@EnableAutoConfiguration、@ComponentScan三个注解的集合。&lt;/li&gt;
+&lt;li&gt;@EnableAutoConfiguration注解：开启SpringBoot的自动配置机制&lt;/li&gt;
+&lt;li&gt;@ComponentScan：扫描被@Component（Service、controller、Repository）注解修饰的Bean，注解默认会扫描该类所在的包下的所有的类&lt;/li&gt;
+&lt;li&gt;@Configuration：允许Spring上下文中注册额外的bean或者导入其他配置类。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;九、开发-RESTful-Web-服务常⽤的注解有哪些&#34;&gt;&lt;a href=&#34;#九、开发-RESTful-Web-服务常⽤的注解有哪些&#34; class=&#34;headerlink&#34; title=&#34;九、开发 RESTful Web 服务常⽤的注解有哪些&#34;&gt;&lt;/a&gt;九、开发 RESTful Web 服务常⽤的注解有哪些&lt;/h3&gt;&lt;h4 id=&#34;RESTful-风格是什么&#34;&gt;&lt;a href=&#34;#RESTful-风格是什么&#34; class=&#34;headerlink&#34; title=&#34;RESTful 风格是什么&#34;&gt;&lt;/a&gt;RESTful 风格是什么&lt;/h4&gt;&lt;p&gt;简单来讲就是：RESTful API 可以让程序员看到 URL+Http Method 就知道这个URL是干什么的，看到了响应码，就知道请求结果是怎样的。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20231228102018854.png&#34; alt=&#34;image-20231228102018854&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;Spring-Bean相关&#34;&gt;&lt;a href=&#34;#Spring-Bean相关&#34; class=&#34;headerlink&#34; title=&#34;Spring Bean相关&#34;&gt;&lt;/a&gt;Spring Bean相关&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;@Autowired：自动注入对象到类中进行使用，被注入的类需要被Spring容器进行管理&lt;/li&gt;
+&lt;li&gt;@RestController：表示这是一个控制器Bean，并且将函数的返回值直接填入Http响应体中，是Rest风格的控制器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;处理HTTP请求&#34;&gt;&lt;a href=&#34;#处理HTTP请求&#34; class=&#34;headerlink&#34; title=&#34;处理HTTP请求&#34;&gt;&lt;/a&gt;处理HTTP请求&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;@GetMapping：get请求，请求参数是放在了路径url中，不太安全，并且会受到url长度的限制，get一般用于资源的获取，读取数据。&lt;/li&gt;
+&lt;li&gt;@PostMapping：post请求，通过request body传递参数，可传递的数据类型更多，更安全。post一般用于修改和写入数据。&lt;/li&gt;
+&lt;li&gt;@PutMapping：put请求&lt;/li&gt;
+&lt;li&gt;@DeleteMapping：delete请求&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;前后端传递值&#34;&gt;&lt;a href=&#34;#前后端传递值&#34; class=&#34;headerlink&#34; title=&#34;前后端传递值&#34;&gt;&lt;/a&gt;前后端传递值&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;@PathVariable 和 @RequestParam，PathVariable用于获取路径参数，@RequestParam用于获取查询参数&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20231228104008749.png&#34; alt=&#34;image-20231228104008749&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;@RequestBody，用于读取一个Json格式的数据，并将其绑定到一个Java对象上去。一个方法只能有一个@RequestBody，但可以有多个**&lt;code&gt;@RequestParam&lt;/code&gt;和&lt;code&gt;@PathVariable&lt;/code&gt;**&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2024/01/03/Javase%E7%9B%B8%E5%85%B3/</guid>
+            <title>Javase相关</title>
+            <link>https://ooooddddd.github.io/2024/01/03/Javase%E7%9B%B8%E5%85%B3/</link>
+            <category>Javase</category>
+            <pubDate>Wed, 03 Jan 2024 20:00:41 +0800</pubDate>
+            <description><![CDATA[ &lt;h3 id=&#34;一、Java常用类&#34;&gt;&lt;a href=&#34;#一、Java常用类&#34; class=&#34;headerlink&#34; title=&#34;一、Java常用类&#34;&gt;&lt;/a&gt;一、Java常用类&lt;/h3&gt;&lt;h4 id=&#34;1、Java的八大基本数据类型&#34;&gt;&lt;a href=&#34;#1、Java的八大基本数据类型&#34; class=&#34;headerlink&#34; title=&#34;1、Java的八大基本数据类型&#34;&gt;&lt;/a&gt;1、Java的八大基本数据类型&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;整数：byte、short、int、long&lt;/li&gt;
+&lt;li&gt;浮点数：float、double&lt;/li&gt;
+&lt;li&gt;布尔：boolearn&lt;/li&gt;
+&lt;li&gt;字符：char&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、ArrayList和linkedlist的区别&#34;&gt;&lt;a href=&#34;#2、ArrayList和linkedlist的区别&#34; class=&#34;headerlink&#34; title=&#34;2、ArrayList和linkedlist的区别&#34;&gt;&lt;/a&gt;2、ArrayList和linkedlist的区别&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;都是线程不安全的&lt;/li&gt;
+&lt;li&gt;底层数据结构：ArrayList使用的是Object数组；linkedlist底层使用的是双向循环链表&lt;/li&gt;
+&lt;li&gt;插入删除：ArrayList采用的是数组存储，因此在插入和删除时的时间复杂度会受到元素位置的影响。而LinkedList则近似于O(1)&lt;/li&gt;
+&lt;li&gt;是否支持快速随机访问：LinkedList不支持，而ArrayList则可以通过元素的序号快速获取元素对象。&lt;/li&gt;
+&lt;li&gt;内存空间占用：ArrayList的空间浪费主要体现在list列表的末尾需要预留一定的冗余空间。而LinkedList则是需要额外存储直接后继与直接前驱。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;3、ArrayList扩容&#34;&gt;&lt;a href=&#34;#3、ArrayList扩容&#34; class=&#34;headerlink&#34; title=&#34;3、ArrayList扩容&#34;&gt;&lt;/a&gt;3、ArrayList扩容&lt;/h4&gt;&lt;p&gt;以&lt;strong&gt;无参构造方法&lt;/strong&gt;创建一个ArrayList时，是不会分配容量的，默认是&lt;strong&gt;0&lt;/strong&gt;，只有在向ArrayList中add()第一个元素时，容量会得到扩容，默认为&lt;strong&gt;10&lt;/strong&gt;，然后继续向里面添加元素，到&lt;strong&gt;11个&lt;/strong&gt;元素时，此时已经超出当前容量，会进行扩容，10+10&amp;#x2F;2&amp;#x3D;15，当old容量为偶数时，新容量刚好就是old容量的1.5倍，奇数则会损失0.5的小数点。&lt;/p&gt;
+&lt;h4 id=&#34;4、HashMap-的-7-种遍历方式与性能分析&#34;&gt;&lt;a href=&#34;#4、HashMap-的-7-种遍历方式与性能分析&#34; class=&#34;headerlink&#34; title=&#34;4、HashMap 的 7 种遍历方式与性能分析&#34;&gt;&lt;/a&gt;4、HashMap 的 7 种遍历方式与性能分析&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;迭代器:Iterator EntrySet、Iterator KeySet&lt;/li&gt;
+&lt;li&gt;For Each:For EntrySet， For KeySet&lt;/li&gt;
+&lt;li&gt;Lambda表达式&lt;/li&gt;
+&lt;li&gt;Streams API&lt;/li&gt;
+&lt;li&gt;多线程Streams API&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;EntrySet的遍历性能最好，因为KeySet在循环时使用了map.get(key)，相当于又遍历了以便Map集合去查询Key所对应的值。在使用迭代器或者for循环时，其实已经遍历了一遍Map集合了。EntrySet只需要遍历一遍，然后就将对象的Key和Value都存放在了Entry对象中，因此再获取Key和Value就无需再遍历Map集合了&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;EntrySet&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre class=&#34;language-java&#34; data-language=&#34;java&#34;&gt;&lt;code class=&#34;language-java&#34;&gt;&lt;span class=&#34;token operator&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;// 遍历*&lt;/span&gt;
+   &lt;span class=&#34;token class-name&#34;&gt;Iterator&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;Entry&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Integer&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt; iterator &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;entrySet&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;iterator&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+   &lt;span class=&#34;token keyword&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;iterator&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;hasNext&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+     &lt;span class=&#34;token class-name&#34;&gt;Map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;Entry&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Integer&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt; entry &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; iterator&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+     &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;entry&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getKey&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+     &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;entry&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getValue&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+   &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;KeySet：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class=&#34;language-java&#34; data-language=&#34;java&#34;&gt;&lt;code class=&#34;language-java&#34;&gt;&lt;span class=&#34;token class-name&#34;&gt;Iterator&lt;/span&gt;&lt;span class=&#34;token generics&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token class-name&#34;&gt;Integer&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt; iterator &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;keySet&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;iterator&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token keyword&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;iterator&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;hasNext&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;
+      &lt;span class=&#34;token class-name&#34;&gt;Integer&lt;/span&gt; key &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; iterator&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;next&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;key&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;key&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;5、hashmap是否是线程安全的，常见的线程安全的集合&#34;&gt;&lt;a href=&#34;#5、hashmap是否是线程安全的，常见的线程安全的集合&#34; class=&#34;headerlink&#34; title=&#34;5、hashmap是否是线程安全的，常见的线程安全的集合&#34;&gt;&lt;/a&gt;5、hashmap是否是线程安全的，常见的线程安全的集合&lt;/h4&gt;&lt;p&gt;hashmap是线程不安全的，多线程下进行扩容会导致死循环，jdk1.7中hashmap的链表使用头插法插入元素，扩容时可能会导致环形链表的出现形成死循环，因此jdk1.8改为了尾插法，但是多线程的put操作，可能会导致元素的丢失问题。&lt;/p&gt;
+&lt;p&gt;常见的线程安全的集合：&lt;/p&gt;
+&lt;p&gt;hashtable，concurrentHashMap，vector、Stack。&lt;/p&gt;
+&lt;h4 id=&#34;6、HashMap的底层原理&#34;&gt;&lt;a href=&#34;#6、HashMap的底层原理&#34; class=&#34;headerlink&#34; title=&#34;6、HashMap的底层原理&#34;&gt;&lt;/a&gt;6、HashMap的底层原理&lt;/h4&gt;&lt;p&gt;在JDK1.8之前hashMap的底层数据结构是由数组+链表组成的，数组是HashMap的主体部分，而链表是为了解决哈希冲突而存在的。在JDK1.8中，是由数组+链表+红黑树组成的，当链表过长时，会严重影响HashMap的性能，因为链表的搜索时间复杂度是O（n），而红黑树则是O(logN)。因此，JDK1.8中引入了红黑树，在链表达到一定条件是会转化为红黑树。这个条件就是：当链表长度大于8，就会去检查数组的长度是否大于64，如果数组长度小于64，则进行数组的扩容，否则就会将链表转化为红黑树，以减少搜索时间。HashMap中采用的解决hash冲突的办法是链地址法。将哈希值相同的元素构成一个单链表，并将单链表的头结点存放在哈希表的第i个单元中。HashMap的默认加载因子是0.75，初始化数组的长度默认值是16，threshold是hashmap所能容纳的最大键值对数量&amp;#x3D;加载因子*数组长度，当容量达到这个值时，数组就会进行扩容，扩大为原来的两倍，并将原来的对象放入新数组中。这里jdk1.8进行了适当的优化，无需再重新计算hash值，元素的位置在原来的位置或者是原来的位置+oldCap。&lt;/p&gt;
+&lt;p&gt;jdk1.8之前，hashmap的插入方法是头插法，新插入的元素会插入到链表的头部。产生的问题如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;破坏了链表元素的插入顺序，可能不利于某些需要按照插入顺序进行遍历的场景&lt;/li&gt;
+&lt;li&gt;容易形成环形链表的问题：由于头插法需要修改链表头，在多线程环境下可能会引起链表环形的问题，使得链表遍历时出现死循环&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;7、ConCurrentHashMap底层原理&#34;&gt;&lt;a href=&#34;#7、ConCurrentHashMap底层原理&#34; class=&#34;headerlink&#34; title=&#34;7、ConCurrentHashMap底层原理&#34;&gt;&lt;/a&gt;7、ConCurrentHashMap底层原理&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;ConCurrentHashMap在HashMap的基础上加上的锁的机制，因此是线程安全的。在JDK1.7中，ConCurrentHashMap是由Segment分段数组结构和HashEntry数组结构组成的。即ConCurrentHashMap把哈希表分为了多个Segment小数组，而每个Segment就是一个类似于hashmap的结构，每一个hashmap的内部可以进行扩容，而segment的个数一旦初始化就不能再改变，默认值是16，也就可以认为其默认支持16个线程的并发。&lt;/li&gt;
+&lt;li&gt;在jdk1.8中，其数据结构变成了数组+链表&amp;#x2F;红黑树的组合，当链表冲突达到一定长度时，会转化为红黑树。在锁的实现上，抛弃了原本的Segment分段锁，采用了CAS + synchronized 对链表的头结点或红黑树的根节点进行加锁，将锁的级别控制在了更细粒度的级别，大大提高了并发量。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;二、并发编程&#34;&gt;&lt;a href=&#34;#二、并发编程&#34; class=&#34;headerlink&#34; title=&#34;二、并发编程&#34;&gt;&lt;/a&gt;二、并发编程&lt;/h3&gt;&lt;h4 id=&#34;1、volatile关键字&#34;&gt;&lt;a href=&#34;#1、volatile关键字&#34; class=&#34;headerlink&#34; title=&#34;1、volatile关键字&#34;&gt;&lt;/a&gt;1、volatile关键字&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;volatile保证变量对所有线程的可见性，当volatile变量被修改时，新值对所有变量会立即更新。即多线程环境下使用volatile修饰的变量的值一定是最新的。&lt;/li&gt;
+&lt;li&gt;禁止指令重排序&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、synchronized关键字&#34;&gt;&lt;a href=&#34;#2、synchronized关键字&#34; class=&#34;headerlink&#34; title=&#34;2、synchronized关键字&#34;&gt;&lt;/a&gt;2、synchronized关键字&lt;/h4&gt;&lt;p&gt;主要是用于解决多个线程之间访问资源的同步性，可以保证被其修饰的方法或代码块在任意时刻只能有一个线程执行。（悲观锁的思想）&lt;/p&gt;
+&lt;p&gt;修饰实例方法：给当前对象实例加锁，进入同步代码块之前需要获取当前对象实例的锁&lt;/p&gt;
+&lt;p&gt;修饰静态方法：给当前的类加锁，会作用于当前类的所有对象实例。&lt;/p&gt;
+&lt;p&gt;修饰代码块：既可以锁定对象实例，也可以锁定类，以括号中的代码为准&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;synchronized(object)&lt;/code&gt; 表示进入同步代码库前要获得 &lt;strong&gt;给定对象的锁&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;synchronized(类.class)&lt;/code&gt; 表示进入同步代码前要获得 &lt;strong&gt;给定 Class 的锁&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;底层实现：&lt;/strong&gt;主要通过两个指令实现，monitorenter指令指向同步代码块的开始位置，monitorexit指令指向同步代码块的结束位置。在执行monitorenter指令时，线程尝试获取锁也就是获取对象监视器monitor的持有权，对象监视器是由c++实现的，每个对象中都内置了一个对象监视器对象。如果锁的计数器为0，则表示可以被获取，获取后将锁计数器设为1，业务执行完毕后通过monitorexit指令释放锁，将锁的计数器设为0，然后其他线程才可以尝试获取锁。如果获取锁失败，当前线程需要阻塞等待，直到锁被另外一个线程释放为止。&lt;/p&gt;
+&lt;h4 id=&#34;3、乐观锁-与-悲观锁&#34;&gt;&lt;a href=&#34;#3、乐观锁-与-悲观锁&#34; class=&#34;headerlink&#34; title=&#34;3、乐观锁 与 悲观锁&#34;&gt;&lt;/a&gt;3、乐观锁 与 悲观锁&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;悲观锁：&lt;/strong&gt;总是假设最坏的情况，认为资源每次被访问的时候都会出问题（比如共享数据被修改），所以每次在获取资源操作的时候都会上锁，共享资源每次只给一个线程使用，其他线程都会阻塞。高并发场景下会增加系统开销，因为线程阻塞会导致系统的上下文切换。还有可能造成死锁的问题。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;乐观锁：&lt;/strong&gt;乐观锁总是假设最好情况，认为共享资源每次被访问都不会出现问题，线程无需等待，只是在提交修改的时候去验证对应的数据是否被其他线程修改了（&lt;strong&gt;版本号或者CAS算法&lt;/strong&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;使用场景&lt;/strong&gt;：悲观锁适用于：写操作比较多的场景 乐观锁适用于：读操作较多的场景&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;乐观锁的实现：&lt;/strong&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;版本号机制：&lt;/strong&gt;在数据表中加上一个数据版本号的字段，表示数据被修改的次数，要更新数据前读取该版本，更新操作完成，提交更新时再次读取版本号的值，与之前的值相等才更新。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CAS算法：&lt;/strong&gt;Compare And Swap（比较与交换）思想：使用一个预期值和要更新的变量值进行比较，两值相等才会进行更新。CAS 是一个原子操作，底层依赖于一条 CPU 的原子指令。乐观锁产生的问题&lt;ol&gt;
+&lt;li&gt;ABA问题：初次读取值为A，要更新时再检查依然是A，但是这个过程中被改为了B，又重新改为了A。&lt;/li&gt;
+&lt;li&gt;CAS自旋操作：就是执行不成功就一直循环执行直到成功为止，如果长时间循环，会对CPU带来较大的开销&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;4、线程死锁&#34;&gt;&lt;a href=&#34;#4、线程死锁&#34; class=&#34;headerlink&#34; title=&#34;4、线程死锁&#34;&gt;&lt;/a&gt;4、线程死锁&lt;/h4&gt;&lt;p&gt;多个线程同时被阻塞，产生死锁的四个必要条件：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;互斥条件，该资源在任意一个时刻只能由一个线程占用&lt;/li&gt;
+&lt;li&gt;请求与保持：一个线程因为请求资源被阻塞时，不会去是释放已经占用的资源&lt;/li&gt;
+&lt;li&gt;不剥夺条件：在线程未主动释放资源之前，不能被其他线程强行剥夺，只能使用完毕自行释放&lt;/li&gt;
+&lt;li&gt;循环等待：若干线程在等待资源时形成了首尾相接的情况&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;预防死锁：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;破坏互斥条件：一次性申请所有资源&lt;/li&gt;
+&lt;li&gt;破坏不剥夺条件：占用部分资源的线程进一步申请资源时如果被阻塞，就主动释放它所占用的资源&lt;/li&gt;
+&lt;li&gt;按序申请资源，破坏循环等待条件&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;避免死锁：&lt;/p&gt;
+&lt;p&gt;借助算法，如银行家算法等对资源分配进行计算评估，使其进入安全状态。&lt;/p&gt;
+&lt;p&gt;还有哪些关键字&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20231225103712047.png&#34; alt=&#34;image-20231225103712047&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;5、说说线程的生命周期和状态&#34;&gt;&lt;a href=&#34;#5、说说线程的生命周期和状态&#34; class=&#34;headerlink&#34; title=&#34;5、说说线程的生命周期和状态?&#34;&gt;&lt;/a&gt;5、说说线程的生命周期和状态?&lt;/h4&gt;&lt;p&gt;New:初始状态，线程被创建之后但没有被调用Start()&lt;/p&gt;
+&lt;p&gt;RUNNABLE:运行状态，线程被调用了Start()等待运行的状态。&lt;/p&gt;
+&lt;p&gt;​	在操作系统层面是有：READY和Running状态的区分，但是在JVM层面只能看到RUNNABLE状态&lt;/p&gt;
+&lt;p&gt;BLOCK:阻塞状态，需要等待锁释放&lt;/p&gt;
+&lt;p&gt;WAITING:等待状态，需要其他线程通知或中断&lt;/p&gt;
+&lt;p&gt;TIME_WAITING:超时等待状态，可以在指定的时间后自行返回而不是像WAITING那样一直等待&lt;/p&gt;
+&lt;p&gt;TERMINATED：终止状态，表示该线程运行完毕&lt;/p&gt;
+&lt;h4 id=&#34;6、线程的上下文切换&#34;&gt;&lt;a href=&#34;#6、线程的上下文切换&#34; class=&#34;headerlink&#34; title=&#34;6、线程的上下文切换&#34;&gt;&lt;/a&gt;6、线程的上下文切换&lt;/h4&gt;&lt;p&gt;每个线程在执行过程中，会有自己的运行条件和状态(也称为上下文)，当出现如下情况时，线程会从占用CPU的状态退出。主动让出CPU，比如调用了sleep、wait等，时间片用完、或者请求 IO，线程被阻塞。然后就会发生线程切换，需要保存当前线程的上下文，用于线程下次占用CPU的时候恢复线程。并加载下一个将要占用CPU的线程的上下文。如果切换频繁就会造成系统的整体效率低下&lt;/p&gt;
+&lt;h4 id=&#34;7、线程池的核心参数：&#34;&gt;&lt;a href=&#34;#7、线程池的核心参数：&#34; class=&#34;headerlink&#34; title=&#34;7、线程池的核心参数：&#34;&gt;&lt;/a&gt;7、线程池的核心参数：&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;corePoolSize：核心线程大小，线程池一直运行，核心线程就不会停止&lt;/li&gt;
+&lt;li&gt;maximumPoolSize：线程池最大线程数量，&lt;/li&gt;
+&lt;li&gt;keepAliveTime：非核心线程的心跳时间，在该时间内没有运行任务，就会消亡&lt;/li&gt;
+&lt;li&gt;workQueue：新任务来的时候判断当前运行的线程数量是否达到核心线程数，如果达到，任务就会被存放到阻塞队列。&lt;/li&gt;
+&lt;li&gt;unit：keepAliveTime的时间单位&lt;/li&gt;
+&lt;li&gt;ThreadFactory：线程工厂，创建新线程会用到&lt;/li&gt;
+&lt;li&gt;defaultHandler：饱和策略。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;8、Java-实现并发的几种方法&#34;&gt;&lt;a href=&#34;#8、Java-实现并发的几种方法&#34; class=&#34;headerlink&#34; title=&#34;8、Java 实现并发的几种方法&#34;&gt;&lt;/a&gt;8、Java 实现并发的几种方法&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;synchronized关键字&lt;/li&gt;
+&lt;li&gt;Volatile关键字&lt;/li&gt;
+&lt;li&gt;实现Runnable接口创建线程&lt;/li&gt;
+&lt;li&gt;继承Thread类创建线程&lt;/li&gt;
+&lt;li&gt;线程池&lt;/li&gt;
+&lt;li&gt;stream流也可以&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;三、JVM&#34;&gt;&lt;a href=&#34;#三、JVM&#34; class=&#34;headerlink&#34; title=&#34;三、JVM&#34;&gt;&lt;/a&gt;三、JVM&lt;/h3&gt;&lt;h4 id=&#34;1、JVM内存分区模型&#34;&gt;&lt;a href=&#34;#1、JVM内存分区模型&#34; class=&#34;headerlink&#34; title=&#34;1、JVM内存分区模型&#34;&gt;&lt;/a&gt;1、JVM内存分区模型&lt;/h4&gt;&lt;p&gt;主要分为以下几个区域：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;程序计数器&lt;/strong&gt;：每个线程都有自己的程序计数器，用于指示当前线程执行的字节码指令的行号，分支、循环、跳转、异常处理等基础功能都依赖这个指示器完成。每个线程都有一个独立的程序计数器，确保线程切换后能恢复到正确的执行位置。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;虚拟机栈&lt;/strong&gt;：也称为Java方法栈，用于存储方法执行时的局部变量表、操作数栈、动态链接、方法出口等信息。每个线程在执行一个方法时，都会为该方法分配一个栈桢，并将其压入虚拟机栈，当方法执行完毕后，虚拟机会将其出栈。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;本地方法栈&lt;/strong&gt;：与虚拟机栈类似，用于存储本地方法的执行信息&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;堆&lt;/strong&gt;：用于存储对象实例，是JVM中最大的一块内存区域。堆是被所有线程共享的，当创建一个新对象时，对象实例存储在堆中，堆中存储的对象实例都有一个标记用于指示对象是否存活。垃圾回收器会周期性地回收那些没有被标记为存活的对象。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;方法区&lt;/strong&gt;：用于存储已被虚拟机加载的类信息、常量、静态变量、即编译器编译后的代码等数据&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;运行时常量池&lt;/strong&gt;：是方法区的一部分，用于存储编译期间生成的各种字面量和符号引用的常量池。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、JVM垃圾回收算法&#34;&gt;&lt;a href=&#34;#2、JVM垃圾回收算法&#34; class=&#34;headerlink&#34; title=&#34;2、JVM垃圾回收算法&#34;&gt;&lt;/a&gt;2、JVM垃圾回收算法&lt;/h4&gt;&lt;p&gt;常见的垃圾回收算法有以下几种类型：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;标记——清除算法：&lt;/strong&gt;分为标记和清除两个阶段。标记阶段遍历所有活动对象并打上标记，清除阶段将未被标记的对象删除。优点是不需要连续的内存空间，缺点是清除后可能会产生内存碎片&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;复制算法：&lt;/strong&gt;将可用内存分为两块，只使用其中一块，当一块满了，将存活对象复制到另一块未被使用的空间，然后清除使用的那块。优点是：简单高效，不会产生内存碎片。缺点是可用内存缩小为原来的一半。不适合老年代：存活对象数量比较大，复制性能很差。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;标记——整理算法：&lt;/strong&gt;与标记——清除类似，在标记阶段与其相似，但是在清除阶段将存活对象整理到内存的一端，然后清除端边界外的所有对象。优点是不会产生内存碎片，缺点是比较慢。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分代收集算法：&lt;/strong&gt;当前虚拟机的垃圾收集都采用分代收集算法，根据对象存活的时间将内存分为几个区域，每个区域采用不同的回收策略。新生代、老年代分别采取不同的回收算法。&lt;ol&gt;
+&lt;li&gt;新生代：分为一个Eden区和两个Survivor 区，当Eden区没有空间时，虚拟机将发起一次Minor GC（只对新生代进行垃圾收集），执行完后，如果对象能够存在Eden区的话，就会直接在Eden分配内存。对象每在Survior区熬过一次，年龄标志就增长1，增长到一定程度就会晋升到老年代中，这个值默认是15&lt;/li&gt;
+&lt;li&gt;大对象和长期存活的对象将会进入老年代，Old GC，只对老年代进行垃圾收集&lt;/li&gt;
+&lt;li&gt;Mixed GC：混合收集&lt;/li&gt;
+&lt;li&gt;Full GC，收集整个Java堆和方法区&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;3、双亲委派模式&#34;&gt;&lt;a href=&#34;#3、双亲委派模式&#34; class=&#34;headerlink&#34; title=&#34;3、双亲委派模式&#34;&gt;&lt;/a&gt;3、双亲委派模式&lt;/h4&gt;&lt;p&gt;是Java类加载器在加载类时所采用的的一种设计模式。这种模式的核心思想是：当一个类加载器收到类加载请求时，首先不会自己尝试加载，而是将请求委派给它的父类加载器。依次递归，指导最顶层的启动类加载器；如果父类加载器无法加载该类，子类才尝试自己加载。&lt;/p&gt;
+&lt;p&gt;主要作用：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;避免类的重复加载&lt;/strong&gt;：通过委派给父类加载器，同一个类不会被多个类加载器重复加载。有助于节省内存资源&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;保护Java核心类库&lt;/strong&gt;：由于双亲委派制的存在，用户自定义的类加载器无法直接加载Java核心类库，java.lang.String等。能够确保Java核心类库的安全性。例如当我们自定义了一个java.lang包，并且定义了一个类String，一旦运行代码，需要加载这个类的时候，就会向上一层层的委派到顶层的&lt;strong&gt;启动类加载器&lt;/strong&gt;，顶层的引导类加载器会加载Java核心类库中的java.lang.String，该类中没有main方法，因此程序提示在&lt;strong&gt;java.lang.String类中找不到main方法&lt;/strong&gt;&lt;ol&gt;
+&lt;li&gt;&lt;img src=&#34;https://ask.qcloudimg.com/http-save/yehe-2219188/k9iysve4gq.png&#34; alt=&#34;img&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;维护类加载器的层次结构&lt;/strong&gt;：双亲委派模式使得各级类加载器可以按照⼀定的层次结构来组织和管理。这有助于 降低类加载器的复杂性，简化类加载过程。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;4、JVM-的垃圾回收机制&#34;&gt;&lt;a href=&#34;#4、JVM-的垃圾回收机制&#34; class=&#34;headerlink&#34; title=&#34;4、JVM 的垃圾回收机制&#34;&gt;&lt;/a&gt;4、JVM 的垃圾回收机制&lt;/h4&gt;&lt;p&gt;在Java中，程序员不需要显示的区释放一个对象的内存，而是由虚拟机自行执行。想要知道JVM的垃圾回收机制，首先我们得知道JVM是如何给一个对象分配内存的。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;大多数情况下，对象会在新生代中的Eden区进行分配内存，当Eden区没有足够空间时，会进行一次Minor GC。此时会将Eden区域的内容转移到Survivor中去，如果该空间不足，会通过分配担保机制将新生代的对象提前转移到老年代中。&lt;/li&gt;
+&lt;li&gt;大对象也会直接进入老年代中，如字符串、数组等&lt;/li&gt;
+&lt;li&gt;长期存活的对象将进入老年代。虚拟机会给每个对象分配一个Age计数器，初始在Eden区为0，经过一次Minor GC还存活，并且可以被Survivor区域所容纳，就会移动到Survivor区，Age计数器加一。每存活过一次Minor GC，Age计数器就会 + 1。到达15时，会转移到老年代中。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;如何判断是否需要进行回收：&lt;ol&gt;
+&lt;li&gt;进行可达性分析：通过一系列的称为 &lt;strong&gt;“GC Roots”&lt;/strong&gt; 的对象作为起点，从这些节点开始向下搜索，节点所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连的话，则证明此对象是不可用的，需要被回收。&lt;/li&gt;
+&lt;li&gt;然后通过一些垃圾回收算法进行垃圾回收。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;5、新生代和老生代怎么区分的&#34;&gt;&lt;a href=&#34;#5、新生代和老生代怎么区分的&#34; class=&#34;headerlink&#34; title=&#34;5、新生代和老生代怎么区分的&#34;&gt;&lt;/a&gt;5、新生代和老生代怎么区分的&lt;/h4&gt;&lt;h3 id=&#34;四、计算机网络&#34;&gt;&lt;a href=&#34;#四、计算机网络&#34; class=&#34;headerlink&#34; title=&#34;四、计算机网络&#34;&gt;&lt;/a&gt;四、计算机网络&lt;/h3&gt;&lt;h4 id=&#34;TCP连接的三次握手&#34;&gt;&lt;a href=&#34;#TCP连接的三次握手&#34; class=&#34;headerlink&#34; title=&#34;TCP连接的三次握手&#34;&gt;&lt;/a&gt;TCP连接的三次握手&lt;/h4&gt;&lt;p&gt;最开始，客户端和服务端都处于&lt;code&gt;Close&lt;/code&gt;状态，先是服务端主动监听某个端口，进入&lt;code&gt;Listen&lt;/code&gt;状态。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;第一次握手，由客户端向服务端发送建立连接的请求，向服务端发送一个同步报文，同时初始化一个随机数作为&lt;strong&gt;客户端的初始序列号seq&amp;#x3D;x&lt;/strong&gt;，并且进入SYN_SENT状态，等待服务器的确认。服务端接到请求之后，可以确认自己的接受能力和客户端的发送能力正常。&lt;/li&gt;
+&lt;li&gt;第二次握手，服务端受到连接请求报文后，如果同意建立连接，则向客户端发送同步确认报文，确认号ack&amp;#x3D;x+1，同时初始化一个随机数作为&lt;strong&gt;服务端的初始序列号seq&amp;#x3D;y&lt;/strong&gt;，此时服务器进入SYN_RECV状态。客户端收到这次报文后，能够确认自己的收、发能力，以及服务端的收、发能力都正常。&lt;/li&gt;
+&lt;li&gt;客户端收到服务端的确认之后，向服务端发送一个确认报文，确认号ack&amp;#x3D;y+1，序列号seq &amp;#x3D; x+1，服务端接收到这次报文之后能够确认自己的发送能力和客户端的接收能力都正常，完成三次握手，第三次握手还可以携带数据。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;为什么是三次握手？&#34;&gt;&lt;a href=&#34;#为什么是三次握手？&#34; class=&#34;headerlink&#34; title=&#34;为什么是三次握手？&#34;&gt;&lt;/a&gt;为什么是三次握手？&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;三次握手可以阻止重复历史连接的初始化&lt;/li&gt;
+&lt;li&gt;三次握手才可以同步双方的初始序列号&lt;/li&gt;
+&lt;li&gt;三次握手才可以保证双方均具有接收和发送的能力&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;TCP连接的四次挥手&#34;&gt;&lt;a href=&#34;#TCP连接的四次挥手&#34; class=&#34;headerlink&#34; title=&#34;TCP连接的四次挥手&#34;&gt;&lt;/a&gt;TCP连接的四次挥手&lt;/h4&gt;&lt;p&gt;第一次挥手，客户端向服务端发送连接释放报文FIN，主动关闭连接，同时等待服务端的确认，序列号&amp;#x3D;客户端上次发送报文的最后一个字节的序号+1，确认号是服务端上次发送的报文的最后一个字节的序号+1&lt;/p&gt;
+&lt;p&gt;第二次挥手：服务端接收到连接释放的报文后，立即发出确认报文，序列号等于刚才客户端的确认号，确认号等于刚才客户端的序列号+1。此时TCP处于半关闭状态，服务端还可以继续向客户端发送没有发完的数据，发送完毕后。&lt;/p&gt;
+&lt;p&gt;第三次挥手，服务端向客户端发送连接释放报文FIN，主动关闭连接，同时等待客户端的确认。序列号&amp;#x3D;服务端上次发送报文的最后一个字节的序号+1，与第二次挥手相同，因为这段时间客户端没有发送数据&lt;/p&gt;
+&lt;p&gt;第四次挥手：客户端收到服务端的释放连接报文后，立即发送确认报文，序列号等于&amp;#x3D;上面的确认号+1，确认号&amp;#x3D;上面的序列号+1，服务端进入Close状态。然后客户端进入TIME_WAIT状态，等待2*MSL（最长报文寿命），之后才会进入Close状态。&lt;/p&gt;
+&lt;h5 id=&#34;为什么需要等待2-MSL：&#34;&gt;&lt;a href=&#34;#为什么需要等待2-MSL：&#34; class=&#34;headerlink&#34; title=&#34;为什么需要等待2*MSL：&#34;&gt;&lt;/a&gt;为什么需要等待2*MSL：&lt;/h5&gt;&lt;p&gt;​	确保第四次握手，客户端的确认报文能够到达服务端，从而使服务端正常关闭连接。如果没有正常到达服务端，服务端会超时重传FIN，此时如果客户端已经断开连接，那么就无法响应服务端的请求，服务端无法正常收到确认报文，无法正常关闭连接。2*MSL&amp;#x3D;客户端确认报文1MSL+服务端重传FIN报文1MSL，这样能够确保服务端能够正常关闭。&lt;/p&gt;
+&lt;h3 id=&#34;职业规划&#34;&gt;&lt;a href=&#34;#职业规划&#34; class=&#34;headerlink&#34; title=&#34;职业规划&#34;&gt;&lt;/a&gt;职业规划&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;能在1-2年完全胜任岗位职责，有优秀的产出&lt;/li&gt;
+&lt;li&gt;2-3年成为岗位熟手，自身优秀的同时能带教新人&lt;/li&gt;
+&lt;li&gt;3-5年成为业务骨干或一线经理，能带领小团队协作完成任务&lt;/li&gt;
+&lt;/ul&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</guid>
+            <title>橙-API开放平台相关问题</title>
+            <link>https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</link>
+            <category>API开放平台</category>
+            <pubDate>Wed, 03 Jan 2024 19:58:05 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;基于React + Spring Boot + Dubbo + Gateway的API接口开放调用平台。管理员可以接入并发布接口，可视化各接口调用情况；用户可以开通接口调用权限、浏览接口及在线调试，并通过客户端 SDK 轻松调用接口。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;项目难点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;权限校验，切面注解。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;首先定义一个注解类，该注解允许在方法上定义两种权限规则：&lt;code&gt;anyRole&lt;/code&gt; 表示任意角色通过，&lt;code&gt;mustRole&lt;/code&gt; 表示必须有特定角色才能通过。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;pre&gt;&lt;code class=&#34;java&#34;&gt;/**
+ * 权限校验
+ * @author zc
+   */
+   @Target(ElementType.METHOD)
+   @Retention(RetentionPolicy.RUNTIME)
+   public @interface AuthCheck &amp;#123;
+
+   /**
+
+    * 有任何一个角色
+      *
+    * @return
+      */
+      String[] anyRole() default &amp;quot;&amp;quot;;
+
+   /**
+
+    * 必须有某个角色
+      *
+    * @return
+      */
+      String mustRole() default &amp;quot;&amp;quot;;
+
+&amp;#125;
+&lt;pre class=&#34;language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;
+2. 然后定义一个拦截器进行权限校验
+
+   &amp;#96;&amp;#96;&amp;#96;java
+   &amp;#x2F;**
+    * 权限校验 AOP
+    *
+    * @author zc
+    *&amp;#x2F;
+   @Aspect
+   @Component
+   public class AuthInterceptor &amp;#123;
+   
+       @Resource
+       private UserService userService;
+   
+       &amp;#x2F;**
+        * 执行拦截
+        *
+        * @param joinPoint
+        * @param authCheck
+        * @return
+        *&amp;#x2F;
+       @Around(&amp;quot;@annotation(authCheck)&amp;quot;)
+       public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable &amp;#123;
+           List&amp;lt;String&amp;gt; anyRole &amp;#x3D; Arrays.stream(authCheck.anyRole()).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+           String mustRole &amp;#x3D; authCheck.mustRole();
+           RequestAttributes requestAttributes &amp;#x3D; RequestContextHolder.currentRequestAttributes();
+           HttpServletRequest request &amp;#x3D; ((ServletRequestAttributes) requestAttributes).getRequest();
+           &amp;#x2F;&amp;#x2F; 当前登录用户
+           User user &amp;#x3D; userService.getLoginUser(request);
+           &amp;#x2F;&amp;#x2F; 拥有任意权限即通过
+           if (CollectionUtils.isNotEmpty(anyRole)) &amp;#123;
+               String userRole &amp;#x3D; user.getUserRole();
+               if (!anyRole.contains(userRole)) &amp;#123;
+                   throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+               &amp;#125;
+           &amp;#125;
+           &amp;#x2F;&amp;#x2F; 必须有所有权限才通过
+           if (StringUtils.isNotBlank(mustRole)) &amp;#123;
+               String userRole &amp;#x3D; user.getUserRole();
+               if (!mustRole.equals(userRole)) &amp;#123;
+                   throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+               &amp;#125;
+           &amp;#125;
+           &amp;#x2F;&amp;#x2F; 通过权限校验，放行
+           return joinPoint.proceed();
+       &amp;#125;
+   &amp;#125;&lt;/code&gt;&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;最后在需要进行权限校验的方法上添加&lt;code&gt;@AuthCheck&lt;/code&gt;注解即可&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20240102135217501.png&#34; alt=&#34;image-20240102135217501&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;网关设计&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;1、为什么要做这个项目：&#34;&gt;&lt;a href=&#34;#1、为什么要做这个项目：&#34; class=&#34;headerlink&#34; title=&#34;1、为什么要做这个项目：&#34;&gt;&lt;/a&gt;1、为什么要做这个项目：&lt;/h4&gt;&lt;p&gt;尽可能地帮助和服务更多的用户和开发者，让他们可以方便快捷地获取他们想要的信息和功能。接口开放平台可以帮助开发者快速接入一些常用的服务，从而提高他们的开发效率，比如天气服务、随机头像、心灵鸡汤等，他们是一些应用或者小程序中常见的功能，所以提供这些接口可以帮助开发者更加方便地实现这些功能。这些接口也可以让用户在使用应用时获得更加全面的功能和服务，从而提高用户体验。所以我认为接口开放平台是一个有意义的项目，可以为用户和开发者带来更多的便利和价值。&lt;/p&gt;
+&lt;p&gt;表结构：用户表（user）、接口信息表（interfaceInfo）、用户接口表（userInterface，用于记录用户对接口是否有调用权限，是否有剩余调用次数等）、土味情话表（用于提供随机土味情话服务的接口需要的表）&lt;/p&gt;
+&lt;h4 id=&#34;2、项目架构设计&#34;&gt;&lt;a href=&#34;#2、项目架构设计&#34; class=&#34;headerlink&#34; title=&#34;2、项目架构设计&#34;&gt;&lt;/a&gt;2、项目架构设计&lt;/h4&gt;&lt;p&gt;采用了前后端分离的架构设计。前端使用Ant-design-pro框架快速开发，然后使用Nginx进行部署，通过Nginx反向代理将请求转发到后端Web项目，因为项目刚刚上线，用户量较少，暂时采用了单机部署的模式，未来可能采取&lt;strong&gt;水平扩容&lt;/strong&gt;的方式，增加多台节点，通过nginx的&lt;strong&gt;负载均衡&lt;/strong&gt;，将请求平均的分发到多个节点上，以支撑更高的并发量。我的web项目使用Spring Boot开发，并且连接到到了 Mysql数据库 和 Redis，数据库主要用来存储用户和接口的相关信息，通过Redis实现了分布式session，因为考虑到未来要是用分布式架构，可以避免使用tomcat保存session出现用户登录失效的问题。&lt;/p&gt;
+&lt;h5 id=&#34;反向代理与正向代理&#34;&gt;&lt;a href=&#34;#反向代理与正向代理&#34; class=&#34;headerlink&#34; title=&#34;反向代理与正向代理&#34;&gt;&lt;/a&gt;反向代理与正向代理&lt;/h5&gt;&lt;p&gt;反向代理：客户端将请求发送到反向代理服务器，由反向代理服务器去选择目标服务器，获取数据后再返回给客户端。对外暴露的是反向代理服务器地址，隐藏了真实服务器 IP 地址。反向代理“代理”的是目标服务器。&lt;/p&gt;
+&lt;p&gt;正向代理：顺着请求的方向进行的代理，即代理服务器它是由你配置为你服务，去请求目标服务器地址。类似于科学上网&lt;/p&gt;
+&lt;h5 id=&#34;负载均衡&#34;&gt;&lt;a href=&#34;#负载均衡&#34; class=&#34;headerlink&#34; title=&#34;负载均衡&#34;&gt;&lt;/a&gt;负载均衡&lt;/h5&gt;&lt;p&gt;常见的负载均衡算法：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;随机法，如果没有配置权重的话，所有服务器被访问到的概率是相等的。权重越高，被访问到的概率也越高。适合服务器性能接近的集群，其中每个服务器承载相同的负载，缺点：部分机器在一段时间之内无法被访问到。&lt;/li&gt;
+&lt;li&gt;轮询法：挨个服务器进行访问，当然，也可以设置权重。&lt;/li&gt;
+&lt;li&gt;一致性Hash法：相同参数的请求总是发送到同一台服务器进行处理，比如同个IP的请求&lt;/li&gt;
+&lt;li&gt;最小连接法：遍历服务器节点列表，选取活动连接数（可以理解为正在处理的请求数）最小的一台服务器来响应当前的请求。&lt;/li&gt;
+&lt;li&gt;两次随机法：两次随机法在随机法的基础上多了一次随机，多选出一台服务器，然后根据两台服务器的负载情况，从中选择一台最合适的&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;水平扩容&#34;&gt;&lt;a href=&#34;#水平扩容&#34; class=&#34;headerlink&#34; title=&#34;水平扩容&#34;&gt;&lt;/a&gt;水平扩容&lt;/h5&gt;&lt;p&gt;垂直扩容：增加自身的容量。&lt;/p&gt;
+&lt;p&gt;水平扩容：增加节点的方式来增加整个系统的容量。垂直扩容比较方便，但是会受制于机器的内存、性能等。所以到了一定阶段肯定要进行水平扩容。&lt;/p&gt;
+&lt;h4 id=&#34;3、技术选型及原因&#34;&gt;&lt;a href=&#34;#3、技术选型及原因&#34; class=&#34;headerlink&#34; title=&#34;3、技术选型及原因&#34;&gt;&lt;/a&gt;3、技术选型及原因&lt;/h4&gt;&lt;p&gt;使用SpringBoot是因为通过&lt;strong&gt;自动装配&lt;/strong&gt;能够提高项目的开发效率，能够很好地整合Spring的相关服务。使用Mysql的原因是考虑到未来打算上用户充值交易功能，限制调用次数等场景需要使用事务来保证数据的&lt;strong&gt;完整性和一致性&lt;/strong&gt;。使用Redis是因为可以用来实现分布式session、锁、缓存等功能。因为Redis是一个单独的中间件，不同客户端可以向同一个Redis或者集群中存放session&amp;#x2F;加锁，能够保证资源在分布式服务下都可见。由于Redis是单线程的，同时也支持Lua脚本，可以保证并发安全的问题，也能够轻松实现分布式锁的功能。&lt;/p&gt;
+&lt;h5 id=&#34;自动装配&#34;&gt;&lt;a href=&#34;#自动装配&#34; class=&#34;headerlink&#34; title=&#34;自动装配&#34;&gt;&lt;/a&gt;自动装配&lt;/h5&gt;&lt;p&gt;&lt;strong&gt;什么是自动装配：&lt;/strong&gt;在没有SpringBoot的情况下，如果我们需要引入第三方依赖，需要手动配置，非常麻烦。但是，在SpringBoot中，我们直接引入一个 starter 即可。比如想要使用redis的话，直接在项目中引入对应的starter，然后在application.yml中配置即可。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如何实现自动装配与按需加载的：&lt;/strong&gt;核心注解：SpringBootApplication注解，是@EnableAutoConfiguration、（启用SpringBoot的自动装配机制）@Configuration（允许上下文中注册额外的bean或者导入其他配置类）、@ComponentScan（扫描被@Compent、@Service、@Controller注解修饰的bean），注解默认会扫描启动类所在的包下的所有类，也可以自定义不扫描某些bean。&lt;/p&gt;
+&lt;p&gt;自动装配核心功能的实现实际是通过 &lt;code&gt;AutoConfigurationImportSelector&lt;/code&gt;类实现的，该类实现&lt;code&gt;ImportSelector&lt;/code&gt;接口，同时实现接口中的&lt;code&gt;selectImports&lt;/code&gt;方法，该方法&lt;strong&gt;获取所有符合条件的类的全限定类名，这些类需要被加载到 IoC 容器中&lt;/strong&gt;。主要是通过读取&lt;code&gt;META-INF/spring.factories&lt;/code&gt;来获取需要自动装配的类的。同时根据&lt;code&gt;@ConditionalOnXXX&lt;/code&gt;注解来实现按需加载&lt;/p&gt;
+&lt;p&gt;项目中的SDK利用上述功能开发成了一个Starter，首先引入Spring Boot 相关依赖，然后创建一个类&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/image-20231221102811685.png&#34; alt=&#34;image-20231221102811685&#34;&gt;&lt;/p&gt;
+&lt;p&gt;最后在resources&amp;#x2F;META-INF目录下创建一个spring.factories文件，引入该类&lt;/p&gt;
+&lt;pre class=&#34;language-none&#34;&gt;&lt;code class=&#34;language-none&#34;&gt;org.springframework.boot.autoconfigure.EnableAutoConfiguration&amp;#x3D;com.zc.orangeapiclientsdk.OrangeApiClientConfig&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此时，该类就被做成了一个Starter，可以给其他开发者调用。&lt;/p&gt;
+&lt;h5 id=&#34;共享session&#34;&gt;&lt;a href=&#34;#共享session&#34; class=&#34;headerlink&#34; title=&#34;共享session&#34;&gt;&lt;/a&gt;共享session&lt;/h5&gt;&lt;p&gt;在分布式系统中，存在多台服务器，如果用户登陆信息存储在服务器1中，第二次访问时用户被分配到了服务器2，此时就需要重新登陆。因此引入Redis 对这些 Session 信息进行统一的存储和管理，这样无论请求发送到那台服务器，服务器都会去同一个 Redis 获取相关的 Session 信息，这样就解决了分布式系统下 Session 存储的问题。&lt;/p&gt;
+&lt;h4 id=&#34;4、开发流程&#34;&gt;&lt;a href=&#34;#4、开发流程&#34; class=&#34;headerlink&#34; title=&#34;4、开发流程&#34;&gt;&lt;/a&gt;4、开发流程&lt;/h4&gt;&lt;p&gt;首选参考了一些已有的产品，根据这些产品，总结出比较好的功能点，再结合自己想要实现的一些特色功能，做了一个项目的整体设计，然后再进行技术选型。&lt;/p&gt;
+&lt;h4 id=&#34;5、项目核心：网关&#34;&gt;&lt;a href=&#34;#5、项目核心：网关&#34; class=&#34;headerlink&#34; title=&#34;5、项目核心：网关&#34;&gt;&lt;/a&gt;5、项目核心：网关&lt;/h4&gt;&lt;p&gt;本平台的关键点就在于提供接口服务，要保证接口的高可用性和稳定性，所有的接口服务项目独立进行部署，隐藏其真实的接口地址及调用，调用接口服务的请求都必须经过网关进行统一鉴权、流量控制（路由转发）、流量染色、负载均衡，接口保护、统一日志等，之后再将请求转发到真实的接口地址，防止接口地址被恶意调用，盗刷等。&lt;/p&gt;
+&lt;p&gt;在本项目中，使用API网关做了什么：&lt;/p&gt;
+&lt;p&gt;1、统一鉴权：应用API签名认证算法校验用户请求的合法性。&lt;/p&gt;
+&lt;p&gt;2、公共业务逻辑：对每个接口的调用进行集中的统计。&lt;/p&gt;
+&lt;p&gt;3、路由转发：前端发送请求到API网关，通过网关转发到实际的接口地址&lt;/p&gt;
+&lt;p&gt;4、流量染色：给经过网关的请求加上特定的请求头参数，便于让API服务确定来源及合法性。&lt;/p&gt;
+&lt;h4 id=&#34;6、API签名认证算法&#34;&gt;&lt;a href=&#34;#6、API签名认证算法&#34; class=&#34;headerlink&#34; title=&#34;6、API签名认证算法&#34;&gt;&lt;/a&gt;6、API签名认证算法&lt;/h4&gt;&lt;p&gt;该算法是用于验证API请求的合法行和完整性的安全机制。具体实现：&lt;/p&gt;
+&lt;p&gt;1、生成密钥对，给每个用户生成唯一的密钥对(ak,sk)，并保存到数据库中，仅用户本人可查看自己的密钥对。&lt;/p&gt;
+&lt;p&gt;2、请求方生成签名：请求方（客户端）使用sk对请求参数和数据进行签名，签名内容包括请求参数、时间戳、随机数等，签名加密算法此处选择MD5&lt;/p&gt;
+&lt;p&gt;3、请求方发送请求：请求方将请求参数、签名、用户标识一起发送给API提供者，通常会把签名信息放到请求头参数中传递，注意这里千万不能传递sk。&lt;/p&gt;
+&lt;p&gt;4、API提供者验证签名：在API网关中，通过请求头获取到用户标识，根据该标识去数据库查询到该用户对应的ak，sk，并使用相同的签名算法生成签名，和请求头中的签名进行对比，如果一致，则API提供者可以信任请求方，然后可以进行后续的操作。&lt;/p&gt;
+&lt;h4 id=&#34;7、为什么使用Dubbo-RPC&#34;&gt;&lt;a href=&#34;#7、为什么使用Dubbo-RPC&#34; class=&#34;headerlink&#34; title=&#34;7、为什么使用Dubbo RPC&#34;&gt;&lt;/a&gt;7、为什么使用Dubbo RPC&lt;/h4&gt;&lt;p&gt;RPC（远程过程调用）是一种用于实现分布式系统通信的协议和技术。它允许一个计算机从程序调用另一个地址的函数或方法，就像本地调用一样。Dubbo是基于Java的高性能、轻量级的开源RPC框架，便于开发者轻松实现分布式系统和微服务架构。简单来说就是性能高、协议多、功能强、生态好、易扩展&lt;/p&gt;
+&lt;h4 id=&#34;8、如何使用的Dubbo-RPC&#34;&gt;&lt;a href=&#34;#8、如何使用的Dubbo-RPC&#34; class=&#34;headerlink&#34; title=&#34;8、如何使用的Dubbo RPC&#34;&gt;&lt;/a&gt;8、如何使用的Dubbo RPC&lt;/h4&gt;&lt;p&gt;在正式运用Dubbo到项目中之前，先阅读了Dubbo的官方文档，利用快速启动跑通了基础的RPC调用的Demo，明确了注册中心，Maven包依赖和各种版本号。先在本地启动Nacos注册中心，然后在服务提供者和服务调用者项目引入Dubbo依赖（最好是引入相同的依赖和配置），编写nacos的连接配置，并且需要在启动类通过@EnableDubbo注解开启Dubbo支持&lt;/p&gt;
+&lt;p&gt;编写服务提供者类和服务调用者客户端类，分别加上@DubboService和DubboReference注解，优先启动服务提供者项目，在Nacos控制台观察到注册信息之后，再启动服务调用者项目。&lt;/p&gt;
+&lt;h4 id=&#34;9、&#34;&gt;&lt;a href=&#34;#9、&#34; class=&#34;headerlink&#34; title=&#34;9、&#34;&gt;&lt;/a&gt;9、&lt;/h4&gt; ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://ooooddddd.github.io/2024/01/03/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98/</guid>
+            <title>MySQL面试题</title>
+            <link>https://ooooddddd.github.io/2024/01/03/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98/</link>
+            <category>MySQL</category>
+            <pubDate>Wed, 03 Jan 2024 19:46:41 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;Mysql相关面经&#34;&gt;&lt;a href=&#34;#Mysql相关面经&#34; class=&#34;headerlink&#34; title=&#34;Mysql相关面经&#34;&gt;&lt;/a&gt;Mysql相关面经&lt;/h1&gt;&lt;h3 id=&#34;执行一条-SQL-查询语句，期间发生了什么？&#34;&gt;&lt;a href=&#34;#执行一条-SQL-查询语句，期间发生了什么？&#34; class=&#34;headerlink&#34; title=&#34;执行一条 SQL 查询语句，期间发生了什么？&#34;&gt;&lt;/a&gt;执行一条 SQL 查询语句，期间发生了什么？&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;连接器：客户端通过TCP请求发送连接请求到Mysql连接器，连接器会对该请求进行权限验证和连接资源分配&lt;/li&gt;
+&lt;li&gt;查询缓存，命中缓存则直接返回数据，否则继续向下执行&lt;/li&gt;
+&lt;li&gt;解析SQL，通过解析器对SQL语句进行词法、语法分析，检查数据表和数据列是否存在，别名是否存在歧义等&lt;/li&gt;
+&lt;li&gt;优化，是否使用索引，生成执行计划&lt;/li&gt;
+&lt;li&gt;交给执行器，将数据保存到结果集中，同时逐步将数据缓存到查询缓存当中，最后将结果集返回给客户端。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;一、索引&#34;&gt;&lt;a href=&#34;#一、索引&#34; class=&#34;headerlink&#34; title=&#34;一、索引&#34;&gt;&lt;/a&gt;一、索引&lt;/h3&gt;&lt;h4 id=&#34;用过哪些索引&#34;&gt;&lt;a href=&#34;#用过哪些索引&#34; class=&#34;headerlink&#34; title=&#34;用过哪些索引&#34;&gt;&lt;/a&gt;用过哪些索引&lt;/h4&gt;&lt;h5 id=&#34;索引的作用&#34;&gt;&lt;a href=&#34;#索引的作用&#34; class=&#34;headerlink&#34; title=&#34;索引的作用&#34;&gt;&lt;/a&gt;&lt;strong&gt;索引的作用&lt;/strong&gt;&lt;/h5&gt;&lt;p&gt;相当于书的目录，是一种可以用于快速查询和检索数据的数据结构，可以看成是一种排序好的数据结构。&lt;/p&gt;
+&lt;h5 id=&#34;优缺点：&#34;&gt;&lt;a href=&#34;#优缺点：&#34; class=&#34;headerlink&#34; title=&#34;优缺点：&#34;&gt;&lt;/a&gt;&lt;strong&gt;优缺点&lt;/strong&gt;：&lt;/h5&gt;&lt;p&gt;优点：可以加快数据的检索速度，主要是大大减少检索的数据量。通过唯一性索引，可以保证数据库表中的每一行数据的唯一性。&lt;/p&gt;
+&lt;p&gt;缺点：从时间层面讲：创建和维护索引需要耗费时间，并且对表中的数据进行增删改的时候，如果存在索引，那么索引也需要动态修改，一定程度上会减低SQL的执行效率。空间上：索引也需要文件进行存储，耗费一定的空间。&lt;/p&gt;
+&lt;h5 id=&#34;索引的数据结构类型&#34;&gt;&lt;a href=&#34;#索引的数据结构类型&#34; class=&#34;headerlink&#34; title=&#34;索引的数据结构类型&#34;&gt;&lt;/a&gt;索引的数据结构类型&lt;/h5&gt;&lt;p&gt;&lt;strong&gt;哈希索引：&lt;/strong&gt;精确匹配索引所有列的查询数据，对于每一行数据，存储引擎针对所有索引列计算一个哈希码。为什么不使用这个，主要是因为hash索引不支持顺序和范围查询，只适合等值查询。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;B-Tree和B+Tree索引的区别&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;B树的所有节点都会存放key和data，而B+数只有叶子节点存放key和data，其他内节点只存放key。&lt;/li&gt;
+&lt;li&gt;B树的叶子节点都是独立的，而B+树的叶子结点有一条指向相邻叶子结点的引用，更加方便扫库&lt;/li&gt;
+&lt;li&gt;B树进行范围查询，需要对树进行中序遍历，直到找到查找的上限，而B+树的范围查询，只需要遍历叶子结点组成的链表即可。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;综上所述，B+具备更稳定的查询效率，更低的IO次数和更适合范围查询等优势而广泛应用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主键索引&lt;/strong&gt;，一张表中只能有一个主键，并且主键不能为null，不能重复，在mysql的InnoDB表中，如果没有显示指定表的主键时，InnoDB会自动先检查表中是否有唯一索引且不允许存在null的字段，如果有，则选择该字段作为主键索引，否则会自动创建一个6Byte的自增主键&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;二级索引&lt;/strong&gt;：普通索引，前缀索引，全文索引&lt;/p&gt;
+&lt;h4 id=&#34;联合索引&#34;&gt;&lt;a href=&#34;#联合索引&#34; class=&#34;headerlink&#34; title=&#34;联合索引&#34;&gt;&lt;/a&gt;联合索引&lt;/h4&gt;&lt;p&gt;使用多个字段同时建立一个索引，叫做联合索引，在联合索引中，如果想要命中索引，需要按照建立索引时的字段顺序进行使用，否则可能无法命中。&lt;/p&gt;
+&lt;h5 id=&#34;索引失效&#34;&gt;&lt;a href=&#34;#索引失效&#34; class=&#34;headerlink&#34; title=&#34;索引失效&#34;&gt;&lt;/a&gt;索引失效&lt;/h5&gt;&lt;p&gt;在进行查询时&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;遵循最左匹配原则&lt;/li&gt;
+&lt;li&gt;同时遇到范围查询(&amp;gt;、&amp;lt;、between、like)就会停止匹配&lt;/li&gt;
+&lt;li&gt;最左缀匹配原则的最重要的就是 第一个字段&lt;/li&gt;
+&lt;li&gt;不推荐 select *&lt;ol&gt;
+&lt;li&gt;增加查询分析器解析成本。&lt;/li&gt;
+&lt;li&gt;增减字段容易与 resultMap 配置不一致&lt;/li&gt;
+&lt;li&gt;无用字段增加网络 消耗，尤其是 text 类型的字段。&lt;/li&gt;
+&lt;li&gt;我们使用 B&amp;#x3D;1 会走索引 但是 与直接查询索引字段不同 使用&lt;code&gt;SELECT*&lt;/code&gt;,获取了不需要的数据，则首先通过辅助索引过滤数据，然后再通过聚集索引获取所有的列，这就多了一次 b+树查询，速度必然会慢很多，减少使用 select * 就是降低回表带来的损耗。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;假如我们建立一个（a，b，c）的索引面，a，b，c在查询时的顺序可以任意调整&lt;/p&gt;
+&lt;p&gt;例如查询(a,b)会走索引，（a，c）（c，a）也会走索引&lt;/p&gt;
+&lt;p&gt;但是 (b,c),(c,b)之类的就不会走索引。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;总结&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;select * 可能会走索引，不一定会造成索引失效，造成索引失效的大概率原因是where条件范围太广&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;**范围查询(&amp;gt;、&amp;lt;、between、like)**，范围查找有概率索引失效但是在特定的情况下会生效 范围小就会使用 也可以理解为 返回结果集小就会使用索引&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;创建了组合索引，但查询条件未遵循最左匹配原则;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在索引列上进行计算、函数、类型转换等操作;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;建立索引语句&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;DROP TABLE IF EXISTS student;&lt;/code&gt;&lt;br&gt;&lt;code&gt;CREATE TABLE student (&lt;/code&gt;&lt;br&gt; &lt;code&gt;id int(11) NOT NULL AUTO_INCREMENT,&lt;/code&gt;&lt;br&gt; &lt;code&gt;sname varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,&lt;/code&gt;&lt;br&gt; &lt;code&gt;s_code int(100) NULL DEFAULT NULL,&lt;/code&gt;&lt;br&gt; &lt;code&gt;address varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,&lt;/code&gt;&lt;br&gt; &lt;code&gt;height double NULL DEFAULT NULL,&lt;/code&gt;&lt;br&gt; &lt;code&gt;classid int(11) NULL DEFAULT NULL,&lt;/code&gt;&lt;br&gt; &lt;code&gt;create_time datetime(0) NOT NULL ON UPDATE CURRENT_TIMESTAMP(0),&lt;/code&gt;&lt;br&gt; &lt;code&gt;PRIMARY KEY (id) USING BTREE,&lt;/code&gt;&lt;br&gt; &lt;code&gt;INDEX 普通索引(height) USING BTREE,&lt;/code&gt;&lt;br&gt; &lt;code&gt;INDEX 联合索引(sname, s_code, address) USING BTREE&lt;/code&gt;&lt;br&gt;&lt;code&gt;) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;二、事务&#34;&gt;&lt;a href=&#34;#二、事务&#34; class=&#34;headerlink&#34; title=&#34;二、事务&#34;&gt;&lt;/a&gt;二、事务&lt;/h3&gt;&lt;h4 id=&#34;事务的特性&#34;&gt;&lt;a href=&#34;#事务的特性&#34; class=&#34;headerlink&#34; title=&#34;事务的特性&#34;&gt;&lt;/a&gt;事务的特性&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;原子性：一个事务中的所有操作，要么全部完成，要么全部不完成，在事务执行过程中发生错误，会被回滚到事物开始前的状态&lt;/li&gt;
+&lt;li&gt;一致性：事务执行的结果必须是使数据库从一个一致性状态变化到另一个一致性状。&lt;/li&gt;
+&lt;li&gt;隔离性：一个事务的执行不能被其他事务所干扰。&lt;/li&gt;
+&lt;li&gt;持久性：事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。&lt;ul&gt;
+&lt;li&gt;持久性是通过 redo log （重做日志）来保证的；&lt;/li&gt;
+&lt;li&gt;原子性是通过 undo log（回滚日志） 来保证的；&lt;/li&gt;
+&lt;li&gt;隔离性是通过 MVCC（多版本并发控制） 或锁机制来保证的；&lt;/li&gt;
+&lt;li&gt;一致性则是通过持久性+原子性+隔离性来保证；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;事务的隔离级别&#34;&gt;&lt;a href=&#34;#事务的隔离级别&#34; class=&#34;headerlink&#34; title=&#34;事务的隔离级别&#34;&gt;&lt;/a&gt;事务的隔离级别&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;脏读：读取到其他事务未提交的数据&lt;/li&gt;
+&lt;li&gt;不可重复读：前后读取的数据不一致&lt;/li&gt;
+&lt;li&gt;幻读：前后读取的记录数不一致&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;针对上面几种现象，SQL标准定义了四种隔离级别来规避这些现象&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;读未提交：所有事务均可看到其他事务未提交的执行结果，会导致上面三种现象的发生，因此很少应用。&lt;/li&gt;
+&lt;li&gt;读已提交：一个事务只能看到其他已经提交的事务所对数据做出的改变，这个级别杜绝了脏读现象，但避免不了不可重复读和幻读&lt;/li&gt;
+&lt;li&gt;可重复读：这个是Mysql InnoDB的默认事务隔离级别，指的是一个事务执行过程中所看到的数据，一直跟这个事务启动时看到的数据是一致的。可以解决脏读和不可重复读现象，但仍然可能发生幻读。&lt;/li&gt;
+&lt;li&gt;串行化：会对记录加上读写锁，在多个事务对这条记录进行读写操作时，后访问的事务必须等待前一个事务执行完成，才能继续执行。在这个级别，可能会导致大量的超时现象和锁的竞争。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;如何避免幻读现象&#34;&gt;&lt;a href=&#34;#如何避免幻读现象&#34; class=&#34;headerlink&#34; title=&#34;如何避免幻读现象&#34;&gt;&lt;/a&gt;如何避免幻读现象&lt;/h4&gt;&lt;p&gt;针对快照读（普通的 select 语句）：通过&lt;strong&gt;（MVCC）多版本并发控制实现&lt;/strong&gt;的，开始事务后，在执行第一个查询语句后，会创建一个 Read View，后续的查询语句可以通过这个 Read View在 undo log 版本中找到事物开始时的数据，就保证了整个事务的过程中每次查询的数据都是一致的。即使中途有其他事务插入了新纪录，也是查询不出来的，很好地避免了幻读问题的发生。&lt;/p&gt;
+&lt;p&gt;针对当前读（比如 update、insert、delete，这些语句），通过&lt;strong&gt;记录锁+间隙锁&lt;/strong&gt;的方式解决欢度，当执行select … for update 语句时候，会加上记录锁和间隙锁，如果有其他事务在这时插入一条记录，会被阻塞，无法插入成功，能够避免幻读&lt;/p&gt;
+&lt;h3 id=&#34;三、日志&#34;&gt;&lt;a href=&#34;#三、日志&#34; class=&#34;headerlink&#34; title=&#34;三、日志&#34;&gt;&lt;/a&gt;三、日志&lt;/h3&gt;&lt;p&gt;更新语句的流程中会涉及到的三种日志：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;undo log（回滚日志）：是InnoDB存储引擎层生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC（多版本并发控制）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;redo log（重做日志）：是InnoDB存储引擎层生成的日志，实现了事务中的持久性，主要用于掉电等故障的恢复&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;binlog（归档日志）：是Server层生成的日志，主要用于数据备份和主从复制。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;1、undo-log（回滚日志）&#34;&gt;&lt;a href=&#34;#1、undo-log（回滚日志）&#34; class=&#34;headerlink&#34; title=&#34;1、undo log（回滚日志）&#34;&gt;&lt;/a&gt;1、undo log（回滚日志）&lt;/h5&gt;&lt;p&gt;每当对一条记录进行增删改操作时，需要把回滚时需要的信息记录到 undo log 里，比如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在&lt;strong&gt;插入&lt;/strong&gt;一条记录时，需要记录主键 id ，回滚时根据 id 删除记录即可&lt;/li&gt;
+&lt;li&gt;在&lt;strong&gt;删除&lt;/strong&gt;一条记录时，需要将该记录中的所有内容都记录下来，回滚时再把由这些内容组成的记录插入到表中即可&lt;/li&gt;
+&lt;li&gt;在&lt;strong&gt;更新&lt;/strong&gt;一条记录时，也是需要记录整列的内容，然后才能在回滚时更新为旧数据即可&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5 id=&#34;1-1、undo-log-的格式&#34;&gt;&lt;a href=&#34;#1-1、undo-log-的格式&#34; class=&#34;headerlink&#34; title=&#34;1.1、undo log 的格式&#34;&gt;&lt;/a&gt;1.1、undo log 的格式&lt;/h5&gt;&lt;p&gt;以更新操作为例，每一次更新操作产生的undo log都由一个 roll_pointer 指针和一个 trx_id事务id构成&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过事务id可以知道该条记录是由哪个事务修改的。&lt;/li&gt;
+&lt;li&gt;通过指针可以将这个 undo log 串成一个链表，称为版本链。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5 id=&#34;1-2、如何实现MVCC（多版本并发控制）&#34;&gt;&lt;a href=&#34;#1-2、如何实现MVCC（多版本并发控制）&#34; class=&#34;headerlink&#34; title=&#34;1.2、如何实现MVCC（多版本并发控制）&#34;&gt;&lt;/a&gt;1.2、如何实现MVCC（多版本并发控制）&lt;/h5&gt;&lt;p&gt;通过 Read View 里面的字段和undo log 记录中的 事务id（trx_id），roll_pointer指针进行对比，找到满足其条件的记录，从而控制并发事务访问同一条记录的行为。&lt;/p&gt;
+&lt;h5 id=&#34;1-3、缓冲池-Buffer-Pool&#34;&gt;&lt;a href=&#34;#1-3、缓冲池-Buffer-Pool&#34; class=&#34;headerlink&#34; title=&#34;1.3、缓冲池(Buffer Pool)&#34;&gt;&lt;/a&gt;1.3、缓冲池(Buffer Pool)&lt;/h5&gt;&lt;p&gt;mysql的数据都是存放在磁盘中的，如果我们要更新一条数据，需要将其从磁盘中读出来，在内存中进行修改之后，先缓存起来，并不会直接写回磁盘，会等待合适时机再写回。&lt;/p&gt;
+&lt;p&gt;为了缓存这些数据，mysql设计了一个缓冲池(Buffer Pool)，来提高数据库的读写性能。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;当读取数据时，如果数据存在于缓冲池中，客户端会直接读取到缓冲池中的数据，否则再去磁盘读取。&lt;/li&gt;
+&lt;li&gt;当修改数据时，如果数据存在于缓冲池中，那么直接修改缓冲池中的数据所在的页，然后将这个页设置为脏页（就是该页的内存数据与磁盘中的数据不一致），为了减少磁盘IO，不会立即将脏页写入磁盘，后续由后台的其他线程选择合适时机将脏页写入磁盘。&lt;/li&gt;
+&lt;li&gt;缓冲池中处理缓存数据页和索引页，还会缓存Undo 页（存放Undo log的），插入缓存，自适应哈希缓存，锁信息等等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;2、redo-log（重做日志）&#34;&gt;&lt;a href=&#34;#2、redo-log（重做日志）&#34; class=&#34;headerlink&#34; title=&#34;2、redo log（重做日志）&#34;&gt;&lt;/a&gt;2、redo log（重做日志）&lt;/h4&gt;&lt;p&gt;redo log 是物理日志，主要是用于记录某个数据页做了什么样的修改的操作。在执行事务的过程中，产生的redo日志文件是顺序写入磁盘的，写入 redo log 的方式使用了追加操作， 使用的是顺序IO，如果没有这个日志，我们需要把缓冲池中的修改写入磁盘需要使用随机IO，性能低下，并且日志的空间占用很小，刷盘更快。之后如果数据库发生崩溃，可以根据redo log进行恢复，保证了事务四大特性中的持久性。&lt;/p&gt;
+&lt;p&gt;redo log 也不是直接写入磁盘的，它也有自己的缓存——redo log buffer&lt;/p&gt;
+&lt;h5 id=&#34;redo-log-刷盘的时机&#34;&gt;&lt;a href=&#34;#redo-log-刷盘的时机&#34; class=&#34;headerlink&#34; title=&#34;redo log 刷盘的时机&#34;&gt;&lt;/a&gt;redo log 刷盘的时机&lt;/h5&gt;&lt;ol&gt;
+&lt;li&gt;Mysql正常关闭&lt;/li&gt;
+&lt;li&gt;当redo log buffer 中的记录写入量大于 redo log buffer 内存空间的一半时&lt;/li&gt;
+&lt;li&gt;InnoDB的后台线程每隔 1 秒，将redo log buffer 持久化到磁盘&lt;/li&gt;
+&lt;li&gt;每次事务提交时，这个策略可以由innodb_flush_log_at_trx_commit 参数控制，默认是1，就是每次事务提交时，都会将 redo log buffer 持久化到磁盘中。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;3、bin-log（归档日志）&#34;&gt;&lt;a href=&#34;#3、bin-log（归档日志）&#34; class=&#34;headerlink&#34; title=&#34;3、bin log（归档日志）&#34;&gt;&lt;/a&gt;3、bin log（归档日志）&lt;/h4&gt;&lt;p&gt;与redo log 类似，记录了所有数据库表结构变更和表数据修改的日志，不记录查询类的操作&lt;/p&gt;
+&lt;h4 id=&#34;4、redo-log-和-bin-log-的区别&#34;&gt;&lt;a href=&#34;#4、redo-log-和-bin-log-的区别&#34; class=&#34;headerlink&#34; title=&#34;4、redo log 和 bin log 的区别&#34;&gt;&lt;/a&gt;4、redo log 和 bin log 的区别&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;适用对象不同，binlog是Mysql Server 层实现的日志，所有存储引擎都可以使用。redo log 是InnoDB 存储引擎实现的日志&lt;/li&gt;
+&lt;li&gt;文件格式不同&lt;/li&gt;
+&lt;li&gt;写入方式不同&lt;ul&gt;
+&lt;li&gt;binlog是追加写，写满一个文件，就开一个新的继续写，不会覆盖一起的日志，保存的是全量的日志&lt;/li&gt;
+&lt;li&gt;redo log 是循环写，日志空间大小是固定的，全部写满就从头开始。&lt;/li&gt;
+&lt;li&gt;因此，如果不小心将数据库数据删除了，应该考虑使用binlog进行恢复&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;用途不同，bin log主要用于备份恢复，主从复制，redo log用于掉电等故障的恢复&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;5、主从复制的实现&#34;&gt;&lt;a href=&#34;#5、主从复制的实现&#34; class=&#34;headerlink&#34; title=&#34;5、主从复制的实现&#34;&gt;&lt;/a&gt;5、主从复制的实现&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;主库写入Bin log，MySQL 主库在收到客户端提交事务的请求之后，会先写入 binlog，再提交事务，更新存储引擎中的数据，&lt;/li&gt;
+&lt;li&gt;从库会创建一个专门的 I&amp;#x2F;O 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 暂存日志里，再返回给主库“复制成功”的响应。&lt;/li&gt;
+&lt;li&gt;从库会创建一个用于回放 binlog 的线程，去读 暂存日志，然后回放 binlog 更新存储引擎中的数据，最终实现主从的数据一致性。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;完成主从复制之后，可以写数据只写主库，读数据只读从库，减少锁资源的竞争，也不会影响读请求的执行，默认是异步复制&lt;/p&gt;
+&lt;h4 id=&#34;6、bin-log-的刷盘时机&#34;&gt;&lt;a href=&#34;#6、bin-log-的刷盘时机&#34; class=&#34;headerlink&#34; title=&#34;6、bin log 的刷盘时机&#34;&gt;&lt;/a&gt;6、bin log 的刷盘时机&lt;/h4&gt;&lt;p&gt;用来控制刷盘频率的参数，默认sync_binlog &amp;#x3D; 0也就是不做任何强制性的磁盘刷新指令，这时候的性能是最好的，但是风险也是最大的。因为一旦主机发生异常重启，还没持久化到磁盘的数据就会丢失。&lt;/p&gt;
+&lt;h3 id=&#34;四、锁&#34;&gt;&lt;a href=&#34;#四、锁&#34; class=&#34;headerlink&#34; title=&#34;四、锁&#34;&gt;&lt;/a&gt;四、锁&lt;/h3&gt;&lt;p&gt;根据类型：可分为：共享锁（读锁），排它锁（写锁）&lt;/p&gt;
+&lt;p&gt;根据加锁的范围，可以分为&lt;strong&gt;全局锁、表级锁、行级锁&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;全局锁&#34;&gt;&lt;a href=&#34;#全局锁&#34; class=&#34;headerlink&#34; title=&#34;全局锁&#34;&gt;&lt;/a&gt;全局锁&lt;/h4&gt;&lt;p&gt;使用全局锁：&lt;/p&gt;
+&lt;pre class=&#34;language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;flush &lt;span class=&#34;token keyword&#34;&gt;tables&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;with&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;read&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;lock&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行之后，整个数据库都处于只读状态了，不管是对数据的增删改，或者是对表结构的更改操作都会被阻塞&lt;/p&gt;
+&lt;p&gt;释放：&lt;/p&gt;
+&lt;pre class=&#34;language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token keyword&#34;&gt;unlock&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;tables&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h5 id=&#34;应用场景&#34;&gt;&lt;a href=&#34;#应用场景&#34; class=&#34;headerlink&#34; title=&#34;应用场景&#34;&gt;&lt;/a&gt;应用场景&lt;/h5&gt;&lt;p&gt;主要用于做&lt;strong&gt;全库逻辑备份&lt;/strong&gt;，防止出现备份文件的数据与预期的不同。&lt;/p&gt;
+&lt;p&gt;如果备份时间过长，可能会导致业务停滞&lt;/p&gt;
+&lt;h5 id=&#34;如何避免其影响业务&#34;&gt;&lt;a href=&#34;#如何避免其影响业务&#34; class=&#34;headerlink&#34; title=&#34;如何避免其影响业务&#34;&gt;&lt;/a&gt;如何避免其影响业务&lt;/h5&gt;&lt;p&gt;对于使用InnoDB存储引擎的可重复读隔离级别的情况，在备份数据库之前先开启事务，会创建Read View，然后整个事务执行期间都使用这个Read View去进行数据的更新操作等。&lt;/p&gt;
+&lt;h4 id=&#34;表级锁&#34;&gt;&lt;a href=&#34;#表级锁&#34; class=&#34;headerlink&#34; title=&#34;表级锁&#34;&gt;&lt;/a&gt;表级锁&lt;/h4&gt;&lt;p&gt;表锁，元数据锁，意向锁，AUTO-INC锁&lt;/p&gt;
+&lt;p&gt;表锁：对整个表加锁，不仅会限制其他线程的读写，也会限制本线程的读写操作。尽量避免在InnoDB引擎的表中使用表级锁，因为表锁的颗粒度太大，会影响并发性能，可以使用颗粒度更细的行级锁。&lt;/p&gt;
+&lt;h4 id=&#34;行级锁&#34;&gt;&lt;a href=&#34;#行级锁&#34; class=&#34;headerlink&#34; title=&#34;行级锁&#34;&gt;&lt;/a&gt;行级锁&lt;/h4&gt;&lt;p&gt;InnoDB 引擎是支持行级锁的，而 MyISAM 引擎并不支持行级锁。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;记录锁，仅仅把一条记录锁上&lt;/li&gt;
+&lt;li&gt;间隙锁，锁定一个范围，但不包含记录本身&lt;/li&gt;
+&lt;li&gt;1+2，锁定一个范围，并且锁定记录本身。&lt;/li&gt;
+&lt;/ol&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://ooooddddd.github.io/2023/12/21/API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
             <title>API开放平台学习笔记</title>
             <link>https://ooooddddd.github.io/2023/12/21/API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
             <category>项目</category>
             <pubDate>Thu, 21 Dec 2023 16:04:14 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;一、项目业务流程&#34;&gt;&lt;a href=&#34;#一、项目业务流程&#34; class=&#34;headerlink&#34; title=&#34;一、项目业务流程&#34;&gt;&lt;/a&gt;一、项目业务流程&lt;/h1&gt;&lt;h2 id=&#34;体验地址：http-120-78-128-74-user-login&#34;&gt;&lt;a href=&#34;#体验地址：http-120-78-128-74-user-login&#34; class=&#34;headerlink&#34; title=&#34;体验地址：http://120.78.128.74/user/login&#34;&gt;&lt;/a&gt;体验地址：&lt;a href=&#34;http://120.78.128.74/user/login&#34;&gt;http://120.78.128.74/user/login&lt;/a&gt;&lt;/h2&gt;&lt;h2 id=&#34;5个子系统&#34;&gt;&lt;a href=&#34;#5个子系统&#34; class=&#34;headerlink&#34; title=&#34;5个子系统&#34;&gt;&lt;/a&gt;5个子系统&lt;/h2&gt;&lt;h3 id=&#34;1-模拟接口系统&#34;&gt;&lt;a href=&#34;#1-模拟接口系统&#34; class=&#34;headerlink&#34; title=&#34;1.模拟接口系统&#34;&gt;&lt;/a&gt;1.模拟接口系统&lt;/h3&gt;&lt;h3 id=&#34;2-后台管理系统&#34;&gt;&lt;a href=&#34;#2-后台管理系统&#34; class=&#34;headerlink&#34; title=&#34;2.后台管理系统&#34;&gt;&lt;/a&gt;2.后台管理系统&lt;/h3&gt;&lt;h3 id=&#34;3-用户前台系统&#34;&gt;&lt;a href=&#34;#3-用户前台系统&#34; class=&#34;headerlink&#34; title=&#34;3.用户前台系统&#34;&gt;&lt;/a&gt;3.用户前台系统&lt;/h3&gt;&lt;h3 id=&#34;4-API网关系统&#34;&gt;&lt;a href=&#34;#4-API网关系统&#34; class=&#34;headerlink&#34; title=&#34;4.API网关系统&#34;&gt;&lt;/a&gt;4.API网关系统&lt;/h3&gt;&lt;h3 id=&#34;5-第三方调用SDK系统&#34;&gt;&lt;a href=&#34;#5-第三方调用SDK系统&#34; class=&#34;headerlink&#34; title=&#34;5.第三方调用SDK系统&#34;&gt;&lt;/a&gt;5.第三方调用SDK系统&lt;/h3&gt;&lt;h1 id=&#34;二、前端项目初始化&#34;&gt;&lt;a href=&#34;#二、前端项目初始化&#34; class=&#34;headerlink&#34; title=&#34;二、前端项目初始化&#34;&gt;&lt;/a&gt;二、前端项目初始化&lt;/h1&gt;&lt;h2 id=&#34;1、搭建脚手架&#34;&gt;&lt;a href=&#34;#1、搭建脚手架&#34; class=&#34;headerlink&#34; title=&#34;1、搭建脚手架&#34;&gt;&lt;/a&gt;1、搭建脚手架&lt;/h2&gt;&lt;p&gt;Ant Design Pro：&lt;a href=&#34;https://pro.ant.design/zh-CN/&#34;&gt;官方文档&lt;/a&gt;&lt;/p&gt;
+            <description><![CDATA[ &lt;h1 id=&#34;一、项目业务流程&#34;&gt;&lt;a href=&#34;#一、项目业务流程&#34; class=&#34;headerlink&#34; title=&#34;一、项目业务流程&#34;&gt;&lt;/a&gt;一、项目业务流程&lt;/h1&gt;&lt;h2 id=&#34;体验地址：http-120-78-128-74-user-login&#34;&gt;&lt;a href=&#34;#体验地址：http-120-78-128-74-user-login&#34; class=&#34;headerlink&#34; title=&#34;体验地址：http://120.78.128.74/user/login&#34;&gt;&lt;/a&gt;体验地址：&lt;a href=&#34;http://120.78.128.74/user/login&#34;&gt;http://120.78.128.74/user/login&lt;/a&gt;&lt;/h2&gt;&lt;h1 id=&#34;二、前端项目初始化&#34;&gt;&lt;a href=&#34;#二、前端项目初始化&#34; class=&#34;headerlink&#34; title=&#34;二、前端项目初始化&#34;&gt;&lt;/a&gt;二、前端项目初始化&lt;/h1&gt;&lt;h2 id=&#34;1、搭建脚手架&#34;&gt;&lt;a href=&#34;#1、搭建脚手架&#34; class=&#34;headerlink&#34; title=&#34;1、搭建脚手架&#34;&gt;&lt;/a&gt;1、搭建脚手架&lt;/h2&gt;&lt;p&gt;Ant Design Pro：&lt;a href=&#34;https://pro.ant.design/zh-CN/&#34;&gt;官方文档&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;2、选择-umi-4&#34;&gt;&lt;a href=&#34;#2、选择-umi-4&#34; class=&#34;headerlink&#34; title=&#34;2、选择 umi 4&#34;&gt;&lt;/a&gt;2、选择 umi 4&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/1.png&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;3、node版本&#34;&gt;&lt;a href=&#34;#3、node版本&#34; class=&#34;headerlink&#34; title=&#34;3、node版本&#34;&gt;&lt;/a&gt;3、node版本&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/2.png&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;4、打开项目&#34;&gt;&lt;a href=&#34;#4、打开项目&#34; class=&#34;headerlink&#34; title=&#34;4、打开项目&#34;&gt;&lt;/a&gt;4、打开项目&lt;/h3&gt;&lt;p&gt;打开webstorm的终端，输入 yarn安装依赖&lt;/p&gt;
@@ -30,8 +677,7 @@
 &lt;p&gt;&lt;img src=&#34;https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/4.png&#34; alt=&#34;image-20231207161536935&#34;&gt;&lt;/p&gt;
 &lt;p&gt;之后再次执行&lt;code&gt;i18n-remove&lt;/code&gt;即可，然后将&lt;code&gt;locales目录&lt;/code&gt;手动删除&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;每次移除某些代码后都要重新start一下，防止删除有用的代码了&lt;/strong&gt;&lt;/p&gt;
-&lt;h1 id=&#34;三、后端代码初始化-orangeApi-backend&#34;&gt;&lt;a href=&#34;#三、后端代码初始化-orangeApi-backend&#34; class=&#34;headerlink&#34; title=&#34;三、后端代码初始化(orangeApi-backend)&#34;&gt;&lt;/a&gt;三、后端代码初始化(orangeApi-backend)&lt;/h1&gt;&lt;h2 id=&#34;1、使用鱼皮提供的模板&#34;&gt;&lt;a href=&#34;#1、使用鱼皮提供的模板&#34; class=&#34;headerlink&#34; title=&#34;1、使用鱼皮提供的模板&#34;&gt;&lt;/a&gt;1、使用鱼皮提供的模板&lt;/h2&gt;&lt;p&gt;地址：&lt;a href=&#34;http://gitlab.code-nav.cn/root/springboot-init-old&#34;&gt;springboot-init-old项目&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&#34;1-1加载maven依赖&#34;&gt;&lt;a href=&#34;#1-1加载maven依赖&#34; class=&#34;headerlink&#34; title=&#34;1.1加载maven依赖&#34;&gt;&lt;/a&gt;1.1加载maven依赖&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;查找所有maven包的仓库：&lt;a href=&#34;https://mvnrepository.com/&#34;&gt;地址&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;三、后端代码初始化-orangeApi-backend&#34;&gt;&lt;a href=&#34;#三、后端代码初始化-orangeApi-backend&#34; class=&#34;headerlink&#34; title=&#34;三、后端代码初始化(orangeApi-backend)&#34;&gt;&lt;/a&gt;三、后端代码初始化(orangeApi-backend)&lt;/h1&gt;&lt;h2 id=&#34;1、模板&#34;&gt;&lt;a href=&#34;#1、模板&#34; class=&#34;headerlink&#34; title=&#34;1、模板&#34;&gt;&lt;/a&gt;1、模板&lt;/h2&gt;&lt;h3 id=&#34;1-1加载aven依赖&#34;&gt;&lt;a href=&#34;#1-1加载aven依赖&#34; class=&#34;headerlink&#34; title=&#34;1.1加载aven依赖&#34;&gt;&lt;/a&gt;1.1加载aven依赖&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;查找所有maven包的仓库：&lt;a href=&#34;https://mvnrepository.com/&#34;&gt;地址&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id=&#34;1-2连接数据库&#34;&gt;&lt;a href=&#34;#1-2连接数据库&#34; class=&#34;headerlink&#34; title=&#34;1.2连接数据库&#34;&gt;&lt;/a&gt;1.2连接数据库&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/5.png&#34; alt=&#34;image-20231207162553113&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;1-3数据库表设计&#34;&gt;&lt;a href=&#34;#1-3数据库表设计&#34; class=&#34;headerlink&#34; title=&#34;1.3数据库表设计&#34;&gt;&lt;/a&gt;1.3数据库表设计&lt;/h3&gt;&lt;p&gt;用户表：&lt;/p&gt;
 &lt;pre class=&#34;language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token comment&#34;&gt;-- 用户表&lt;/span&gt;
@@ -51,29 +697,7 @@
         &lt;span class=&#34;token keyword&#34;&gt;unique&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;userAccount&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;用户&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;帖子表：&lt;/p&gt;
-&lt;pre class=&#34;language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token comment&#34;&gt;-- 帖子表&lt;/span&gt;
-&lt;span class=&#34;token keyword&#34;&gt;create&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;exists&lt;/span&gt; post
-&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;
-    id            &lt;span class=&#34;token keyword&#34;&gt;bigint&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;auto_increment&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;id&#39;&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;primary&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    age           &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;年龄&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    gender        &lt;span class=&#34;token keyword&#34;&gt;tinyint&lt;/span&gt;  &lt;span class=&#34;token keyword&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;                 &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;性别（0-男, 1-女）&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    education     &lt;span class=&#34;token keyword&#34;&gt;varchar&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;                       &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;学历&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    place         &lt;span class=&#34;token keyword&#34;&gt;varchar&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;                       &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;地点&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    job           &lt;span class=&#34;token keyword&#34;&gt;varchar&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;                       &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;职业&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    contact       &lt;span class=&#34;token keyword&#34;&gt;varchar&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;                       &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;联系方式&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    loveExp       &lt;span class=&#34;token keyword&#34;&gt;varchar&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;                       &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;感情经历&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    content       &lt;span class=&#34;token keyword&#34;&gt;text&lt;/span&gt;                               &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;内容（个人介绍）&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    photo         &lt;span class=&#34;token keyword&#34;&gt;varchar&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1024&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;                      &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;照片地址&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    reviewStatus  &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;      &lt;span class=&#34;token keyword&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;                 &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;状态（0-待审核, 1-通过, 2-拒绝）&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    reviewMessage &lt;span class=&#34;token keyword&#34;&gt;varchar&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;                       &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;审核信息&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    viewNum       &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;                                &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;浏览数&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    thumbNum      &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt;                                &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;点赞数&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    userId        &lt;span class=&#34;token keyword&#34;&gt;bigint&lt;/span&gt;                             &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;创建用户 id&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    createTime    &lt;span class=&#34;token keyword&#34;&gt;datetime&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;CURRENT_TIMESTAMP&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;创建时间&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    updateTime    &lt;span class=&#34;token keyword&#34;&gt;datetime&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;CURRENT_TIMESTAMP&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;on&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;update&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;CURRENT_TIMESTAMP&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;更新时间&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;
-    isDelete      &lt;span class=&#34;token keyword&#34;&gt;tinyint&lt;/span&gt;  &lt;span class=&#34;token keyword&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;                 &lt;span class=&#34;token operator&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;是否删除&#39;&lt;/span&gt;
-&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;comment&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;帖子&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
 
 &lt;p&gt;接口表：&lt;/p&gt;
 &lt;pre class=&#34;language-sql&#34; data-language=&#34;sql&#34;&gt;&lt;code class=&#34;language-sql&#34;&gt;&lt;span class=&#34;token comment&#34;&gt;-- 接口管理表&lt;/span&gt;
