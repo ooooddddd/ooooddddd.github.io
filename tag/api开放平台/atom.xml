@@ -11,8 +11,9 @@
     <category term="Javase" />
     <category term="MySQL" />
     <category term="Spring" />
-    <category term="API开放平台" />
     <category term="点评" />
+    <category term="API开放平台" />
+    <category term="redis" />
     <entry>
         <id>https://ooooddddd.github.io/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</id>
         <title>橙-API开放平台相关问题</title>

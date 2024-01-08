@@ -11,8 +11,9 @@
     <category term="Javase" />
     <category term="MySQL" />
     <category term="Spring" />
-    <category term="API开放平台" />
     <category term="点评" />
+    <category term="API开放平台" />
+    <category term="redis" />
     <entry>
         <id>https://ooooddddd.github.io/2024/01/03/Spring%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/</id>
         <title>Spring框架相关</title>

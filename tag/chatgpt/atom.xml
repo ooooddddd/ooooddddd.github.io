@@ -11,8 +11,9 @@
     <category term="Javase" />
     <category term="MySQL" />
     <category term="Spring" />
-    <category term="API开放平台" />
     <category term="点评" />
+    <category term="API开放平台" />
+    <category term="redis" />
     <entry>
         <id>https://ooooddddd.github.io/2023/10/16/%E6%9C%AC%E5%9C%B0ChatGPT/</id>
         <title>本地ChatGPT</title>

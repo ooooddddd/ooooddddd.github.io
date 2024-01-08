@@ -3,7 +3,7 @@
     <id>https://ooooddddd.github.io</id>
     <title>橙熟</title>
     <link href="https://ooooddddd.github.io" />
-    <updated>2024-01-03T12:06:12.000Z</updated>
+    <updated>2024-01-08T00:48:53.000Z</updated>
     <category term="RabbitMQ" />
     <category term="blog" />
     <category term="chatGPT" />
@@ -11,8 +11,187 @@
     <category term="Javase" />
     <category term="MySQL" />
     <category term="Spring" />
-    <category term="API开放平台" />
     <category term="点评" />
+    <category term="API开放平台" />
+    <category term="redis" />
+    <entry>
+        <id>https://ooooddddd.github.io/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/</id>
+        <title>redis面试题</title>
+        <link rel="alternate" href="https://ooooddddd.github.io/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/"/>
+        <content type="html">&lt;h3 id=&#34;一、认识Redis&#34;&gt;&lt;a href=&#34;#一、认识Redis&#34; class=&#34;headerlink&#34; title=&#34;一、认识Redis&#34;&gt;&lt;/a&gt;一、认识Redis&lt;/h3&gt;&lt;h4 id=&#34;1、Redis简介&#34;&gt;&lt;a href=&#34;#1、Redis简介&#34; class=&#34;headerlink&#34; title=&#34;1、Redis简介&#34;&gt;&lt;/a&gt;1、Redis简介&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;一种基于内存的数据库，对数据的读写操作都是在内存中完成的，因此读写速度非常快，常用于缓存、消息队列、分布式锁等&lt;/li&gt;
+&lt;li&gt;提供了多种数据结构来适用于不同的应用场景，如String、Hash、List、Set、ZSet、BitMap、HyperLogLog、GEO、Stream等&lt;/li&gt;
+&lt;li&gt;支持事务、数据持久化、Lua脚本、集群、内存淘汰策略等&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、Redis和Memcached的区别&#34;&gt;&lt;a href=&#34;#2、Redis和Memcached的区别&#34; class=&#34;headerlink&#34; title=&#34;2、Redis和Memcached的区别&#34;&gt;&lt;/a&gt;2、Redis和Memcached的区别&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;共同点：&lt;ul&gt;
+&lt;li&gt;都是基于内存的数据库，一般都用来做缓存&lt;/li&gt;
+&lt;li&gt;都有过期淘汰策略&lt;/li&gt;
+&lt;li&gt;性能都很高&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;不同点：&lt;ul&gt;
+&lt;li&gt;Redis支持的数据结构更加丰富，Memcached只支持Key-Value&lt;/li&gt;
+&lt;li&gt;Redis支持数据持久化，可以把内存中的数据持久化到磁盘，即使Redis宕机，下次重启依然可以恢复数据，但是Memcached没有持久化&lt;/li&gt;
+&lt;li&gt;Redis原生态支持集群&lt;/li&gt;
+&lt;li&gt;Redis支持发布订阅模型、Lua脚本、事务等&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;3、为什么使用Redis作为MySQL的缓存&#34;&gt;&lt;a href=&#34;#3、为什么使用Redis作为MySQL的缓存&#34; class=&#34;headerlink&#34; title=&#34;3、为什么使用Redis作为MySQL的缓存&#34;&gt;&lt;/a&gt;3、为什么使用Redis作为MySQL的缓存&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;高性能&lt;ul&gt;
+&lt;li&gt;MySQL是从磁盘读取，Redis是从内存读取，因此Redis的速度相当快&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;高并发&lt;ul&gt;
+&lt;li&gt;Redis 单机的 QPS 能轻松破 10w，而 MySQL 单机的 QPS 很难破 1w&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;二、Redis数据结构&#34;&gt;&lt;a href=&#34;#二、Redis数据结构&#34; class=&#34;headerlink&#34; title=&#34;二、Redis数据结构&#34;&gt;&lt;/a&gt;二、Redis数据结构&lt;/h3&gt;&lt;h4 id=&#34;1、常见的数据结构及其应用场景&#34;&gt;&lt;a href=&#34;#1、常见的数据结构及其应用场景&#34; class=&#34;headerlink&#34; title=&#34;1、常见的数据结构及其应用场景&#34;&gt;&lt;/a&gt;1、常见的数据结构及其应用场景&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;String：缓存对象（点评项目中的店铺信息）、共享session、分布式锁等&lt;/li&gt;
+&lt;li&gt;Hash类型：缓存对象、购物车等&lt;/li&gt;
+&lt;li&gt;Set类型：聚合计算的场景（并集、差集、交集）&lt;/li&gt;
+&lt;li&gt;ZSet：排序场景，如点赞前TOP&lt;/li&gt;
+&lt;li&gt;BitMap：二值状态统计，如签到、登录状态&lt;/li&gt;
+&lt;li&gt;GEO：存储地理位置&lt;/li&gt;
+&lt;li&gt;Stream：消息队列。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;三、Redis-线程模型&#34;&gt;&lt;a href=&#34;#三、Redis-线程模型&#34; class=&#34;headerlink&#34; title=&#34;三、Redis 线程模型&#34;&gt;&lt;/a&gt;三、Redis 线程模型&lt;/h3&gt;&lt;h4 id=&#34;1、Redis是单线程吗？&#34;&gt;&lt;a href=&#34;#1、Redis是单线程吗？&#34; class=&#34;headerlink&#34; title=&#34;1、Redis是单线程吗？&#34;&gt;&lt;/a&gt;1、Redis是单线程吗？&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;Redis所谓的单线程模式指的是：接收客户端请求–&amp;gt;解析请求–&amp;gt;进行数据读写操作–&amp;gt;发送数据到客户端这整个过程是由一个主线程来完成的。&lt;/li&gt;
+&lt;li&gt;但是，Redis程序可不是单线程的，在Redis启动时，是会启动后台线程的，用于处理关闭文件、AOF刷盘、释放内存等操作&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、Redis单线程模式：&#34;&gt;&lt;a href=&#34;#2、Redis单线程模式：&#34; class=&#34;headerlink&#34; title=&#34;2、Redis单线程模式：&#34;&gt;&lt;/a&gt;2、Redis单线程模式：&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Redis的初始化过程：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;首先，调用epoll_create()创建一个epoll（I&amp;#x2F;O多路复用）对象创建一个epoll对象和调用socket()创建一个服务端socket&lt;/li&gt;
+&lt;li&gt;然后，bind()绑定相关端口监听socket&lt;/li&gt;
+&lt;li&gt;最后，调用epoll_ctl()方法将 listen socket 加入到epoll中，同时注册 连接事件 处理函数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;初始化完成后，主线程会进入到一个 事件循环函数 中&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;写事件：write函数：首先会调用处理发送队列函数，查看发送队列是否有任务，如果有任务，则通过write函数将发送缓存区中的数据发送出去。如果这一轮数据没有发送完，就会注册写事件处理函数，等待epoll_wait发现可写后再进行处理&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;然后，调用epoll_wait函数等待事件的到来。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;连接事件：获取连接 socket，加入到 epoll中&lt;/li&gt;
+&lt;li&gt;读事件：获取客户端发送的数据–&amp;gt;解析命了–&amp;gt;处理命令–&amp;gt;将客户端对象添加到发送队列–&amp;gt;将执行结果写到发送缓存区等待发送&lt;/li&gt;
+&lt;li&gt;写事件：write函数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;四、Redis持久化&#34;&gt;&lt;a href=&#34;#四、Redis持久化&#34; class=&#34;headerlink&#34; title=&#34;四、Redis持久化&#34;&gt;&lt;/a&gt;四、Redis持久化&lt;/h3&gt;&lt;h4 id=&#34;1、两种持久化方式：AOF和RDB&#34;&gt;&lt;a href=&#34;#1、两种持久化方式：AOF和RDB&#34; class=&#34;headerlink&#34; title=&#34;1、两种持久化方式：AOF和RDB&#34;&gt;&lt;/a&gt;1、两种持久化方式：AOF和RDB&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;AOF：每当Redis操作一个写命令时，都会存储到这个文件中，当Redis宕机恢复数据时，通过这个文件重新执行一遍命令来恢复数据。&lt;/li&gt;
+&lt;li&gt;RDB：快照文件，将某一时刻的redis内存中的数据以二进制的方式写入磁盘，当Redis宕机恢复时，直接从该快照文件读取数据进行恢复即可。&lt;/li&gt;
+&lt;li&gt;混合持久化方式：集成了两种方式的优点。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、各自的优缺点&#34;&gt;&lt;a href=&#34;#2、各自的优缺点&#34; class=&#34;headerlink&#34; title=&#34;2、各自的优缺点&#34;&gt;&lt;/a&gt;2、各自的优缺点&lt;/h4&gt;&lt;p&gt;1、AOF优点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据保证：我们可以设置数据写会磁盘的策略，一般来说是选择Everysec（每秒），每次写操作执行完毕后，先将命令写入到AOF文件的内核缓冲区，然后每隔1秒将缓冲区的内容写回磁盘。即使Redis宕机，也只会丢失1秒内的数据。&lt;/li&gt;
+&lt;li&gt;AOF重写机制：当AOF文件大小达到一定程度的时候，后台会自动执行AOF重写，缩小AOF文件的大小。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;2、AOF缺点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;性能相对较差：对于同一份数据，AOF文件的恢复速度通常要比RDB慢。&lt;/li&gt;
+&lt;li&gt;体积相对更大：尽管AOF文件可以重写，但是毕竟RDB记录的是操作后的结果文件，而AOF记录的是操作过程。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;3、RDB优点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;体积更小：RDB文件是紧凑的二进制文件。&lt;/li&gt;
+&lt;li&gt;恢复更快：因为RDB是快照存储，数据恢复的过程就是复制，因此更快&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;4、RDB的缺点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;故障丢失数据：因为RDB是全量复制，一般来说，RDB文件都是每隔5分钟或者更久时间生成一次，一旦Redis宕机，就会丢失最近5分钟的数据。&lt;/li&gt;
+&lt;li&gt;RDB无法实时或者秒级持久化&lt;/li&gt;
+&lt;li&gt;数据量很大时，对磁盘资源的消耗也是不可忽视的&lt;/li&gt;
+&lt;li&gt;save和bgsave：save会阻塞主进程，bgsave会创建一个子进程来进行RDB文件的生成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;3、为什么会有混合持久化？&#34;&gt;&lt;a href=&#34;#3、为什么会有混合持久化？&#34; class=&#34;headerlink&#34; title=&#34;3、为什么会有混合持久化？&#34;&gt;&lt;/a&gt;3、为什么会有混合持久化？&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;Redis4.0提出了混合使用AOF日志和RDB内存快照的持久化方式，既保证了数据恢复的速度，也降低了数据丢失的风险，结合了两者的优点&lt;/li&gt;
+&lt;li&gt;在AOF的基础上，将AOF重写的操作发生了变化：重写时以RDB的方式写入到AOF文件中，这样AOF文件的前半部分是RDB格式的全量数据，后半部分则是AOF格式的增量数据。这样的话，前半部分数据在Redis重启时数据恢复速度快，后半部分的内容记录了Redis后台子进程重写AOF期间，主线程产生的操作命令，降低了数据的丢失风险。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;五、Redis集群&#34;&gt;&lt;a href=&#34;#五、Redis集群&#34; class=&#34;headerlink&#34; title=&#34;五、Redis集群&#34;&gt;&lt;/a&gt;五、Redis集群&lt;/h3&gt;&lt;h4 id=&#34;1、主从复制&#34;&gt;&lt;a href=&#34;#1、主从复制&#34; class=&#34;headerlink&#34; title=&#34;1、主从复制&#34;&gt;&lt;/a&gt;1、主从复制&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.xiaolincoding.com//mysql/other/2b7231b6aabb9a9a2e2390ab3a280b2d.png&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主从复制是Redis高可用的基础，实现方式就是将从前的一台Redis服务器，同步数据到多台服务器上，实现一主多从的模式。&lt;/li&gt;
+&lt;li&gt;主服务器可以进行读写操作，当主服务器发生写操作时同步给从服务器，从服务器一般是只读，然后接受主服务器同步过来的写操作进行数据同步&lt;/li&gt;
+&lt;li&gt;主从服务器直接的命令复制是异步的，因此无法保证数据的强一致性问题（时时刻刻保持一致）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;2、哨兵模式&#34;&gt;&lt;a href=&#34;#2、哨兵模式&#34; class=&#34;headerlink&#34; title=&#34;2、哨兵模式&#34;&gt;&lt;/a&gt;2、哨兵模式&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.xiaolincoding.com//mysql/other/26f88373d8454682b9e0c1d4fd1611b4.png&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;哨兵模式是为了解决主从服务时候存在的一个问题：当主服务器出现故障发生宕机时，需要手动进行恢复的问题&lt;/li&gt;
+&lt;li&gt;哨兵模式可以做到监控主从服务器，并且提供了主从节点故障转移的功能。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;3、切片集群模式&#34;&gt;&lt;a href=&#34;#3、切片集群模式&#34; class=&#34;headerlink&#34; title=&#34;3、切片集群模式&#34;&gt;&lt;/a&gt;3、切片集群模式&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;它可以将数据分步到不同的服务器上面，以此来降低系统对单个节点的依赖，从而提高Redis服务的读写性能。&lt;/li&gt;
+&lt;li&gt;采用哈希槽的方式来处理数据和节点之间的映射关系，一个Redis切片集群共有16384个哈希槽，哈希槽类似于数据分区，每个键值对都会根据Key映射到一个哈希槽中。然后哈希槽是如何映射到具体节点的呢？：&lt;/li&gt;
+&lt;li&gt;两种分配方案：&lt;ul&gt;
+&lt;li&gt;平均分配&lt;/li&gt;
+&lt;li&gt;手动分配&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;六、Redis的数据过期删除和内存淘汰策略&#34;&gt;&lt;a href=&#34;#六、Redis的数据过期删除和内存淘汰策略&#34; class=&#34;headerlink&#34; title=&#34;六、Redis的数据过期删除和内存淘汰策略&#34;&gt;&lt;/a&gt;六、Redis的数据过期删除和内存淘汰策略&lt;/h3&gt;&lt;h4 id=&#34;1、（Key）数据过期删除&#34;&gt;&lt;a href=&#34;#1、（Key）数据过期删除&#34; class=&#34;headerlink&#34; title=&#34;1、（Key）数据过期删除&#34;&gt;&lt;/a&gt;1、（Key）数据过期删除&lt;/h4&gt;&lt;p&gt;相对于&lt;strong&gt;Key值的过期时间&lt;/strong&gt;来删除的一种策略。每当我们对一个Key设置了过期时间，Redis都会把该Key带上过期时间存放到一个过期词典（expire dict）。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;惰性删除：不去主动删除键，当每次访问该Key时，都会到过期词典中去检测Key是否过期，如果过期则删除。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：系统资源占用量较少，对CPU时间友好型；&lt;/li&gt;
+&lt;li&gt;缺点：如果一个Key已经过期且一直没有被访问，就一直无法释放，造成一定的内存空间的浪费&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;定期删除策略：每隔一段时间，就会随机取出一定量的Key进行检查，并且删除已经过期的Key，两种模式&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;SLOW模式定时任务：执行频率默认是 10 hz，执行时间每次不超过25ms&lt;/li&gt;
+&lt;li&gt;FAST模式：执行频率不固定，每次时间循环都会尝试执行，但每两次之间的间隔不得低于2ms、每次执行的耗时不得超过1ms&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：通过限制删除操作的执行时间和频率来减少删除操作对 CPU的影响，同时减少了过期Key对内存空间的浪费。&lt;/li&gt;
+&lt;li&gt;缺点：不好确定执行频率和时长，执行太频繁，对CPU不友好；如果执行次数太少，那就跟惰性删除差不多了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;因此，Redis选择的是惰性删除和定期淘汰相结合的策略。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、内存淘汰策略&#34;&gt;&lt;a href=&#34;#2、内存淘汰策略&#34; class=&#34;headerlink&#34; title=&#34;2、内存淘汰策略&#34;&gt;&lt;/a&gt;2、内存淘汰策略&lt;/h4&gt;&lt;p&gt;相对于 Redis 的&lt;strong&gt;内存满了&lt;/strong&gt;的一种内存淘汰机制&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;不进行内存淘汰，超过最大内存后直接返回错误&lt;/li&gt;
+&lt;li&gt;进行内存淘汰：&lt;ul&gt;
+&lt;li&gt;只在设置了过期时间的数据中进行淘汰&lt;/li&gt;
+&lt;li&gt;在所有数据中进行淘汰&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;2-1-LRU-和-LFU&#34;&gt;&lt;a href=&#34;#2-1-LRU-和-LFU&#34; class=&#34;headerlink&#34; title=&#34;2.1 LRU 和 LFU&#34;&gt;&lt;/a&gt;2.1 LRU 和 LFU&lt;/h5&gt;&lt;ol&gt;
+&lt;li&gt;LRU：最近最少使用，会选择淘汰最近最少使用的数据，当前时间减去最后一次访问时间，这个值越大则淘汰优先级越大。&lt;/li&gt;
+&lt;li&gt;LFU：最近最不常用，会统计每个Key的访问频率，根据核心思想”如果一个Key过去被访问多次，那么将来被访问的频率也会更高”实现的。但是它不是单纯地记录访问频率，也会根据访问时间进行一定的衰减。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;七、缓存三大件&#34;&gt;&lt;a href=&#34;#七、缓存三大件&#34; class=&#34;headerlink&#34; title=&#34;七、缓存三大件&#34;&gt;&lt;/a&gt;七、缓存三大件&lt;/h3&gt;&lt;h4 id=&#34;1、缓存雪崩&#34;&gt;&lt;a href=&#34;#1、缓存雪崩&#34; class=&#34;headerlink&#34; title=&#34;1、缓存雪崩&#34;&gt;&lt;/a&gt;1、缓存雪崩&lt;/h4&gt;&lt;p&gt;指在同一时段大量的缓存key同时失效或者Redis服务宕机，导致大量请求到达数据库，带来巨大压力。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在缓存失效时间的基础上加上随机值（1-5分钟），可以降低集体失效的概率。&lt;/li&gt;
+&lt;li&gt;多级缓存&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;2、缓存击穿（热点Key问题）&#34;&gt;&lt;a href=&#34;#2、缓存击穿（热点Key问题）&#34; class=&#34;headerlink&#34; title=&#34;2、缓存击穿（热点Key问题）&#34;&gt;&lt;/a&gt;2、缓存击穿（热点Key问题）&lt;/h4&gt;&lt;p&gt;被&lt;strong&gt;高并发访问&lt;/strong&gt;并且&lt;strong&gt;缓存重建业务较复杂&lt;/strong&gt;的key突然失效了，无数的请求访问会在瞬间给数据库带来巨大的冲击。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;逻辑过期时间（不保证一致性，适用于注重用户体验，而非注重数据一致性的场景）：先从redis中查询缓存，如果未命中，直接返回 null，如果命中，判断其逻辑过期时间是否过期，未过期，直接返回数据。已过期，则需要进行缓存重建，先尝试获取互斥锁，获取成功，开启独立线程去完成缓存重建的工作。如果获取互斥锁失败，则不进行等待，直接返回已经过期的数据即可。性能较好。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;3、缓存穿透&#34;&gt;&lt;a href=&#34;#3、缓存穿透&#34; class=&#34;headerlink&#34; title=&#34;3、缓存穿透&#34;&gt;&lt;/a&gt;3、缓存穿透&lt;/h4&gt;&lt;p&gt;用户需要访问的数据，既不在缓存中，也不在数据库中&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;缓存 null 值，实现较为简单，但是会造成内存浪费&lt;/li&gt;
+&lt;li&gt;布隆过滤器：用于检查一个元素是否在一个集合中的工具。它的底层是由一个初始值都为0的位图数组和N个哈希函数组成的。当我们将数据写入数据库中，在布隆过滤器中做个标记，之后再查询数据库时可以通过布隆过滤器判断数据是否在数据库中。如何做标记：&lt;ul&gt;
+&lt;li&gt;首先，使用 N个哈希函数分别对数据进行哈希计算，可以得到N个哈希值&lt;/li&gt;
+&lt;li&gt;然后与数组长度取模运算，得到每个哈希值在数组中的对应位置，并将其置为 1。&lt;/li&gt;
+&lt;li&gt;但是，由于存在哈希冲突的情况，所以可能会出现误判的情况，但一般都在可接受范围5%以内。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;之后在查询某个数据时，先通过布隆过滤器判断其是否在库中，如果不存在就不用再去查询数据库了，这样即使发生了缓存穿透，也不会对数据库造成很大压力。&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+        <category term="redis" />
+        <updated>2024-01-08T00:48:53.000Z</updated>
+    </entry>
     <entry>
         <id>https://ooooddddd.github.io/2024/01/03/%E8%B1%86%E4%B8%81%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3/</id>
         <title>豆丁点评相关</title>
@@ -161,21 +340,30 @@
         <id>https://ooooddddd.github.io/2024/01/03/Javase%E7%9B%B8%E5%85%B3/</id>
         <title>Javase相关</title>
         <link rel="alternate" href="https://ooooddddd.github.io/2024/01/03/Javase%E7%9B%B8%E5%85%B3/"/>
-        <content type="html">&lt;h3 id=&#34;一、Java常用类&#34;&gt;&lt;a href=&#34;#一、Java常用类&#34; class=&#34;headerlink&#34; title=&#34;一、Java常用类&#34;&gt;&lt;/a&gt;一、Java常用类&lt;/h3&gt;&lt;h4 id=&#34;1、Java的八大基本数据类型&#34;&gt;&lt;a href=&#34;#1、Java的八大基本数据类型&#34; class=&#34;headerlink&#34; title=&#34;1、Java的八大基本数据类型&#34;&gt;&lt;/a&gt;1、Java的八大基本数据类型&lt;/h4&gt;&lt;ol&gt;
+        <content type="html">&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;一、Java常用类、集合&lt;/p&gt;
+&lt;h4 id=&#34;1、Java的八大基本数据类型&#34;&gt;&lt;a href=&#34;#1、Java的八大基本数据类型&#34; class=&#34;headerlink&#34; title=&#34;1、Java的八大基本数据类型&#34;&gt;&lt;/a&gt;1、Java的八大基本数据类型&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;整数：byte、short、int、long&lt;/li&gt;
 &lt;li&gt;浮点数：float、double&lt;/li&gt;
 &lt;li&gt;布尔：boolearn&lt;/li&gt;
 &lt;li&gt;字符：char&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h4 id=&#34;2、ArrayList和linkedlist的区别&#34;&gt;&lt;a href=&#34;#2、ArrayList和linkedlist的区别&#34; class=&#34;headerlink&#34; title=&#34;2、ArrayList和linkedlist的区别&#34;&gt;&lt;/a&gt;2、ArrayList和linkedlist的区别&lt;/h4&gt;&lt;ol&gt;
+&lt;h4 id=&#34;2、String、StringBuilder、StringBuffer&#34;&gt;&lt;a href=&#34;#2、String、StringBuilder、StringBuffer&#34; class=&#34;headerlink&#34; title=&#34;2、String、StringBuilder、StringBuffer&#34;&gt;&lt;/a&gt;2、String、StringBuilder、StringBuffer&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;String是不可变的，因为它被final修饰符修饰，并且String类的内部并没有暴露修改这个字符串的方法&lt;/li&gt;
+&lt;li&gt;StringBuilder和StringBuffer则提供了很多修改字符串的方法，比如常用的 append()方法。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;线程是否安全：&lt;/strong&gt;String是不可变的，可以理解为常量，是线程安全的。StringBuffer和StringBuilder都定义了一些对字符串的基本操作。因为StringBuffer对这些方法加了同步锁，因此是线程安全的。而StringBuilder没有，所以StringBuilder不是线程安全的&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;总结&lt;/strong&gt;：操作少量的数据时：使用String；单线程下操作大量数据：StringBuilder；多线程下操作大量数据：StringBuffer&lt;/li&gt;
+&lt;li&gt;String使用&lt;strong&gt;字符串拼接&lt;/strong&gt;时，也就是”+”时，底层会创建一个StringBuilder对象，调用append方法实现。最后会使用toString重新转为String。但是在循环内应该避免使用String拼接，因为编译器不会创建单个StringBuilder用以复用，会导致创建过多的StringBuilder对象。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;3、ArrayList和linkedlist的区别&#34;&gt;&lt;a href=&#34;#3、ArrayList和linkedlist的区别&#34; class=&#34;headerlink&#34; title=&#34;3、ArrayList和linkedlist的区别&#34;&gt;&lt;/a&gt;3、ArrayList和linkedlist的区别&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;都是线程不安全的&lt;/li&gt;
 &lt;li&gt;底层数据结构：ArrayList使用的是Object数组；linkedlist底层使用的是双向循环链表&lt;/li&gt;
 &lt;li&gt;插入删除：ArrayList采用的是数组存储，因此在插入和删除时的时间复杂度会受到元素位置的影响。而LinkedList则近似于O(1)&lt;/li&gt;
 &lt;li&gt;是否支持快速随机访问：LinkedList不支持，而ArrayList则可以通过元素的序号快速获取元素对象。&lt;/li&gt;
 &lt;li&gt;内存空间占用：ArrayList的空间浪费主要体现在list列表的末尾需要预留一定的冗余空间。而LinkedList则是需要额外存储直接后继与直接前驱。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h4 id=&#34;3、ArrayList扩容&#34;&gt;&lt;a href=&#34;#3、ArrayList扩容&#34; class=&#34;headerlink&#34; title=&#34;3、ArrayList扩容&#34;&gt;&lt;/a&gt;3、ArrayList扩容&lt;/h4&gt;&lt;p&gt;以&lt;strong&gt;无参构造方法&lt;/strong&gt;创建一个ArrayList时，是不会分配容量的，默认是&lt;strong&gt;0&lt;/strong&gt;，只有在向ArrayList中add()第一个元素时，容量会得到扩容，默认为&lt;strong&gt;10&lt;/strong&gt;，然后继续向里面添加元素，到&lt;strong&gt;11个&lt;/strong&gt;元素时，此时已经超出当前容量，会进行扩容，10+10&amp;#x2F;2&amp;#x3D;15，当old容量为偶数时，新容量刚好就是old容量的1.5倍，奇数则会损失0.5的小数点。&lt;/p&gt;
-&lt;h4 id=&#34;4、HashMap-的-7-种遍历方式与性能分析&#34;&gt;&lt;a href=&#34;#4、HashMap-的-7-种遍历方式与性能分析&#34; class=&#34;headerlink&#34; title=&#34;4、HashMap 的 7 种遍历方式与性能分析&#34;&gt;&lt;/a&gt;4、HashMap 的 7 种遍历方式与性能分析&lt;/h4&gt;&lt;ol&gt;
+&lt;h4 id=&#34;4、ArrayList扩容&#34;&gt;&lt;a href=&#34;#4、ArrayList扩容&#34; class=&#34;headerlink&#34; title=&#34;4、ArrayList扩容&#34;&gt;&lt;/a&gt;4、ArrayList扩容&lt;/h4&gt;&lt;p&gt;以&lt;strong&gt;无参构造方法&lt;/strong&gt;创建一个ArrayList时，是不会分配容量的，默认是&lt;strong&gt;0&lt;/strong&gt;，只有在向ArrayList中add()第一个元素时，容量会得到扩容，默认为&lt;strong&gt;10&lt;/strong&gt;，然后继续向里面添加元素，到&lt;strong&gt;11个&lt;/strong&gt;元素时，此时已经超出当前容量，会进行扩容，10+10&amp;#x2F;2&amp;#x3D;15，当old容量为偶数时，新容量刚好就是old容量的1.5倍，奇数则会损失0.5的小数点。&lt;/p&gt;
+&lt;h4 id=&#34;5、HashMap-的-7-种遍历方式与性能分析&#34;&gt;&lt;a href=&#34;#5、HashMap-的-7-种遍历方式与性能分析&#34; class=&#34;headerlink&#34; title=&#34;5、HashMap 的 7 种遍历方式与性能分析&#34;&gt;&lt;/a&gt;5、HashMap 的 7 种遍历方式与性能分析&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;迭代器:Iterator EntrySet、Iterator KeySet&lt;/li&gt;
 &lt;li&gt;For Each:For EntrySet， For KeySet&lt;/li&gt;
 &lt;li&gt;Lambda表达式&lt;/li&gt;
@@ -200,18 +388,39 @@
       &lt;span class=&#34;token class-name&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;map&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;key&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;
     &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;5、hashmap是否是线程安全的，常见的线程安全的集合&#34;&gt;&lt;a href=&#34;#5、hashmap是否是线程安全的，常见的线程安全的集合&#34; class=&#34;headerlink&#34; title=&#34;5、hashmap是否是线程安全的，常见的线程安全的集合&#34;&gt;&lt;/a&gt;5、hashmap是否是线程安全的，常见的线程安全的集合&lt;/h4&gt;&lt;p&gt;hashmap是线程不安全的，多线程下进行扩容会导致死循环，jdk1.7中hashmap的链表使用头插法插入元素，扩容时可能会导致环形链表的出现形成死循环，因此jdk1.8改为了尾插法，但是多线程的put操作，可能会导致元素的丢失问题。&lt;/p&gt;
+&lt;h4 id=&#34;6、hashmap是否是线程安全的，常见的线程安全的集合&#34;&gt;&lt;a href=&#34;#6、hashmap是否是线程安全的，常见的线程安全的集合&#34; class=&#34;headerlink&#34; title=&#34;6、hashmap是否是线程安全的，常见的线程安全的集合&#34;&gt;&lt;/a&gt;6、hashmap是否是线程安全的，常见的线程安全的集合&lt;/h4&gt;&lt;p&gt;hashmap是线程不安全的，多线程下进行扩容会导致死循环，jdk1.7中hashmap的链表使用头插法插入元素，扩容时可能会导致环形链表的出现形成死循环，因此jdk1.8改为了尾插法，但是多线程的put操作，可能会导致元素的丢失问题。&lt;/p&gt;
 &lt;p&gt;常见的线程安全的集合：&lt;/p&gt;
 &lt;p&gt;hashtable，concurrentHashMap，vector、Stack。&lt;/p&gt;
-&lt;h4 id=&#34;6、HashMap的底层原理&#34;&gt;&lt;a href=&#34;#6、HashMap的底层原理&#34; class=&#34;headerlink&#34; title=&#34;6、HashMap的底层原理&#34;&gt;&lt;/a&gt;6、HashMap的底层原理&lt;/h4&gt;&lt;p&gt;在JDK1.8之前hashMap的底层数据结构是由数组+链表组成的，数组是HashMap的主体部分，而链表是为了解决哈希冲突而存在的。在JDK1.8中，是由数组+链表+红黑树组成的，当链表过长时，会严重影响HashMap的性能，因为链表的搜索时间复杂度是O（n），而红黑树则是O(logN)。因此，JDK1.8中引入了红黑树，在链表达到一定条件是会转化为红黑树。这个条件就是：当链表长度大于8，就会去检查数组的长度是否大于64，如果数组长度小于64，则进行数组的扩容，否则就会将链表转化为红黑树，以减少搜索时间。HashMap中采用的解决hash冲突的办法是链地址法。将哈希值相同的元素构成一个单链表，并将单链表的头结点存放在哈希表的第i个单元中。HashMap的默认加载因子是0.75，初始化数组的长度默认值是16，threshold是hashmap所能容纳的最大键值对数量&amp;#x3D;加载因子*数组长度，当容量达到这个值时，数组就会进行扩容，扩大为原来的两倍，并将原来的对象放入新数组中。这里jdk1.8进行了适当的优化，无需再重新计算hash值，元素的位置在原来的位置或者是原来的位置+oldCap。&lt;/p&gt;
+&lt;h4 id=&#34;7、HashMap的底层原理&#34;&gt;&lt;a href=&#34;#7、HashMap的底层原理&#34; class=&#34;headerlink&#34; title=&#34;7、HashMap的底层原理&#34;&gt;&lt;/a&gt;7、HashMap的底层原理&lt;/h4&gt;&lt;p&gt;在JDK1.8之前hashMap的底层数据结构是由数组+链表组成的，数组是HashMap的主体部分，而链表是为了解决哈希冲突而存在的。在JDK1.8中，是由数组+链表+红黑树组成的，当链表过长时，会严重影响HashMap的性能，因为链表的搜索时间复杂度是O（n），而红黑树则是O(logN)。因此，JDK1.8中引入了红黑树，在链表达到一定条件是会转化为红黑树。这个条件就是：当链表长度大于8，就会去检查数组的长度是否大于64，如果数组长度小于64，则进行数组的扩容，否则就会将链表转化为红黑树，以减少搜索时间。HashMap中采用的解决hash冲突的办法是链地址法。将哈希值相同的元素构成一个单链表，并将单链表的头结点存放在哈希表的第i个单元中。HashMap的默认加载因子是0.75，初始化数组的长度默认值是16，threshold是hashmap所能容纳的最大键值对数量&amp;#x3D;加载因子*数组长度，当容量达到这个值时，数组就会进行扩容，扩大为原来的两倍，并将原来的对象放入新数组中。这里jdk1.8进行了适当的优化，无需再重新计算hash值，元素的位置在原来的位置或者是原来的位置+oldCap。&lt;/p&gt;
 &lt;p&gt;jdk1.8之前，hashmap的插入方法是头插法，新插入的元素会插入到链表的头部。产生的问题如下：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;破坏了链表元素的插入顺序，可能不利于某些需要按照插入顺序进行遍历的场景&lt;/li&gt;
 &lt;li&gt;容易形成环形链表的问题：由于头插法需要修改链表头，在多线程环境下可能会引起链表环形的问题，使得链表遍历时出现死循环&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4 id=&#34;7、ConCurrentHashMap底层原理&#34;&gt;&lt;a href=&#34;#7、ConCurrentHashMap底层原理&#34; class=&#34;headerlink&#34; title=&#34;7、ConCurrentHashMap底层原理&#34;&gt;&lt;/a&gt;7、ConCurrentHashMap底层原理&lt;/h4&gt;&lt;ol&gt;
+&lt;h4 id=&#34;8、ConCurrentHashMap底层原理&#34;&gt;&lt;a href=&#34;#8、ConCurrentHashMap底层原理&#34; class=&#34;headerlink&#34; title=&#34;8、ConCurrentHashMap底层原理&#34;&gt;&lt;/a&gt;8、ConCurrentHashMap底层原理&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;ConCurrentHashMap在HashMap的基础上加上的锁的机制，因此是线程安全的。在JDK1.7中，ConCurrentHashMap是由Segment分段数组结构和HashEntry数组结构组成的。即ConCurrentHashMap把哈希表分为了多个Segment小数组，而每个Segment就是一个类似于hashmap的结构，每一个hashmap的内部可以进行扩容，而segment的个数一旦初始化就不能再改变，默认值是16，也就可以认为其默认支持16个线程的并发。&lt;/li&gt;
 &lt;li&gt;在jdk1.8中，其数据结构变成了数组+链表&amp;#x2F;红黑树的组合，当链表冲突达到一定长度时，会转化为红黑树。在锁的实现上，抛弃了原本的Segment分段锁，采用了CAS + synchronized 对链表的头结点或红黑树的根节点进行加锁，将锁的级别控制在了更细粒度的级别，大大提高了并发量。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;9、set、map、list&#34;&gt;&lt;a href=&#34;#9、set、map、list&#34; class=&#34;headerlink&#34; title=&#34;9、set、map、list&#34;&gt;&lt;/a&gt;9、set、map、list&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;set&lt;/strong&gt;：不包含重复元素的集合，实现了set接口的类通常有HashSet、TreeSet等&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Map：&lt;/strong&gt;键值对的集合，key-value，不允许包含重复的key，但是可以包含重复的value&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;list&lt;/strong&gt;：一个有序的集合，允许重复元素。ArrayList、LinkedList等。可以通过索引访问元素，按照插入顺序排序&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;10、HashMap、HashTable&#34;&gt;&lt;a href=&#34;#10、HashMap、HashTable&#34; class=&#34;headerlink&#34; title=&#34;10、HashMap、HashTable&#34;&gt;&lt;/a&gt;10、HashMap、HashTable&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;是否线程安全：&lt;/strong&gt;HashMap不是线程安全的，另外两个是线程安全的。HashTable的线程安全是因为它内部的方法基本上都加了&lt;code&gt;synchronized&lt;/code&gt;锁。ConCurrentHashMap是通过分段锁（jdk1.7），或者是CAS + synchronized（jdk1.8）对链表的头结点或者红黑树的根节点进行加锁实现的。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;效率：&lt;/strong&gt;HashMap效率更高，HashTable基本上已经不怎么用了，如果需要保证线程安全就选择ConCurrentHashMap&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Null Key 和 Null Value&lt;/strong&gt;：HashMap支持Null Key 和 Null Value，但是Null Key 只能存在一个，Null Value可以有多个。HashTable并不支持 Null Key 和Null Value，否则会报错NPE（空指针异常）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;初始容量：&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;不指定：HashTable默认是11，每次扩容变为原来的 2n+1。 HashMap默认16，每次扩容变为原来的2倍&lt;/li&gt;
+&lt;li&gt;指定：HashTable直接用指定的。HashMap则会扩充为2的幂次方大小 10 –&amp;gt; 16。为什么总是2的幂次方，因为 取余（%）操作可以利用 二进制位与（&amp;amp;）操作代替。（也就是说 hash%length&amp;#x3D;&amp;#x3D;hash&amp;amp;(length-1)的前提是 length 是 2 的 n 次方；）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;底层数据结构：&lt;/strong&gt;HashTable没有链表转为红黑树的操作&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;11、HashMap-和-HashSet-区别&#34;&gt;&lt;a href=&#34;#11、HashMap-和-HashSet-区别&#34; class=&#34;headerlink&#34; title=&#34;11、HashMap 和 HashSet 区别&#34;&gt;&lt;/a&gt;11、HashMap 和 HashSet 区别&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;HashSet的底层就是HashMap 实现的。&lt;/li&gt;
+&lt;li&gt;HashSet仅存储值，HashMap存储键值对 Key-Value&lt;/li&gt;
+&lt;li&gt;HashSet add方法添加元素，HashMap则add（key，value）方法添加元素&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;二、并发编程&#34;&gt;&lt;a href=&#34;#二、并发编程&#34; class=&#34;headerlink&#34; title=&#34;二、并发编程&#34;&gt;&lt;/a&gt;二、并发编程&lt;/h3&gt;&lt;h4 id=&#34;1、volatile关键字&#34;&gt;&lt;a href=&#34;#1、volatile关键字&#34; class=&#34;headerlink&#34; title=&#34;1、volatile关键字&#34;&gt;&lt;/a&gt;1、volatile关键字&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;volatile保证变量对所有线程的可见性，当volatile变量被修改时，新值对所有变量会立即更新。即多线程环境下使用volatile修饰的变量的值一定是最新的。&lt;/li&gt;
@@ -282,7 +491,7 @@
 &lt;li&gt;线程池&lt;/li&gt;
 &lt;li&gt;stream流也可以&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3 id=&#34;三、JVM&#34;&gt;&lt;a href=&#34;#三、JVM&#34; class=&#34;headerlink&#34; title=&#34;三、JVM&#34;&gt;&lt;/a&gt;三、JVM&lt;/h3&gt;&lt;h4 id=&#34;1、JVM内存分区模型&#34;&gt;&lt;a href=&#34;#1、JVM内存分区模型&#34; class=&#34;headerlink&#34; title=&#34;1、JVM内存分区模型&#34;&gt;&lt;/a&gt;1、JVM内存分区模型&lt;/h4&gt;&lt;p&gt;主要分为以下几个区域：&lt;/p&gt;
+&lt;h4 id=&#34;9、ThreadLocal&#34;&gt;&lt;a href=&#34;#9、ThreadLocal&#34; class=&#34;headerlink&#34; title=&#34;9、ThreadLocal&#34;&gt;&lt;/a&gt;9、ThreadLocal&lt;/h4&gt;&lt;h3 id=&#34;三、JVM&#34;&gt;&lt;a href=&#34;#三、JVM&#34; class=&#34;headerlink&#34; title=&#34;三、JVM&#34;&gt;&lt;/a&gt;三、JVM&lt;/h3&gt;&lt;h4 id=&#34;1、JVM内存分区模型&#34;&gt;&lt;a href=&#34;#1、JVM内存分区模型&#34; class=&#34;headerlink&#34; title=&#34;1、JVM内存分区模型&#34;&gt;&lt;/a&gt;1、JVM内存分区模型&lt;/h4&gt;&lt;p&gt;主要分为以下几个区域：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;程序计数器&lt;/strong&gt;：每个线程都有自己的程序计数器，用于指示当前线程执行的字节码指令的行号，分支、循环、跳转、异常处理等基础功能都依赖这个指示器完成。每个线程都有一个独立的程序计数器，确保线程切换后能恢复到正确的执行位置。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;虚拟机栈&lt;/strong&gt;：也称为Java方法栈，用于存储方法执行时的局部变量表、操作数栈、动态链接、方法出口等信息。每个线程在执行一个方法时，都会为该方法分配一个栈桢，并将其压入虚拟机栈，当方法执行完毕后，虚拟机会将其出栈。&lt;/li&gt;
@@ -347,6 +556,8 @@
 &lt;li&gt;能在1-2年完全胜任岗位职责，有优秀的产出&lt;/li&gt;
 &lt;li&gt;2-3年成为岗位熟手，自身优秀的同时能带教新人&lt;/li&gt;
 &lt;li&gt;3-5年成为业务骨干或一线经理，能带领小团队协作完成任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 </content>
         <category term="Javase" />

@@ -11,8 +11,9 @@
     <category term="Javase" />
     <category term="MySQL" />
     <category term="Spring" />
-    <category term="API开放平台" />
     <category term="点评" />
+    <category term="API开放平台" />
+    <category term="redis" />
     <entry>
         <id>https://ooooddddd.github.io/2024/01/03/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98/</id>
         <title>MySQL面试题</title>

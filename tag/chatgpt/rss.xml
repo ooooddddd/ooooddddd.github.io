@@ -14,8 +14,9 @@
         <category>Javase</category>
         <category>MySQL</category>
         <category>Spring</category>
-        <category>API开放平台</category>
         <category>点评</category>
+        <category>API开放平台</category>
+        <category>redis</category>
         <item>
             <guid isPermalink="true">https://ooooddddd.github.io/2023/10/16/%E6%9C%AC%E5%9C%B0ChatGPT/</guid>
             <title>本地ChatGPT</title>

@@ -1,0 +1,631 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>redis面试题 | 橙熟</title><meta name="author" content="zc"><meta name="copyright" content="zc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="一、认识Redis1、Redis简介 一种基于内存的数据库，对数据的读写操作都是在内存中完成的，因此读写速度非常快，常用于缓存、消息队列、分布式锁等 提供了多种数据结构来适用于不同的应用场景，如String、Hash、List、Set、ZSet、BitMap、HyperLogLog、GEO、Stream等 支持事务、数据持久化、Lua脚本、集群、内存淘汰策略等  2、Redis和Memcached">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis面试题">
+<meta property="og:url" content="https://ooooddddd.github.io/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="橙熟">
+<meta property="og:description" content="一、认识Redis1、Redis简介 一种基于内存的数据库，对数据的读写操作都是在内存中完成的，因此读写速度非常快，常用于缓存、消息队列、分布式锁等 提供了多种数据结构来适用于不同的应用场景，如String、Hash、List、Set、ZSet、BitMap、HyperLogLog、GEO、Stream等 支持事务、数据持久化、Lua脚本、集群、内存淘汰策略等  2、Redis和Memcached">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240108085042.png">
+<meta property="article:published_time" content="2024-01-08T00:48:53.000Z">
+<meta property="article:modified_time" content="2024-01-08T10:26:33.436Z">
+<meta property="article:author" content="zc">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240108085042.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ooooddddd.github.io/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?72f5d185beeddfa65a6064480cf43a71";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"DQLKK163PC","apiKey":"a3e4a75ae66ef186b7acfc756c55dd24","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: zc","link":"链接: ","source":"来源: 橙熟","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'redis面试题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-08 18:26:33'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/self/duotone.css"><link rel="stylesheet" href="//at.alicdn.com/t/c/font_4286548_9cv1z5uybf8.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> HOME</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-list"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-list"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw iconfont icon-yongyan"></i><span> 书单</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 留言</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240108085042.png')"><nav id="nav"><span id="blog-info"><a href="/" title="橙熟"><span class="site-name">橙熟</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> HOME</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-list"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-list"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw iconfont icon-yongyan"></i><span> 书单</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 留言</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">redis面试题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-08T00:48:53.000Z" title="发表于 2024-01-08 08:48:53">2024-01-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-08T10:26:33.436Z" title="更新于 2024-01-08 18:26:33">2024-01-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="redis面试题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="一、认识Redis"><a href="#一、认识Redis" class="headerlink" title="一、认识Redis"></a>一、认识Redis</h3><h4 id="1、Redis简介"><a href="#1、Redis简介" class="headerlink" title="1、Redis简介"></a>1、Redis简介</h4><ol>
+<li>一种基于内存的数据库，对数据的读写操作都是在内存中完成的，因此读写速度非常快，常用于缓存、消息队列、分布式锁等</li>
+<li>提供了多种数据结构来适用于不同的应用场景，如String、Hash、List、Set、ZSet、BitMap、HyperLogLog、GEO、Stream等</li>
+<li>支持事务、数据持久化、Lua脚本、集群、内存淘汰策略等</li>
+</ol>
+<h4 id="2、Redis和Memcached的区别"><a href="#2、Redis和Memcached的区别" class="headerlink" title="2、Redis和Memcached的区别"></a>2、Redis和Memcached的区别</h4><ol>
+<li>共同点：<ul>
+<li>都是基于内存的数据库，一般都用来做缓存</li>
+<li>都有过期淘汰策略</li>
+<li>性能都很高</li>
+</ul>
+</li>
+<li>不同点：<ul>
+<li>Redis支持的数据结构更加丰富，Memcached只支持Key-Value</li>
+<li>Redis支持数据持久化，可以把内存中的数据持久化到磁盘，即使Redis宕机，下次重启依然可以恢复数据，但是Memcached没有持久化</li>
+<li>Redis原生态支持集群</li>
+<li>Redis支持发布订阅模型、Lua脚本、事务等</li>
+</ul>
+</li>
+</ol>
+<h4 id="3、为什么使用Redis作为MySQL的缓存"><a href="#3、为什么使用Redis作为MySQL的缓存" class="headerlink" title="3、为什么使用Redis作为MySQL的缓存"></a>3、为什么使用Redis作为MySQL的缓存</h4><ol>
+<li>高性能<ul>
+<li>MySQL是从磁盘读取，Redis是从内存读取，因此Redis的速度相当快</li>
+</ul>
+</li>
+<li>高并发<ul>
+<li>Redis 单机的 QPS 能轻松破 10w，而 MySQL 单机的 QPS 很难破 1w</li>
+</ul>
+</li>
+</ol>
+<h3 id="二、Redis数据结构"><a href="#二、Redis数据结构" class="headerlink" title="二、Redis数据结构"></a>二、Redis数据结构</h3><h4 id="1、常见的数据结构及其应用场景"><a href="#1、常见的数据结构及其应用场景" class="headerlink" title="1、常见的数据结构及其应用场景"></a>1、常见的数据结构及其应用场景</h4><ul>
+<li>String：缓存对象（点评项目中的店铺信息）、共享session、分布式锁等</li>
+<li>Hash类型：缓存对象、购物车等</li>
+<li>Set类型：聚合计算的场景（并集、差集、交集）</li>
+<li>ZSet：排序场景，如点赞前TOP</li>
+<li>BitMap：二值状态统计，如签到、登录状态</li>
+<li>GEO：存储地理位置</li>
+<li>Stream：消息队列。</li>
+</ul>
+<h3 id="三、Redis-线程模型"><a href="#三、Redis-线程模型" class="headerlink" title="三、Redis 线程模型"></a>三、Redis 线程模型</h3><h4 id="1、Redis是单线程吗？"><a href="#1、Redis是单线程吗？" class="headerlink" title="1、Redis是单线程吗？"></a>1、Redis是单线程吗？</h4><ol>
+<li>Redis所谓的单线程模式指的是：接收客户端请求–&gt;解析请求–&gt;进行数据读写操作–&gt;发送数据到客户端这整个过程是由一个主线程来完成的。</li>
+<li>但是，Redis程序可不是单线程的，在Redis启动时，是会启动后台线程的，用于处理关闭文件、AOF刷盘、释放内存等操作</li>
+</ol>
+<h4 id="2、Redis单线程模式："><a href="#2、Redis单线程模式：" class="headerlink" title="2、Redis单线程模式："></a>2、Redis单线程模式：</h4><ol>
+<li><p>Redis的初始化过程：</p>
+<ul>
+<li>首先，调用epoll_create()创建一个epoll（I&#x2F;O多路复用）对象创建一个epoll对象和调用socket()创建一个服务端socket</li>
+<li>然后，bind()绑定相关端口监听socket</li>
+<li>最后，调用epoll_ctl()方法将 listen socket 加入到epoll中，同时注册 连接事件 处理函数</li>
+</ul>
+</li>
+<li><p>初始化完成后，主线程会进入到一个 事件循环函数 中</p>
+<ul>
+<li><p>写事件：write函数：首先会调用处理发送队列函数，查看发送队列是否有任务，如果有任务，则通过write函数将发送缓存区中的数据发送出去。如果这一轮数据没有发送完，就会注册写事件处理函数，等待epoll_wait发现可写后再进行处理</p>
+</li>
+<li><p>然后，调用epoll_wait函数等待事件的到来。</p>
+<ul>
+<li>连接事件：获取连接 socket，加入到 epoll中</li>
+<li>读事件：获取客户端发送的数据–&gt;解析命了–&gt;处理命令–&gt;将客户端对象添加到发送队列–&gt;将执行结果写到发送缓存区等待发送</li>
+<li>写事件：write函数</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="四、Redis持久化"><a href="#四、Redis持久化" class="headerlink" title="四、Redis持久化"></a>四、Redis持久化</h3><h4 id="1、两种持久化方式：AOF和RDB"><a href="#1、两种持久化方式：AOF和RDB" class="headerlink" title="1、两种持久化方式：AOF和RDB"></a>1、两种持久化方式：AOF和RDB</h4><ol>
+<li>AOF：每当Redis操作一个写命令时，都会存储到这个文件中，当Redis宕机恢复数据时，通过这个文件重新执行一遍命令来恢复数据。</li>
+<li>RDB：快照文件，将某一时刻的redis内存中的数据以二进制的方式写入磁盘，当Redis宕机恢复时，直接从该快照文件读取数据进行恢复即可。</li>
+<li>混合持久化方式：集成了两种方式的优点。</li>
+</ol>
+<h4 id="2、各自的优缺点"><a href="#2、各自的优缺点" class="headerlink" title="2、各自的优缺点"></a>2、各自的优缺点</h4><p>1、AOF优点：</p>
+<ul>
+<li>数据保证：我们可以设置数据写会磁盘的策略，一般来说是选择Everysec（每秒），每次写操作执行完毕后，先将命令写入到AOF文件的内核缓冲区，然后每隔1秒将缓冲区的内容写回磁盘。即使Redis宕机，也只会丢失1秒内的数据。</li>
+<li>AOF重写机制：当AOF文件大小达到一定程度的时候，后台会自动执行AOF重写，缩小AOF文件的大小。</li>
+</ul>
+<p>2、AOF缺点：</p>
+<ul>
+<li>性能相对较差：对于同一份数据，AOF文件的恢复速度通常要比RDB慢。</li>
+<li>体积相对更大：尽管AOF文件可以重写，但是毕竟RDB记录的是操作后的结果文件，而AOF记录的是操作过程。</li>
+</ul>
+<p>3、RDB优点：</p>
+<ul>
+<li>体积更小：RDB文件是紧凑的二进制文件。</li>
+<li>恢复更快：因为RDB是快照存储，数据恢复的过程就是复制，因此更快</li>
+</ul>
+<p>4、RDB的缺点：</p>
+<ul>
+<li>故障丢失数据：因为RDB是全量复制，一般来说，RDB文件都是每隔5分钟或者更久时间生成一次，一旦Redis宕机，就会丢失最近5分钟的数据。</li>
+<li>RDB无法实时或者秒级持久化</li>
+<li>数据量很大时，对磁盘资源的消耗也是不可忽视的</li>
+<li>save和bgsave：save会阻塞主进程，bgsave会创建一个子进程来进行RDB文件的生成</li>
+</ul>
+<h4 id="3、为什么会有混合持久化？"><a href="#3、为什么会有混合持久化？" class="headerlink" title="3、为什么会有混合持久化？"></a>3、为什么会有混合持久化？</h4><ol>
+<li>Redis4.0提出了混合使用AOF日志和RDB内存快照的持久化方式，既保证了数据恢复的速度，也降低了数据丢失的风险，结合了两者的优点</li>
+<li>在AOF的基础上，将AOF重写的操作发生了变化：重写时以RDB的方式写入到AOF文件中，这样AOF文件的前半部分是RDB格式的全量数据，后半部分则是AOF格式的增量数据。这样的话，前半部分数据在Redis重启时数据恢复速度快，后半部分的内容记录了Redis后台子进程重写AOF期间，主线程产生的操作命令，降低了数据的丢失风险。</li>
+</ol>
+<h3 id="五、Redis集群"><a href="#五、Redis集群" class="headerlink" title="五、Redis集群"></a>五、Redis集群</h3><h4 id="1、主从复制"><a href="#1、主从复制" class="headerlink" title="1、主从复制"></a>1、主从复制</h4><p><img src="https://cdn.xiaolincoding.com//mysql/other/2b7231b6aabb9a9a2e2390ab3a280b2d.png" alt="img"></p>
+<ul>
+<li>主从复制是Redis高可用的基础，实现方式就是将从前的一台Redis服务器，同步数据到多台服务器上，实现一主多从的模式。</li>
+<li>主服务器可以进行读写操作，当主服务器发生写操作时同步给从服务器，从服务器一般是只读，然后接受主服务器同步过来的写操作进行数据同步</li>
+<li>主从服务器直接的命令复制是异步的，因此无法保证数据的强一致性问题（时时刻刻保持一致）</li>
+</ul>
+<h4 id="2、哨兵模式"><a href="#2、哨兵模式" class="headerlink" title="2、哨兵模式"></a>2、哨兵模式</h4><p><img src="https://cdn.xiaolincoding.com//mysql/other/26f88373d8454682b9e0c1d4fd1611b4.png" alt="img"></p>
+<ul>
+<li>哨兵模式是为了解决主从服务时候存在的一个问题：当主服务器出现故障发生宕机时，需要手动进行恢复的问题</li>
+<li>哨兵模式可以做到监控主从服务器，并且提供了主从节点故障转移的功能。</li>
+</ul>
+<h4 id="3、切片集群模式"><a href="#3、切片集群模式" class="headerlink" title="3、切片集群模式"></a>3、切片集群模式</h4><ul>
+<li>它可以将数据分步到不同的服务器上面，以此来降低系统对单个节点的依赖，从而提高Redis服务的读写性能。</li>
+<li>采用哈希槽的方式来处理数据和节点之间的映射关系，一个Redis切片集群共有16384个哈希槽，哈希槽类似于数据分区，每个键值对都会根据Key映射到一个哈希槽中。然后哈希槽是如何映射到具体节点的呢？：</li>
+<li>两种分配方案：<ul>
+<li>平均分配</li>
+<li>手动分配</li>
+</ul>
+</li>
+</ul>
+<h3 id="六、Redis的数据过期删除和内存淘汰策略"><a href="#六、Redis的数据过期删除和内存淘汰策略" class="headerlink" title="六、Redis的数据过期删除和内存淘汰策略"></a>六、Redis的数据过期删除和内存淘汰策略</h3><h4 id="1、（Key）数据过期删除"><a href="#1、（Key）数据过期删除" class="headerlink" title="1、（Key）数据过期删除"></a>1、（Key）数据过期删除</h4><p>相对于<strong>Key值的过期时间</strong>来删除的一种策略。每当我们对一个Key设置了过期时间，Redis都会把该Key带上过期时间存放到一个过期词典（expire dict）。</p>
+<ol>
+<li><p>惰性删除：不去主动删除键，当每次访问该Key时，都会到过期词典中去检测Key是否过期，如果过期则删除。</p>
+<ul>
+<li>优点：系统资源占用量较少，对CPU时间友好型；</li>
+<li>缺点：如果一个Key已经过期且一直没有被访问，就一直无法释放，造成一定的内存空间的浪费</li>
+</ul>
+</li>
+<li><p>定期删除策略：每隔一段时间，就会随机取出一定量的Key进行检查，并且删除已经过期的Key，两种模式</p>
+<ol>
+<li>SLOW模式定时任务：执行频率默认是 10 hz，执行时间每次不超过25ms</li>
+<li>FAST模式：执行频率不固定，每次时间循环都会尝试执行，但每两次之间的间隔不得低于2ms、每次执行的耗时不得超过1ms</li>
+</ol>
+<ul>
+<li>优点：通过限制删除操作的执行时间和频率来减少删除操作对 CPU的影响，同时减少了过期Key对内存空间的浪费。</li>
+<li>缺点：不好确定执行频率和时长，执行太频繁，对CPU不友好；如果执行次数太少，那就跟惰性删除差不多了。</li>
+</ul>
+</li>
+<li><p>因此，Redis选择的是惰性删除和定期淘汰相结合的策略。</p>
+</li>
+</ol>
+<h4 id="2、内存淘汰策略"><a href="#2、内存淘汰策略" class="headerlink" title="2、内存淘汰策略"></a>2、内存淘汰策略</h4><p>相对于 Redis 的<strong>内存满了</strong>的一种内存淘汰机制</p>
+<ol>
+<li>不进行内存淘汰，超过最大内存后直接返回错误</li>
+<li>进行内存淘汰：<ul>
+<li>只在设置了过期时间的数据中进行淘汰</li>
+<li>在所有数据中进行淘汰</li>
+</ul>
+</li>
+</ol>
+<h5 id="2-1-LRU-和-LFU"><a href="#2-1-LRU-和-LFU" class="headerlink" title="2.1 LRU 和 LFU"></a>2.1 LRU 和 LFU</h5><ol>
+<li>LRU：最近最少使用，会选择淘汰最近最少使用的数据，当前时间减去最后一次访问时间，这个值越大则淘汰优先级越大。</li>
+<li>LFU：最近最不常用，会统计每个Key的访问频率，根据核心思想”如果一个Key过去被访问多次，那么将来被访问的频率也会更高”实现的。但是它不是单纯地记录访问频率，也会根据访问时间进行一定的衰减。</li>
+</ol>
+<h3 id="七、缓存三大件"><a href="#七、缓存三大件" class="headerlink" title="七、缓存三大件"></a>七、缓存三大件</h3><h4 id="1、缓存雪崩"><a href="#1、缓存雪崩" class="headerlink" title="1、缓存雪崩"></a>1、缓存雪崩</h4><p>指在同一时段大量的缓存key同时失效或者Redis服务宕机，导致大量请求到达数据库，带来巨大压力。</p>
+<ol>
+<li>在缓存失效时间的基础上加上随机值（1-5分钟），可以降低集体失效的概率。</li>
+<li>多级缓存</li>
+</ol>
+<h4 id="2、缓存击穿（热点Key问题）"><a href="#2、缓存击穿（热点Key问题）" class="headerlink" title="2、缓存击穿（热点Key问题）"></a>2、缓存击穿（热点Key问题）</h4><p>被<strong>高并发访问</strong>并且<strong>缓存重建业务较复杂</strong>的key突然失效了，无数的请求访问会在瞬间给数据库带来巨大的冲击。</p>
+<ol>
+<li>逻辑过期时间（不保证一致性，适用于注重用户体验，而非注重数据一致性的场景）：先从redis中查询缓存，如果未命中，直接返回 null，如果命中，判断其逻辑过期时间是否过期，未过期，直接返回数据。已过期，则需要进行缓存重建，先尝试获取互斥锁，获取成功，开启独立线程去完成缓存重建的工作。如果获取互斥锁失败，则不进行等待，直接返回已经过期的数据即可。性能较好。</li>
+</ol>
+<h4 id="3、缓存穿透"><a href="#3、缓存穿透" class="headerlink" title="3、缓存穿透"></a>3、缓存穿透</h4><p>用户需要访问的数据，既不在缓存中，也不在数据库中</p>
+<ol>
+<li>缓存 null 值，实现较为简单，但是会造成内存浪费</li>
+<li>布隆过滤器：用于检查一个元素是否在一个集合中的工具。它的底层是由一个初始值都为0的位图数组和N个哈希函数组成的。当我们将数据写入数据库中，在布隆过滤器中做个标记，之后再查询数据库时可以通过布隆过滤器判断数据是否在数据库中。如何做标记：<ul>
+<li>首先，使用 N个哈希函数分别对数据进行哈希计算，可以得到N个哈希值</li>
+<li>然后与数组长度取模运算，得到每个哈希值在数组中的对应位置，并将其置为 1。</li>
+<li>但是，由于存在哈希冲突的情况，所以可能会出现误判的情况，但一般都在可接受范围5%以内。</li>
+</ul>
+</li>
+<li>之后在查询某个数据时，先通过布隆过滤器判断其是否在库中，如果不存在就不用再去查询数据库了，这样即使发生了缓存穿透，也不会对数据库造成很大压力。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://ooooddddd.github.io">zc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://ooooddddd.github.io/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/">https://ooooddddd.github.io/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://ooooddddd.github.io" target="_blank">橙熟</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/redis/">redis</a></div><div class="post_share"><div class="social-share" data-image="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240108085042.png" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/01/03/%E8%B1%86%E4%B8%81%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3/" title="豆丁点评相关"><img class="cover" src="/img/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">豆丁点评相关</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Waline</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">zc</div><div class="author-info__description">默默无闻</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ooooddddd"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ooooddddd" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1310410823@qq.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%AE%A4%E8%AF%86Redis"><span class="toc-number">1.</span> <span class="toc-text">一、认识Redis</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81Redis%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">1、Redis简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81Redis%E5%92%8CMemcached%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.</span> <span class="toc-text">2、Redis和Memcached的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8Redis%E4%BD%9C%E4%B8%BAMySQL%E7%9A%84%E7%BC%93%E5%AD%98"><span class="toc-number">1.3.</span> <span class="toc-text">3、为什么使用Redis作为MySQL的缓存</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">二、Redis数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.1.</span> <span class="toc-text">1、常见的数据结构及其应用场景</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">三、Redis 线程模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81Redis%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%90%97%EF%BC%9F"><span class="toc-number">3.1.</span> <span class="toc-text">1、Redis是单线程吗？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%BC%8F%EF%BC%9A"><span class="toc-number">3.2.</span> <span class="toc-text">2、Redis单线程模式：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">四、Redis持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E4%B8%A4%E7%A7%8D%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F%EF%BC%9AAOF%E5%92%8CRDB"><span class="toc-number">4.1.</span> <span class="toc-text">1、两种持久化方式：AOF和RDB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E5%90%84%E8%87%AA%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">4.2.</span> <span class="toc-text">2、各自的优缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%9F"><span class="toc-number">4.3.</span> <span class="toc-text">3、为什么会有混合持久化？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81Redis%E9%9B%86%E7%BE%A4"><span class="toc-number">5.</span> <span class="toc-text">五、Redis集群</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="toc-number">5.1.</span> <span class="toc-text">1、主从复制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">2、哨兵模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E5%88%87%E7%89%87%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.3.</span> <span class="toc-text">3、切片集群模式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81Redis%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E5%92%8C%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="toc-number">6.</span> <span class="toc-text">六、Redis的数据过期删除和内存淘汰策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%EF%BC%88Key%EF%BC%89%E6%95%B0%E6%8D%AE%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4"><span class="toc-number">6.1.</span> <span class="toc-text">1、（Key）数据过期删除</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="toc-number">6.2.</span> <span class="toc-text">2、内存淘汰策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-LRU-%E5%92%8C-LFU"><span class="toc-number">6.2.1.</span> <span class="toc-text">2.1 LRU 和 LFU</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%BC%93%E5%AD%98%E4%B8%89%E5%A4%A7%E4%BB%B6"><span class="toc-number">7.</span> <span class="toc-text">七、缓存三大件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="toc-number">7.1.</span> <span class="toc-text">1、缓存雪崩</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%88%E7%83%AD%E7%82%B9Key%E9%97%AE%E9%A2%98%EF%BC%89"><span class="toc-number">7.2.</span> <span class="toc-text">2、缓存击穿（热点Key问题）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="toc-number">7.3.</span> <span class="toc-text">3、缓存穿透</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/" title="redis面试题"><img src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240108085042.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="redis面试题"/></a><div class="content"><a class="title" href="/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/" title="redis面试题">redis面试题</a><time datetime="2024-01-08T00:48:53.000Z" title="发表于 2024-01-08 08:48:53">2024-01-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/%E8%B1%86%E4%B8%81%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3/" title="豆丁点评相关"><img src="/img/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="豆丁点评相关"/></a><div class="content"><a class="title" href="/2024/01/03/%E8%B1%86%E4%B8%81%E7%82%B9%E8%AF%84%E7%9B%B8%E5%85%B3/" title="豆丁点评相关">豆丁点评相关</a><time datetime="2024-01-03T12:06:12.000Z" title="发表于 2024-01-03 20:06:12">2024-01-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/Spring%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/" title="Spring框架相关"><img src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240103200304.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring框架相关"/></a><div class="content"><a class="title" href="/2024/01/03/Spring%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3/" title="Spring框架相关">Spring框架相关</a><time datetime="2024-01-03T12:02:34.000Z" title="发表于 2024-01-03 20:02:34">2024-01-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/Javase%E7%9B%B8%E5%85%B3/" title="Javase相关"><img src="https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240103200135.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Javase相关"/></a><div class="content"><a class="title" href="/2024/01/03/Javase%E7%9B%B8%E5%85%B3/" title="Javase相关">Javase相关</a><time datetime="2024-01-03T12:00:41.000Z" title="发表于 2024-01-03 20:00:41">2024-01-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" title="橙-API开放平台相关问题"><img src="https://img.miccai.top/api%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%AC%94%E8%AE%B0/20231221160700.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="橙-API开放平台相关问题"/></a><div class="content"><a class="title" href="/2024/01/03/%E6%A9%99-API%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" title="橙-API开放平台相关问题">橙-API开放平台相关问题</a><time datetime="2024-01-03T11:58:05.000Z" title="发表于 2024-01-03 19:58:05">2024-01-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://img.miccai.top/%E9%9D%A2%E8%AF%95%E7%9B%B8%E5%85%B3/20240108085042.png')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By zc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener external nofollow noreferrer" href="https://blog.miccai.top/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>function loadWaline () {
+  function initWaline () {
+    const waline = Waline.init(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline.miccai.top',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, {"locale":{"nick":"昵称","mail":"邮箱","link":"你的网站","placeholder":"欢迎大家文明评论嗷～(填写邮箱可以收到回复通知)","requiredMeta":[],"mailError":"请填写正确的邮件地址","sofa":"快来抢占沙发~","level0":"列兵","level1":"上等兵","level2":"一期","level3":"二期","level4":"三期","level5":"四期","level6":"五期","level7":"六期","level8":"兵王"},"emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/qq","https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili"]}))
+  }
+
+  if (typeof Waline === 'object') initWaline()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css').then(() => {
+      getScript('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js').then(initWaline)
+    })
+  }
+}
+
+if ('Waline' === 'Waline' || !true) {
+  if (true) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+  else setTimeout(loadWaline, 0)
+} else {
+  function loadOtherComment () {
+    loadWaline()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://ooooddddd.github.io/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/'
+    this.page.identifier = '/2024/01/08/redis%E9%9D%A2%E8%AF%95%E9%A2%98/'
+    this.page.title = 'redis面试题'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-ooooddddd-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Waline' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script>window.addEventListener('load', () => {
+  const changeContent = content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = async () => {
+    try {
+      const res = await fetch('https://waline.miccai.top/api/comment?type=recent&count=6', { method: 'GET' })
+      const result = await res.json()
+      const walineArray = result.data.map(e => {
+        return {
+          'content': changeContent(e.comment),
+          'avatar': e.avatar,
+          'nick': e.nick,
+          'url': e.url + '#' + e.objectId,
+          'date': e.time || e.insertedAt
+        }
+      })
+      saveToLocal.set('waline-newest-comments', JSON.stringify(walineArray), 10/(60*24))
+      generateHtml(walineArray)
+    } catch (err) {
+      console.error(err)
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+    }
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('waline-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="8181670003" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="爱国,公正,和平,友善" data-fontsize="15px" data-random="true" async="async"></script><script src="//code.tidio.co/sqsgrbmshnf7qvhnlpqchn7a4dvsyfcf.js" async="async"></script><script>(() => {
+  const isChatBtn = true
+  const isChatHideShow = true
+
+  if (isChatBtn) {
+    let isShow = false
+    const close = () => {
+      window.tidioChatApi.hide()
+      isShow = false
+    }
+    
+    const open = () => {
+      window.tidioChatApi.open()
+      window.tidioChatApi.show()
+      isShow = true
+    }
+
+    const onTidioChatApiReady = () => {
+      window.tidioChatApi.hide()
+      window.tidioChatApi.on("close", close)
+    }
+    if (window.tidioChatApi) {
+      window.tidioChatApi.on("ready", onTidioChatApiReady)
+    } else {
+      document.addEventListener("tidioChat-ready", onTidioChatApiReady)
+    }
+
+    window.chatBtnFn = () => {
+      if (!window.tidioChatApi) return
+      isShow ? close() : open()
+    }
+  } else if (isChatHideShow) {
+    window.chatBtn = {
+      hide: () => {
+        window.tidioChatApi && window.tidioChatApi.hide()
+      },
+      show: () => {
+        window.tidioChatApi && window.tidioChatApi.show()
+      }
+    }
+  }
+})()</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script></div></div></body></html>
